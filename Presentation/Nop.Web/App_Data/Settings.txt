@@ -1,0 +1,2 @@
+DataProvider: sqlserver
+DataConnectionString: Data Source=VADIM-PC\SQLEXPRESS;Initial Catalog=localNopDb;Integrated Security=True;Persist Security Info=False
