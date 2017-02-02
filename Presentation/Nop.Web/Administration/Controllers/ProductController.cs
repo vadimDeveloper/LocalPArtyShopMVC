@@ -11,7 +11,6 @@ using Nop.Admin.Models.Catalog;
 using Nop.Admin.Models.Orders;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
@@ -131,46 +130,46 @@ namespace Nop.Admin.Controllers
             IProductAttributeParser productAttributeParser,
             IDownloadService downloadService)
         {
-            this._productService = productService;
-            this._productTemplateService = productTemplateService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._customerService = customerService;
-            this._urlRecordService = urlRecordService;
-            this._workContext = workContext;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._specificationAttributeService = specificationAttributeService;
-            this._pictureService = pictureService;
-            this._taxCategoryService = taxCategoryService;
-            this._productTagService = productTagService;
-            this._copyProductService = copyProductService;
-            this._pdfService = pdfService;
-            this._exportManager = exportManager;
-            this._importManager = importManager;
-            this._customerActivityService = customerActivityService;
-            this._permissionService = permissionService;
-            this._aclService = aclService;
-            this._storeService = storeService;
-            this._orderService = orderService;
-            this._storeMappingService = storeMappingService;
-            this._vendorService = vendorService;
-            this._shippingService = shippingService;
-            this._shipmentService = shipmentService;
-            this._currencyService = currencyService;
-            this._currencySettings = currencySettings;
-            this._measureService = measureService;
-            this._measureSettings = measureSettings;
-            this._cacheManager = cacheManager;
-            this._dateTimeHelper = dateTimeHelper;
-            this._discountService = discountService;
-            this._productAttributeService = productAttributeService;
-            this._backInStockSubscriptionService = backInStockSubscriptionService;
-            this._shoppingCartService = shoppingCartService;
-            this._productAttributeFormatter = productAttributeFormatter;
-            this._productAttributeParser = productAttributeParser;
-            this._downloadService = downloadService;
+            _productService = productService;
+            _productTemplateService = productTemplateService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _customerService = customerService;
+            _urlRecordService = urlRecordService;
+            _workContext = workContext;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _specificationAttributeService = specificationAttributeService;
+            _pictureService = pictureService;
+            _taxCategoryService = taxCategoryService;
+            _productTagService = productTagService;
+            _copyProductService = copyProductService;
+            _pdfService = pdfService;
+            _exportManager = exportManager;
+            _importManager = importManager;
+            _customerActivityService = customerActivityService;
+            _permissionService = permissionService;
+            _aclService = aclService;
+            _storeService = storeService;
+            _orderService = orderService;
+            _storeMappingService = storeMappingService;
+            _vendorService = vendorService;
+            _shippingService = shippingService;
+            _shipmentService = shipmentService;
+            _currencyService = currencyService;
+            _currencySettings = currencySettings;
+            _measureService = measureService;
+            _measureSettings = measureSettings;
+            _cacheManager = cacheManager;
+            _dateTimeHelper = dateTimeHelper;
+            _discountService = discountService;
+            _productAttributeService = productAttributeService;
+            _backInStockSubscriptionService = backInStockSubscriptionService;
+            _shoppingCartService = shoppingCartService;
+            _productAttributeFormatter = productAttributeFormatter;
+            _productAttributeParser = productAttributeParser;
+            _downloadService = downloadService;
         }
 
         #endregion 
@@ -248,7 +247,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareAclModel(ProductModel model, Product product, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableCustomerRoles = _customerService
                 .GetAllCustomerRoles(true)
@@ -290,7 +289,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(ProductModel model, Product product, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableStores = _storeService
                 .GetAllStores()
@@ -332,9 +331,9 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareAddProductAttributeCombinationModel(AddProductAttributeCombinationModel model, Product product)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             model.ProductId = product.Id;
             model.StockQuantity = 10000;
@@ -380,11 +379,11 @@ namespace Nop.Admin.Controllers
         protected virtual string[] ParseProductTags(string productTags)
         {
             var result = new List<string>();
-            if (!String.IsNullOrWhiteSpace(productTags))
+            if (!string.IsNullOrWhiteSpace(productTags))
             {
-                string[] values = productTags.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string val1 in values)
-                    if (!String.IsNullOrEmpty(val1.Trim()))
+                var values = productTags.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var val1 in values)
+                    if (!string.IsNullOrEmpty(val1.Trim()))
                         result.Add(val1.Trim());
             }
             return result.ToArray();
@@ -394,15 +393,15 @@ namespace Nop.Admin.Controllers
         protected virtual void SaveProductTags(Product product, string[] productTags)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             //product tags
             var existingProductTags = product.ProductTags.ToList();
             var productTagsToRemove = new List<ProductTag>();
             foreach (var existingProductTag in existingProductTags)
             {
-                bool found = false;
-                foreach (string newProductTag in productTags)
+                var found = false;
+                foreach (var newProductTag in productTags)
                 {
                     if (existingProductTag.Name.Equals(newProductTag, StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -420,7 +419,7 @@ namespace Nop.Admin.Controllers
                 product.ProductTags.Remove(productTag);
                 _productService.UpdateProduct(product);
             }
-            foreach (string productTagName in productTags)
+            foreach (var productTagName in productTags)
             {
                 ProductTag productTag;
                 var productTag2 = _productTagService.GetProductTagByName(productTagName);
@@ -450,7 +449,7 @@ namespace Nop.Admin.Controllers
             bool setPredefinedValues, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (product != null)
             {
@@ -634,7 +633,7 @@ namespace Nop.Admin.Controllers
             if (product != null)
             {
                 var result = new StringBuilder();
-                for (int i = 0; i < product.ProductTags.Count; i++)
+                for (var i = 0; i < product.ProductTags.Count; i++)
                 {
                     var pt = product.ProductTags.ToList()[i];
                     result.Append(pt.Name);
@@ -705,7 +704,7 @@ namespace Nop.Admin.Controllers
         protected virtual void SaveProductWarehouseInventory(Product product, ProductModel model)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (model.ManageInventoryMethodId != (int)ManageInventoryMethod.ManageStock)
                 return;
@@ -718,28 +717,28 @@ namespace Nop.Admin.Controllers
             foreach (var warehouse in warehouses)
             {
                 //parse stock quantity
-                int stockQuantity = 0; 
-                foreach (string formKey in this.Request.Form.AllKeys)
+                var stockQuantity = 0; 
+                foreach (var formKey in Request.Form.AllKeys)
                     if (formKey.Equals(string.Format("warehouse_qty_{0}", warehouse.Id), StringComparison.InvariantCultureIgnoreCase))
                     {
-                        int.TryParse(this.Request.Form[formKey], out stockQuantity);
+                        int.TryParse(Request.Form[formKey], out stockQuantity);
                         break;
                     }
                 //parse reserved quantity
-                int reservedQuantity = 0;
-                foreach (string formKey in this.Request.Form.AllKeys)
+                var reservedQuantity = 0;
+                foreach (var formKey in Request.Form.AllKeys)
                     if (formKey.Equals(string.Format("warehouse_reserved_{0}", warehouse.Id), StringComparison.InvariantCultureIgnoreCase))
                     {
-                        int.TryParse(this.Request.Form[formKey], out reservedQuantity);
+                        int.TryParse(Request.Form[formKey], out reservedQuantity);
                         break;
                     }
                 //parse "used" field
-                bool used = false;
-                foreach (string formKey in this.Request.Form.AllKeys)
+                var used = false;
+                foreach (var formKey in Request.Form.AllKeys)
                     if (formKey.Equals(string.Format("warehouse_used_{0}", warehouse.Id), StringComparison.InvariantCultureIgnoreCase))
                     {
                         int tmp;
-                        int.TryParse(this.Request.Form[formKey], out tmp);
+                        int.TryParse(Request.Form[formKey], out tmp);
                         used = tmp == warehouse.Id;
                         break;
                     }
@@ -911,7 +910,7 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("go-to-product-by-sku")]
         public ActionResult GoToSku(ProductListModel model)
         {
-            string sku = model.GoDirectlyToSku;
+            var sku = model.GoDirectlyToSku;
 
             //try to load a product entity
             var product = _productService.GetProductBySku(sku);
@@ -1070,8 +1069,8 @@ namespace Nop.Admin.Controllers
                 }
                 //some previously used values
                 var prevStockQuantity = product.GetTotalStockQuantity();
-                int prevDownloadId = product.DownloadId;
-                int prevSampleDownloadId = product.SampleDownloadId;
+                var prevDownloadId = product.DownloadId;
+                var prevSampleDownloadId = product.SampleDownloadId;
 
                 //product
                 product = model.ToEntity(product);
@@ -1195,7 +1194,7 @@ namespace Nop.Admin.Controllers
             {
                 products.AddRange(_productService.GetProductsByIds(selectedIds.ToArray()));
 
-                for (int i = 0; i < products.Count; i++)
+                for (var i = 0; i < products.Count; i++)
                 {
                     var product = products[i];
 
@@ -1250,7 +1249,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return Json(new { Text = result });
 
-            if (!String.IsNullOrWhiteSpace(productIds))
+            if (!string.IsNullOrWhiteSpace(productIds))
             {
                 var ids = new List<int>();
                 var rangeArray = productIds
@@ -1258,7 +1257,7 @@ namespace Nop.Admin.Controllers
                     .Select(x => x.Trim())
                     .ToList();
 
-                foreach (string str1 in rangeArray)
+                foreach (var str1 in rangeArray)
                 {
                     int tmp1;
                     if (int.TryParse(str1, out tmp1))
@@ -1266,7 +1265,7 @@ namespace Nop.Admin.Controllers
                 }
 
                 var products = _productService.GetProductsByIds(ids.ToArray());
-                for (int i = 0; i <= products.Count - 1; i++)
+                for (var i = 0; i <= products.Count - 1; i++)
                 {
                     result += products[i].Name;
                     if (i != products.Count - 1)
@@ -1798,7 +1797,7 @@ namespace Nop.Admin.Controllers
 
             if (model.SelectedProductIds != null)
             {
-                foreach (int id in model.SelectedProductIds)
+                foreach (var id in model.SelectedProductIds)
                 {
                     var product = _productService.GetProductById(id);
                     if (product != null)
@@ -1973,7 +1972,7 @@ namespace Nop.Admin.Controllers
 
             if (model.SelectedProductIds != null)
             {
-                foreach (int id in model.SelectedProductIds)
+                foreach (var id in model.SelectedProductIds)
                 {
                     var product = _productService.GetProductById(id);
                     if (product != null)
@@ -2181,7 +2180,7 @@ namespace Nop.Admin.Controllers
 
             if (model.SelectedProductIds != null)
             {
-                foreach (int id in model.SelectedProductIds)
+                foreach (var id in model.SelectedProductIds)
                 {
                     var product = _productService.GetProductById(id);
                     if (product != null)
@@ -2952,7 +2951,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            int vendorId = 0;
+            var vendorId = 0;
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
@@ -3033,7 +3032,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            int vendorId = 0;
+            var vendorId = 0;
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
@@ -3394,7 +3393,7 @@ namespace Nop.Admin.Controllers
                 foreach (var lang in languages)
                 {
                     var name = predefinedValue.GetLocalized(x => x.Name, lang.Id, false, false);
-                    if (!String.IsNullOrEmpty(name))
+                    if (!string.IsNullOrEmpty(name))
                         _localizedEntityService.SaveLocalizedValue(pav, x => x.Name, name, lang.Id);
                 }
             }
@@ -3558,7 +3557,7 @@ namespace Nop.Admin.Controllers
 
             var model = new ProductAttributeConditionModel();
             model.ProductAttributeMappingId = productAttributeMapping.Id;
-            model.EnableCondition = !String.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml);
+            model.EnableCondition = !string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml);
 
 
             //pre-select attribute and values
@@ -3613,7 +3612,7 @@ namespace Nop.Admin.Controllers
                             case AttributeControlType.Checkboxes:
                             case AttributeControlType.ColorSquares:
                                 {
-                                    if (!String.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml))
+                                    if (!string.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml))
                                     {
                                         //clear default selection
                                         foreach (var item in attributeModel.Values)
@@ -3673,7 +3672,7 @@ namespace Nop.Admin.Controllers
                 var attribute = _productAttributeService.GetProductAttributeMappingById(model.SelectedProductAttributeId);
                 if (attribute != null)
                 {
-                    string controlId = string.Format("product_attribute_{0}", attribute.Id);
+                    var controlId = string.Format("product_attribute_{0}", attribute.Id);
                     switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
@@ -3681,9 +3680,9 @@ namespace Nop.Admin.Controllers
                         case AttributeControlType.ColorSquares:
                             {
                                 var ctrlAttributes = form[controlId];
-                                if (!String.IsNullOrEmpty(ctrlAttributes))
+                                if (!string.IsNullOrEmpty(ctrlAttributes))
                                 {
-                                    int selectedAttributeId = int.Parse(ctrlAttributes);
+                                    var selectedAttributeId = int.Parse(ctrlAttributes);
                                     if (selectedAttributeId > 0)
                                     {
                                         attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
@@ -3711,12 +3710,12 @@ namespace Nop.Admin.Controllers
                         case AttributeControlType.Checkboxes:
                             {
                                 var cblAttributes = form[controlId];
-                                if (!String.IsNullOrEmpty(cblAttributes))
+                                if (!string.IsNullOrEmpty(cblAttributes))
                                 {
-                                    bool anyValueSelected = false;
+                                    var anyValueSelected = false;
                                     foreach (var item in cblAttributes.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries))
                                     {
-                                        int selectedAttributeId = int.Parse(item);
+                                        var selectedAttributeId = int.Parse(item);
                                         if (selectedAttributeId > 0)
                                         {
                                             attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
@@ -3826,7 +3825,7 @@ namespace Nop.Admin.Controllers
                     }
                     var pictureThumbnailUrl = _pictureService.GetPictureUrl(x.PictureId, 75, false);
                     //little hack here. Grid is rendered wrong way with <inmg> without "src" attribute
-                    if (String.IsNullOrEmpty(pictureThumbnailUrl))
+                    if (string.IsNullOrEmpty(pictureThumbnailUrl))
                         pictureThumbnailUrl = _pictureService.GetPictureUrl(null, 1, true);
                     return new ProductModel.ProductAttributeValueModel
                     {
@@ -3924,7 +3923,7 @@ namespace Nop.Admin.Controllers
             if (productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares)
             {
                 //ensure valid color is chosen/entered
-                if (String.IsNullOrEmpty(model.ColorSquaresRgb))
+                if (string.IsNullOrEmpty(model.ColorSquaresRgb))
                     ModelState.AddModelError("", "Color is required");
                 try
                 {
@@ -4024,7 +4023,7 @@ namespace Nop.Admin.Controllers
                 DisplayOrder = pav.DisplayOrder,
                 PictureId = pav.PictureId
             };
-            if (model.DisplayColorSquaresRgb && String.IsNullOrEmpty(model.ColorSquaresRgb))
+            if (model.DisplayColorSquaresRgb && string.IsNullOrEmpty(model.ColorSquaresRgb))
             {
                 model.ColorSquaresRgb = "#000000";
             }
@@ -4070,7 +4069,7 @@ namespace Nop.Admin.Controllers
             if (pav.ProductAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares)
             {
                 //ensure valid color is chosen/entered
-                if (String.IsNullOrEmpty(model.ColorSquaresRgb))
+                if (string.IsNullOrEmpty(model.ColorSquaresRgb))
                     ModelState.AddModelError("", "Color is required");
                 try
                 {
@@ -4287,7 +4286,7 @@ namespace Nop.Admin.Controllers
                     //warnings
                     var warnings = _shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
                         ShoppingCartType.ShoppingCart, x.Product, 1, x.AttributesXml, true);
-                    for (int i = 0; i < warnings.Count; i++)
+                    for (var i = 0; i < warnings.Count; i++)
                     {
                         pacModel.Warnings += warnings[i];
                         if (i != warnings.Count - 1)
@@ -4401,7 +4400,7 @@ namespace Nop.Admin.Controllers
             ViewBag.formId = formId;
 
             //attributes
-            string attributesXml = "";
+            var attributesXml = "";
             var warnings = new List<string>();
 
             #region Product attributes
@@ -4412,7 +4411,7 @@ namespace Nop.Admin.Controllers
                 .ToList();
             foreach (var attribute in attributes)
             {
-                string controlId = string.Format("product_attribute_{0}", attribute.Id);
+                var controlId = string.Format("product_attribute_{0}", attribute.Id);
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -4420,9 +4419,9 @@ namespace Nop.Admin.Controllers
                     case AttributeControlType.ColorSquares:
                         {
                             var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
-                                int selectedAttributeId = int.Parse(ctrlAttributes);
+                                var selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
                                     attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
@@ -4432,11 +4431,11 @@ namespace Nop.Admin.Controllers
                     case AttributeControlType.Checkboxes:
                         {
                             var cblAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(cblAttributes))
+                            if (!string.IsNullOrEmpty(cblAttributes))
                             {
                                 foreach (var item in cblAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    int selectedAttributeId = int.Parse(item);
+                                    var selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
                                         attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                             attribute, selectedAttributeId.ToString());
@@ -4462,9 +4461,9 @@ namespace Nop.Admin.Controllers
                     case AttributeControlType.MultilineTextbox:
                         {
                             var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
-                                string enteredText = ctrlAttributes.Trim();
+                                var enteredText = ctrlAttributes.Trim();
                                 attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, enteredText);
                             }
@@ -4478,7 +4477,7 @@ namespace Nop.Admin.Controllers
                             DateTime? selectedDate = null;
                             try
                             {
-                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(date));
+                                selectedDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(date));
                             }
                             catch { }
                             if (selectedDate.HasValue)
@@ -4490,8 +4489,8 @@ namespace Nop.Admin.Controllers
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                            var httpPostedFile = this.Request.Files[controlId];
-                            if ((httpPostedFile != null) && (!String.IsNullOrEmpty(httpPostedFile.FileName)))
+                            var httpPostedFile = Request.Files[controlId];
+                            if ((httpPostedFile != null) && (!string.IsNullOrEmpty(httpPostedFile.FileName)))
                             {
                                 var fileSizeOk = true;
                                 if (attribute.ValidationFileMaximumSize.HasValue)

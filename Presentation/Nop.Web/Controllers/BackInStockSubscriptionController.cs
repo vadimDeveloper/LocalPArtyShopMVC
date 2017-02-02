@@ -35,13 +35,13 @@ namespace Nop.Web.Controllers
             CatalogSettings catalogSettings,
             CustomerSettings customerSettings)
         {
-            this._productService = productService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._localizationService = localizationService;
-            this._backInStockSubscriptionService = backInStockSubscriptionService;
-            this._catalogSettings = catalogSettings;
-            this._customerSettings = customerSettings;
+            _productService = productService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _localizationService = localizationService;
+            _backInStockSubscriptionService = backInStockSubscriptionService;
+            _catalogSettings = catalogSettings;
+            _customerSettings = customerSettings;
         }
 
         #endregion
@@ -55,25 +55,25 @@ namespace Nop.Web.Controllers
             if (product == null || product.Deleted)
                 throw new ArgumentException("No product found with the specified id");
 
-            var model = new BackInStockSubscribeModel();
-            model.ProductId = product.Id;
-            model.ProductName = product.GetLocalized(x => x.Name);
-            model.ProductSeName = product.GetSeName();
-            model.IsCurrentCustomerRegistered = _workContext.CurrentCustomer.IsRegistered();
-            model.MaximumBackInStockSubscriptions = _catalogSettings.MaximumBackInStockSubscriptions;
-            model.CurrentNumberOfBackInStockSubscriptions = _backInStockSubscriptionService
-                .GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, 0, 1)
-                .TotalCount;
-            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
-                product.BackorderMode == BackorderMode.NoBackorders &&
-                product.AllowBackInStockSubscriptions &&
-                product.GetTotalStockQuantity() <= 0)
+            var model = new BackInStockSubscribeModel
             {
-                //out of stock
-                model.SubscriptionAllowed = true;
-                model.AlreadySubscribed = _backInStockSubscriptionService
-                    .FindSubscription(_workContext.CurrentCustomer.Id, product.Id, _storeContext.CurrentStore.Id) != null;
-            }
+                ProductId = product.Id,
+                ProductName = product.GetLocalized(x => x.Name),
+                ProductSeName = product.GetSeName(),
+                IsCurrentCustomerRegistered = _workContext.CurrentCustomer.IsRegistered(),
+                MaximumBackInStockSubscriptions = _catalogSettings.MaximumBackInStockSubscriptions,
+                CurrentNumberOfBackInStockSubscriptions = _backInStockSubscriptionService
+                    .GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, 0,
+                        1)
+                    .TotalCount
+            };
+            if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock ||
+                product.BackorderMode != BackorderMode.NoBackorders || !product.AllowBackInStockSubscriptions ||
+                product.GetTotalStockQuantity() > 0) return View(model);
+            //out of stock
+            model.SubscriptionAllowed = true;
+            model.AlreadySubscribed = _backInStockSubscriptionService
+                                          .FindSubscription(_workContext.CurrentCustomer.Id, product.Id, _storeContext.CurrentStore.Id) != null;
             return View(model);
         }
         [HttpPost, ActionName("SubscribePopup")]
@@ -86,43 +86,40 @@ namespace Nop.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Content(_localizationService.GetResource("BackInStockSubscriptions.OnlyRegistered"));
 
-            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
-                product.BackorderMode == BackorderMode.NoBackorders &&
-                product.AllowBackInStockSubscriptions &&
-                product.GetTotalStockQuantity() <= 0)
+            if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock ||
+                product.BackorderMode != BackorderMode.NoBackorders || !product.AllowBackInStockSubscriptions ||
+                product.GetTotalStockQuantity() > 0)
+                return Content(_localizationService.GetResource("BackInStockSubscriptions.NotAllowed"));
+            //out of stock
+            var subscription = _backInStockSubscriptionService
+                .FindSubscription(_workContext.CurrentCustomer.Id, product.Id, _storeContext.CurrentStore.Id);
+            if (subscription != null)
             {
-                //out of stock
-                var subscription = _backInStockSubscriptionService
-                    .FindSubscription(_workContext.CurrentCustomer.Id, product.Id, _storeContext.CurrentStore.Id);
-                if (subscription != null)
-                {
-                    //subscription already exists
-                    //unsubscribe
-                    _backInStockSubscriptionService.DeleteSubscription(subscription);
-                    return Content("Unsubscribed");
-                }
-
-                //subscription does not exist
-                //subscribe
-                if (_backInStockSubscriptionService
-                    .GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, 0, 1)
-                    .TotalCount >= _catalogSettings.MaximumBackInStockSubscriptions)
-                {
-                    return Content(string.Format(_localizationService.GetResource("BackInStockSubscriptions.MaxSubscriptions"), _catalogSettings.MaximumBackInStockSubscriptions));
-                }
-                subscription = new BackInStockSubscription
-                {
-                    Customer = _workContext.CurrentCustomer,
-                    Product = product,
-                    StoreId = _storeContext.CurrentStore.Id,
-                    CreatedOnUtc = DateTime.UtcNow
-                };
-                _backInStockSubscriptionService.InsertSubscription(subscription);
-                return Content("Subscribed");
+                //subscription already exists
+                //unsubscribe
+                _backInStockSubscriptionService.DeleteSubscription(subscription);
+                return Content("Unsubscribed");
             }
 
+            //subscription does not exist
+            //subscribe
+            if (_backInStockSubscriptionService
+                    .GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, 0, 1)
+                    .TotalCount >= _catalogSettings.MaximumBackInStockSubscriptions)
+            {
+                return Content(string.Format(_localizationService.GetResource("BackInStockSubscriptions.MaxSubscriptions"), _catalogSettings.MaximumBackInStockSubscriptions));
+            }
+            subscription = new BackInStockSubscription
+            {
+                Customer = _workContext.CurrentCustomer,
+                Product = product,
+                StoreId = _storeContext.CurrentStore.Id,
+                CreatedOnUtc = DateTime.UtcNow
+            };
+            _backInStockSubscriptionService.InsertSubscription(subscription);
+            return Content("Subscribed");
+
             //subscription not possible
-            return Content(_localizationService.GetResource("BackInStockSubscriptions.NotAllowed"));
         }
 
 
@@ -134,12 +131,12 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerInfo");
             }
 
-            int pageIndex = 0;
+            var pageIndex = 0;
             if (page > 0)
             {
                 pageIndex = page.Value - 1;
             }
-            var pageSize = 10;
+            const int pageSize = 10;
 
             var customer = _workContext.CurrentCustomer;
             var list = _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customer.Id,
@@ -178,24 +175,21 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         [HttpPost, ActionName("CustomerSubscriptions")]
-        public ActionResult CustomerSubscriptionsPOST(FormCollection formCollection)
+        public ActionResult CustomerSubscriptionsPost(FormCollection formCollection)
         {
             foreach (var key in formCollection.AllKeys)
             {
                 var value = formCollection[key];
 
-                if (value.Equals("on") && key.StartsWith("biss", StringComparison.InvariantCultureIgnoreCase))
+                if (!value.Equals("on") || !key.StartsWith("biss", StringComparison.InvariantCultureIgnoreCase))
+                    continue;
+                var id = key.Replace("biss", "").Trim();
+                int subscriptionId;
+                if (!int.TryParse(id, out subscriptionId)) continue;
+                var subscription = _backInStockSubscriptionService.GetSubscriptionById(subscriptionId);
+                if (subscription != null && subscription.CustomerId == _workContext.CurrentCustomer.Id)
                 {
-                    var id = key.Replace("biss", "").Trim();
-                    int subscriptionId;
-                    if (Int32.TryParse(id, out subscriptionId))
-                    {
-                        var subscription = _backInStockSubscriptionService.GetSubscriptionById(subscriptionId);
-                        if (subscription != null && subscription.CustomerId == _workContext.CurrentCustomer.Id)
-                        {
-                            _backInStockSubscriptionService.DeleteSubscription(subscription);
-                        }
-                    }
+                    _backInStockSubscriptionService.DeleteSubscription(subscription);
                 }
             }
 

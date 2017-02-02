@@ -39,9 +39,9 @@ namespace Nop.Admin.Controllers
         //custom code by nopCommerce team
         public RoxyFilemanController(IPermissionService permissionService, HttpContextBase context)
         {
-            this._permissionService = permissionService;
-            this._context = context;
-            this._r = this._context.Response;
+            _permissionService = permissionService;
+            _context = context;
+            _r = _context.Response;
         }
 
         #endregion
@@ -49,7 +49,7 @@ namespace Nop.Admin.Controllers
         #region Methods
 
         public void ProcessRequest() {
-            string action = "DIRLIST";
+            var action = "DIRLIST";
 
             //custom code by nopCommerce team
             if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
@@ -155,14 +155,14 @@ namespace Nop.Admin.Controllers
             return _context.Server.MapPath(path);
         }
         private string GetLangFile(){
-            string filename = "../lang/" + GetSetting("LANG") + ".json";
+            var filename = "../lang/" + GetSetting("LANG") + ".json";
             if (!System.IO.File.Exists(_context.Server.MapPath(filename)))
                 filename = "../lang/en.json";
             return filename;
         }
         protected string LangRes(string name)
         {
-            string ret = name;
+            var ret = name;
             if (_lang == null)
                 _lang = ParseJSON(GetLangFile());
             if (_lang.ContainsKey(name))
@@ -171,7 +171,7 @@ namespace Nop.Admin.Controllers
             return ret;
         }
         protected string GetFileType(string ext){
-            string ret = "file";
+            var ret = "file";
             ext = ext.ToLower();
             if(ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif")
                 ret = "image";
@@ -181,13 +181,13 @@ namespace Nop.Admin.Controllers
         }
         protected bool CanHandleFile(string filename)
         {
-            bool ret = false;
-            FileInfo file = new FileInfo(filename);
-            string ext = file.Extension.Replace(".", "").ToLower();
-            string setting = GetSetting("FORBIDDEN_UPLOADS").Trim().ToLower();
+            var ret = false;
+            var file = new FileInfo(filename);
+            var ext = file.Extension.Replace(".", "").ToLower();
+            var setting = GetSetting("FORBIDDEN_UPLOADS").Trim().ToLower();
             if (setting != "")
             {
-                ArrayList tmp = new ArrayList();
+                var tmp = new ArrayList();
                 tmp.AddRange(Regex.Split(setting, "\\s+"));
                 if (!tmp.Contains(ext))
                     ret = true;
@@ -195,7 +195,7 @@ namespace Nop.Admin.Controllers
             setting = GetSetting("ALLOWED_UPLOADS").Trim().ToLower();
             if (setting != "")
             {
-                ArrayList tmp = new ArrayList();
+                var tmp = new ArrayList();
                 tmp.AddRange(Regex.Split(setting, "\\s+"));
                 if (!tmp.Contains(ext))
                     ret = false;
@@ -204,8 +204,8 @@ namespace Nop.Admin.Controllers
             return ret;
         }
         protected Dictionary<string, string> ParseJSON(string file){
-            Dictionary<string, string> ret = new Dictionary<string,string>();
-            string json = "";
+            var ret = new Dictionary<string,string>();
+            var json = "";
             try{
                 json = System.IO.File.ReadAllText(_context.Server.MapPath(file), System.Text.Encoding.UTF8);
             }
@@ -217,9 +217,9 @@ namespace Nop.Admin.Controllers
                     json = json.Substring(1, json.Length - 2);
                 json = json.Trim();
                 json = json.Substring(1, json.Length - 2);
-                string[] lines = Regex.Split(json, "\"\\s*,\\s*\"");
-                foreach(string line in lines){
-                    string[] tmp = Regex.Split(line, "\"\\s*:\\s*\"");
+                var lines = Regex.Split(json, "\"\\s*,\\s*\"");
+                foreach(var line in lines){
+                    var tmp = Regex.Split(line, "\"\\s*:\\s*\"");
                     try{
                         if (tmp[0] != "" && !ret.ContainsKey(tmp[0]))
                         {
@@ -232,7 +232,7 @@ namespace Nop.Admin.Controllers
             return ret;
         }
         protected string GetFilesRoot(){
-            string ret = GetSetting("FILES_ROOT");
+            var ret = GetSetting("FILES_ROOT");
             if (GetSetting("SESSION_PATH_KEY") != "" && _context.Session[GetSetting("SESSION_PATH_KEY")] != null)
                 ret = (string)_context.Session[GetSetting("SESSION_PATH_KEY")];
         
@@ -247,7 +247,7 @@ namespace Nop.Admin.Controllers
                 _settings = ParseJSON(confFile);
         }
         protected string GetSetting(string name){
-            string ret = "";
+            var ret = "";
             LoadConf();
             if(_settings.ContainsKey(name))
                 ret = _settings[name];
@@ -263,7 +263,7 @@ namespace Nop.Admin.Controllers
         }
         protected void VerifyAction(string action)
         {
-            string setting = GetSetting(action);
+            var setting = GetSetting(action);
             if (setting.IndexOf("?") > -1)
                 setting = setting.Substring(0, setting.IndexOf("?"));
             if (!setting.StartsWith("/"))
@@ -292,16 +292,16 @@ namespace Nop.Admin.Controllers
         private void _copyDir(string path, string dest){
             if(!Directory.Exists(dest))
                 Directory.CreateDirectory(dest);
-            foreach(string f in  Directory.GetFiles(path)){
-                FileInfo file = new FileInfo(f);
+            foreach(var f in  Directory.GetFiles(path)){
+                var file = new FileInfo(f);
                 if (!System.IO.File.Exists(Path.Combine(dest, file.Name)))
                 {
                     System.IO.File.Copy(f, Path.Combine(dest, file.Name));
                 }
             }
-            foreach (string d in Directory.GetDirectories(path))
+            foreach (var d in Directory.GetDirectories(path))
             {
-                DirectoryInfo dir = new DirectoryInfo(d);
+                var dir = new DirectoryInfo(d);
                 _copyDir(d, Path.Combine(dest, dir.Name));
             }
         }
@@ -309,8 +309,8 @@ namespace Nop.Admin.Controllers
         {
             CheckPath(path);
             CheckPath(newPath);
-            DirectoryInfo dir = new  DirectoryInfo(FixPath(path));
-            DirectoryInfo newDir = new DirectoryInfo(FixPath(newPath + "/" + dir.Name));
+            var dir = new  DirectoryInfo(FixPath(path));
+            var newDir = new DirectoryInfo(FixPath(newPath + "/" + dir.Name));
         
             if (!dir.Exists)
             {
@@ -326,8 +326,8 @@ namespace Nop.Admin.Controllers
             _r.Write(GetSuccessRes());
         }
         protected string MakeUniqueFilename(string dir, string filename){
-            string ret = filename;
-            int i = 0;
+            var ret = filename;
+            var i = 0;
             while (System.IO.File.Exists(Path.Combine(dir, ret)))
             {
                 i++;
@@ -338,12 +338,12 @@ namespace Nop.Admin.Controllers
         protected void CopyFile(string path, string newPath)
         {
             CheckPath(path);
-            FileInfo file = new FileInfo(FixPath(path));
+            var file = new FileInfo(FixPath(path));
             newPath = FixPath(newPath);
             if (!file.Exists)
                 throw new Exception(LangRes("E_CopyFileInvalisPath"));
             else{
-                string newName = MakeUniqueFilename(newPath, file.Name);
+                var newName = MakeUniqueFilename(newPath, file.Name);
                 try{
                     System.IO.File.Copy(file.FullName, Path.Combine(newPath, newName));
                     _r.Write(GetSuccessRes());
@@ -416,20 +416,20 @@ namespace Nop.Admin.Controllers
             }
         }
         private List<string> GetFiles(string path, string type){
-            List<string> ret = new List<string>();
+            var ret = new List<string>();
             if(type == "#")
                 type = "";
-            string[] files = Directory.GetFiles(path);
-            foreach(string f in files){
+            var files = Directory.GetFiles(path);
+            foreach(var f in files){
                 if ((GetFileType(new FileInfo(f).Extension) == type) || (type == ""))
                     ret.Add(f);
             }
             return ret;
         }
         private ArrayList ListDirs(string path){
-            string[] dirs = Directory.GetDirectories(path);
-            ArrayList ret = new ArrayList();
-            foreach(string dir in dirs){
+            var dirs = Directory.GetDirectories(path);
+            var ret = new ArrayList();
+            foreach(var dir in dirs){
                 ret.Add(dir);
                 ret.AddRange(ListDirs(dir));
             }
@@ -437,17 +437,17 @@ namespace Nop.Admin.Controllers
         }
         protected void ListDirTree(string type)
         {
-            DirectoryInfo d = new DirectoryInfo(GetFilesRoot());
+            var d = new DirectoryInfo(GetFilesRoot());
             if(!d.Exists)
                 throw new Exception("Invalid files root directory. Check your configuration.");
             
-            ArrayList dirs = ListDirs(d.FullName);
+            var dirs = ListDirs(d.FullName);
             dirs.Insert(0, d.FullName);
         
-            string localPath = _context.Server.MapPath("~/");
+            var localPath = _context.Server.MapPath("~/");
             _r.Write("[");
-            for(int i = 0; i <dirs.Count; i++){
-                string dir = (string) dirs[i];
+            for(var i = 0; i <dirs.Count; i++){
+                var dir = (string) dirs[i];
                 _r.Write("{\"p\":\"/" + dir.Replace(localPath, "").Replace("\\", "/") + "\",\"f\":\"" + GetFiles(dir, type).Count.ToString() + "\",\"d\":\"" + Directory.GetDirectories(dir).Length.ToString() + "\"}");
                 if(i < dirs.Count -1)
                     _r.Write(",");
@@ -455,8 +455,8 @@ namespace Nop.Admin.Controllers
             _r.Write("]");
         }
         protected double LinuxTimestamp(DateTime d){
-            DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0).ToLocalTime();
-            TimeSpan timeSpan = (d.ToLocalTime() - epoch);
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0).ToLocalTime();
+            var timeSpan = (d.ToLocalTime() - epoch);
         
             return timeSpan.TotalSeconds;
 
@@ -464,16 +464,16 @@ namespace Nop.Admin.Controllers
         protected void ListFiles(string path, string type)
         {
             CheckPath(path);
-            string fullPath = FixPath(path);
-            List<string> files = GetFiles(fullPath, type);
+            var fullPath = FixPath(path);
+            var files = GetFiles(fullPath, type);
             _r.Write("[");
-            for(int i = 0; i < files.Count; i++){
-                FileInfo f = new FileInfo(files[i]);
+            for(var i = 0; i < files.Count; i++){
+                var f = new FileInfo(files[i]);
                 int w = 0, h = 0;
                 if (GetFileType(f.Extension) == "image"){
                     try{
-                        FileStream fs = new FileStream(f.FullName, FileMode.Open);
-                        Image img = Image.FromStream(fs);
+                        var fs = new FileStream(f.FullName, FileMode.Open);
+                        var img = Image.FromStream(fs);
                         w = img.Width;
                         h = img.Height;
                         fs.Close();
@@ -499,8 +499,8 @@ namespace Nop.Admin.Controllers
             path = FixPath(path);
             if(!Directory.Exists(path))
                 throw new Exception(LangRes("E_CreateArchive"));
-            string dirName = new FileInfo(path).Name;
-            string tmpZip = _context.Server.MapPath("../tmp/" + dirName + ".zip");
+            var dirName = new FileInfo(path).Name;
+            var tmpZip = _context.Server.MapPath("../tmp/" + dirName + ".zip");
             if (System.IO.File.Exists(tmpZip))
                 System.IO.File.Delete(tmpZip);
             ZipFile.CreateFromDirectory(path, tmpZip,CompressionLevel.Fastest, true);
@@ -515,7 +515,7 @@ namespace Nop.Admin.Controllers
         protected void DownloadFile(string path)
         {
             CheckPath(path);
-            FileInfo file = new FileInfo(FixPath(path));
+            var file = new FileInfo(FixPath(path));
             if(file.Exists){
                 _r.Clear();
                 _r.Headers.Add("Content-Disposition", "attachment; filename=\"" + file.Name + "\"");
@@ -529,8 +529,8 @@ namespace Nop.Admin.Controllers
         {
             CheckPath(path);
             CheckPath(newPath);
-            DirectoryInfo source = new DirectoryInfo(FixPath(path));
-            DirectoryInfo dest = new DirectoryInfo(FixPath(Path.Combine(newPath, source.Name)));
+            var source = new DirectoryInfo(FixPath(path));
+            var dest = new DirectoryInfo(FixPath(Path.Combine(newPath, source.Name)));
             if(dest.FullName.IndexOf(source.FullName) == 0)
                 throw new Exception(LangRes("E_CannotMoveDirToChild"));
             else if (!source.Exists)
@@ -552,8 +552,8 @@ namespace Nop.Admin.Controllers
         {
             CheckPath(path);
             CheckPath(newPath);
-            FileInfo source = new FileInfo(FixPath(path));
-            FileInfo dest = new FileInfo(FixPath(newPath));
+            var source = new FileInfo(FixPath(path));
+            var dest = new FileInfo(FixPath(newPath));
             if (!source.Exists)
                 throw new Exception(LangRes("E_MoveFileInvalisPath"));
             else if (dest.Exists)
@@ -574,8 +574,8 @@ namespace Nop.Admin.Controllers
         protected void RenameDir(string path, string name)
         {
             CheckPath(path);
-            DirectoryInfo source = new DirectoryInfo(FixPath(path));
-            DirectoryInfo dest = new DirectoryInfo(Path.Combine(source.Parent.FullName, name));
+            var source = new DirectoryInfo(FixPath(path));
+            var dest = new DirectoryInfo(Path.Combine(source.Parent.FullName, name));
             if(source.FullName == GetFilesRoot())
                 throw new Exception(LangRes("E_CannotRenameRoot"));
             else if (!source.Exists)
@@ -598,8 +598,8 @@ namespace Nop.Admin.Controllers
         protected void RenameFile(string path, string name)
         {
             CheckPath(path);
-            FileInfo source = new FileInfo(FixPath(path));
-            FileInfo dest = new FileInfo(Path.Combine(source.Directory.FullName, name));
+            var source = new FileInfo(FixPath(path));
+            var dest = new FileInfo(Path.Combine(source.Directory.FullName, name));
             if (!source.Exists)
                 throw new Exception(LangRes("E_RenameFileInvalidPath"));
             else if (!CanHandleFile(name))
@@ -625,14 +625,14 @@ namespace Nop.Admin.Controllers
         protected void ShowThumbnail(string path, int width, int height)
         {
             CheckPath(path);
-            FileStream fs = new FileStream(FixPath(path), FileMode.Open);
-            Bitmap img = new Bitmap(Bitmap.FromStream(fs));
+            var fs = new FileStream(FixPath(path), FileMode.Open);
+            var img = new Bitmap(Image.FromStream(fs));
             fs.Close();
             fs.Dispose();
             int cropWidth = img.Width, cropHeight = img.Height;
             int cropX = 0, cropY = 0;
 
-            double imgRatio = (double)img.Width / (double)img.Height;
+            var imgRatio = (double)img.Width / (double)img.Height;
         
             if(height == 0)
                 height = Convert.ToInt32(Math.Floor((double)width / imgRatio));
@@ -642,7 +642,7 @@ namespace Nop.Admin.Controllers
             if (height > img.Height)
                 height = img.Height;
 
-            double cropRatio = (double)width / (double)height;
+            var cropRatio = (double)width / (double)height;
             cropWidth = Convert.ToInt32(Math.Floor((double)img.Height * cropRatio));
             cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
             if (cropWidth > img.Width)
@@ -662,10 +662,10 @@ namespace Nop.Admin.Controllers
                 cropY = Convert.ToInt32(Math.Floor((double)(img.Height - cropHeight) / 2));
             }
 
-            Rectangle area = new Rectangle(cropX, cropY, cropWidth, cropHeight);
-            Bitmap cropImg = img.Clone(area, System.Drawing.Imaging.PixelFormat.DontCare);
+            var area = new Rectangle(cropX, cropY, cropWidth, cropHeight);
+            var cropImg = img.Clone(area, PixelFormat.DontCare);
             img.Dispose();
-            Image.GetThumbnailImageAbort imgCallback = new Image.GetThumbnailImageAbort(ThumbnailCallback);
+            var imgCallback = new Image.GetThumbnailImageAbort(ThumbnailCallback);
 
             _r.AddHeader("Content-Type", "image/png");
             cropImg.GetThumbnailImage(width, height, imgCallback, IntPtr.Zero).Save(_r.OutputStream, ImageFormat.Png);
@@ -673,7 +673,7 @@ namespace Nop.Admin.Controllers
             cropImg.Dispose();
         }
         private ImageFormat GetImageFormat(string filename){
-            ImageFormat ret = ImageFormat.Jpeg;
+            var ret = ImageFormat.Jpeg;
             switch(new FileInfo(filename).Extension.ToLower()){
                 case ".png": ret = ImageFormat.Png; break;
                 case ".gif": ret = ImageFormat.Gif; break;
@@ -682,23 +682,23 @@ namespace Nop.Admin.Controllers
         }
         protected void ImageResize(string path, string dest, int width, int height)
         {
-            FileStream fs = new FileStream(path, FileMode.Open);
-            Image img = Image.FromStream(fs);
+            var fs = new FileStream(path, FileMode.Open);
+            var img = Image.FromStream(fs);
             fs.Close();
             fs.Dispose();
-            float ratio = (float)img.Width / (float)img.Height;
+            var ratio = (float)img.Width / (float)img.Height;
             if ((img.Width <= width && img.Height <= height) || (width == 0 && height == 0))
                 return;
 
-            int newWidth = width;
+            var newWidth = width;
             int newHeight = Convert.ToInt16(Math.Floor((float)newWidth / ratio));
             if ((height > 0 && newHeight > height) || (width == 0))
             {
                 newHeight = height;
                 newWidth = Convert.ToInt16(Math.Floor((float)newHeight * ratio));
             }
-            Bitmap newImg = new Bitmap(newWidth, newHeight);
-            Graphics g = Graphics.FromImage((Image)newImg);
+            var newImg = new Bitmap(newWidth, newHeight);
+            var g = Graphics.FromImage((Image)newImg);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             g.DrawImage(img, 0, 0, newWidth, newHeight);
             img.Dispose();
@@ -716,20 +716,20 @@ namespace Nop.Admin.Controllers
         {
             CheckPath(path);
             path = FixPath(path);
-            string res = GetSuccessRes();
-            bool hasErrors = false;
+            var res = GetSuccessRes();
+            var hasErrors = false;
             try{
-                for(int i = 0; i < Request.Files.Count; i++){
+                for(var i = 0; i < Request.Files.Count; i++){
                     if (CanHandleFile(Request.Files[i].FileName))
                     {
-                        FileInfo f = new FileInfo(Request.Files[i].FileName);
-                        string filename = MakeUniqueFilename(path, f.Name);
-                        string dest = Path.Combine(path, filename);
+                        var f = new FileInfo(Request.Files[i].FileName);
+                        var filename = MakeUniqueFilename(path, f.Name);
+                        var dest = Path.Combine(path, filename);
                         Request.Files[i].SaveAs(dest);
                         if (GetFileType(new FileInfo(filename).Extension) == "image")
                         {
-                            int w = 0;
-                            int h = 0;
+                            var w = 0;
+                            var h = 0;
                             int.TryParse(GetSetting("MAX_IMAGE_WIDTH"), out w);
                             int.TryParse(GetSetting("MAX_IMAGE_HEIGHT"), out h);
                             ImageResize(dest, dest, w, h);

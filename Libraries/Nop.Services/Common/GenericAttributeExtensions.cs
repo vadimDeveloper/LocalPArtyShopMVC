@@ -37,7 +37,7 @@ namespace Nop.Services.Common
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            string keyGroup = entity.GetUnproxiedEntityType().Name;
+            var keyGroup = entity.GetUnproxiedEntityType().Name;
 
             var props = genericAttributeService.GetAttributesForEntity(entity.Id, keyGroup);
             //little hack here (only for unit testing). we should write ecpect-return rules in unit tests for such cases

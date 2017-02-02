@@ -59,12 +59,12 @@ namespace Nop.Services.Catalog
             var recentlyViewedCookie = _httpContext.Request.Cookies.Get("NopCommerce.RecentlyViewedProducts");
             if (recentlyViewedCookie == null)
                 return productIds;
-            string[] values = recentlyViewedCookie.Values.GetValues("RecentlyViewedProductIds");
+            var values = recentlyViewedCookie.Values.GetValues("RecentlyViewedProductIds");
             if (values == null)
                 return productIds;
-            foreach (string productId in values)
+            foreach (var productId in values)
             {
-                int prodId = int.Parse(productId);
+                var prodId = int.Parse(productId);
                 if (!productIds.Contains(prodId))
                 {
                     productIds.Add(prodId);
@@ -109,7 +109,7 @@ namespace Nop.Services.Catalog
             var oldProductIds = GetRecentlyViewedProductsIds();
             var newProductIds = new List<int>();
             newProductIds.Add(productId);
-            foreach (int oldProductId in oldProductIds)
+            foreach (var oldProductId in oldProductIds)
                 if (oldProductId != productId)
                     newProductIds.Add(oldProductId);
 
@@ -120,11 +120,11 @@ namespace Nop.Services.Catalog
                 recentlyViewedCookie.HttpOnly = true;
             }
             recentlyViewedCookie.Values.Clear();
-            int maxProducts = _catalogSettings.RecentlyViewedProductsNumber;
+            var maxProducts = _catalogSettings.RecentlyViewedProductsNumber;
             if (maxProducts <= 0)
                 maxProducts = 10;
-            int i = 1;
-            foreach (int newProductId in newProductIds)
+            var i = 1;
+            foreach (var newProductId in newProductIds)
             {
                 recentlyViewedCookie.Values.Add("RecentlyViewedProductIds", newProductId.ToString());
                 if (i == maxProducts)

@@ -49,7 +49,7 @@ namespace Nop.Web
             //initialize engine context
             EngineContext.Initialize(false);
 
-            bool databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
+            var databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
             if (databaseInstalled)
             {
                 //remove all view engines
@@ -109,14 +109,14 @@ namespace Nop.Web
                 return;
 
             //keep alive page requested (we ignore it to prevent creating a guest customer records)
-            string keepAliveUrl = string.Format("{0}keepalive/index", webHelper.GetStoreLocation());
+            var keepAliveUrl = string.Format("{0}keepalive/index", webHelper.GetStoreLocation());
             if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
                 return;
 
             //ensure database is installed
             if (!DataSettingsHelper.DatabaseIsInstalled())
             {
-                string installUrl = string.Format("{0}install", webHelper.GetStoreLocation());
+                var installUrl = string.Format("{0}install", webHelper.GetStoreLocation());
                 if (!webHelper.GetThisPageUrl(false).StartsWith(installUrl, StringComparison.InvariantCultureIgnoreCase))
                 {
                     this.Response.Redirect(installUrl);
@@ -193,7 +193,7 @@ namespace Nop.Web
                 return;
 
             //keep alive page requested (we ignore it to prevent creation of guest customer records)
-            string keepAliveUrl = string.Format("{0}keepalive/index", webHelper.GetStoreLocation());
+            var keepAliveUrl = string.Format("{0}keepalive/index", webHelper.GetStoreLocation());
             if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
                 return;
 

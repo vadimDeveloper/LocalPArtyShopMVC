@@ -56,7 +56,7 @@
             function validateWarehouseAvailability() {
                 @{
                     var sb = new StringBuilder();
-                    for (int i = 0; i <= itemsFromMultipleWarehouses.Count - 1; i++)
+                    for (var i = 0; i <= itemsFromMultipleWarehouses.Count - 1; i++)
                     {
                         var item = itemsFromMultipleWarehouses[i];
                         sb.AppendFormat("validateAvailableQuantity('{0}')", item.OrderItemId);
@@ -171,7 +171,7 @@
                                         else
                                         {
                                             //display warehouses
-                                            for (int i = 0; i < item.AvailableWarehouses.Count; i++)
+                                            for (var i = 0; i < item.AvailableWarehouses.Count; i++)
                                             {
                                                 var warehouse = item.AvailableWarehouses[i];
                                                 @warehouse.WarehouseName

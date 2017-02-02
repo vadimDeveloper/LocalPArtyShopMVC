@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Data;
@@ -16,10 +15,7 @@ namespace Nop.Web.Framework
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (filterContext == null || filterContext.HttpContext == null)
-                return;
-
-            HttpRequestBase request = filterContext.HttpContext.Request;
+            var request = filterContext?.HttpContext?.Request;
             if (request == null)
                 return;
 
@@ -28,7 +24,7 @@ namespace Nop.Web.Framework
                 return;
 
             //only GET requests
-            if (!String.Equals(filterContext.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(filterContext.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
                 return;
 
             if (!DataSettingsHelper.DatabaseIsInstalled())
@@ -39,13 +35,13 @@ namespace Nop.Web.Framework
                 return;
             
             //ensure that this route is registered and localizable (LocalizedRoute in RouteProvider.cs)
-            if (filterContext.RouteData == null || filterContext.RouteData.Route == null || !(filterContext.RouteData.Route is LocalizedRoute))
+            if (!(filterContext.RouteData?.Route is LocalizedRoute))
                 return;
 
 
             //process current URL
             var pageUrl = filterContext.HttpContext.Request.RawUrl;
-            string applicationPath = filterContext.HttpContext.Request.ApplicationPath;
+            var applicationPath = filterContext.HttpContext.Request.ApplicationPath;
             if (pageUrl.IsLocalizedUrl(applicationPath, true))
                 //already localized URL
                 return;

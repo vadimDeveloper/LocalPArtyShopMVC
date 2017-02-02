@@ -134,7 +134,7 @@ namespace Nop.Services.Authentication.External
                     var randomPassword = CommonHelper.GenerateRandomDigitCode(20);
 
 
-                    bool isApproved =
+                    var isApproved =
                         //standard registration
                         (_customerSettings.UserRegistrationType == UserRegistrationType.Standard) ||
                         //skip email validation?

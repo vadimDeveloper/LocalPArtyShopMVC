@@ -82,7 +82,7 @@ namespace Nop.Services.Seo
         protected virtual void WriteUrlLocation(string url, UpdateFrequency updateFrequency, DateTime lastUpdated)
         {
             _writer.WriteStartElement("url");
-            string loc = XmlHelper.XmlEncode(url);
+            var loc = XmlHelper.XmlEncode(url);
             _writer.WriteElementString("loc", loc);
             _writer.WriteElementString("changefreq", updateFrequency.ToString().ToLowerInvariant());
             _writer.WriteElementString("lastmod", lastUpdated.ToString(DateFormat));

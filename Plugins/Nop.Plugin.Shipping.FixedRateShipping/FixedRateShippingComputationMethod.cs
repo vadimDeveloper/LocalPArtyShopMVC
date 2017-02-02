@@ -35,7 +35,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
 
         private decimal GetRate(int shippingMethodId)
         {
-            string key = string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId);
+            var key = string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId);
             var rate = this._settingService.GetSettingByKey<decimal>(key);
             return rate;
         }
@@ -61,7 +61,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
                 return response;
             }
 
-            int? restrictByCountryId = (getShippingOptionRequest.ShippingAddress != null && getShippingOptionRequest.ShippingAddress.Country != null) ? (int?)getShippingOptionRequest.ShippingAddress.Country.Id : null;
+            var restrictByCountryId = (getShippingOptionRequest.ShippingAddress != null && getShippingOptionRequest.ShippingAddress.Country != null) ? (int?)getShippingOptionRequest.ShippingAddress.Country.Id : null;
             var shippingMethods = this._shippingService.GetAllShippingMethods(restrictByCountryId);
             foreach (var shippingMethod in shippingMethods)
             {
@@ -85,13 +85,13 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException("getShippingOptionRequest");
 
-            int? restrictByCountryId = (getShippingOptionRequest.ShippingAddress != null && getShippingOptionRequest.ShippingAddress.Country != null) ? (int?)getShippingOptionRequest.ShippingAddress.Country.Id : null;
+            var restrictByCountryId = (getShippingOptionRequest.ShippingAddress != null && getShippingOptionRequest.ShippingAddress.Country != null) ? (int?)getShippingOptionRequest.ShippingAddress.Country.Id : null;
             var shippingMethods = this._shippingService.GetAllShippingMethods(restrictByCountryId);
             
             var rates = new List<decimal>();
             foreach (var shippingMethod in shippingMethods)
             {
-                decimal rate = GetRate(shippingMethod.Id);
+                var rate = GetRate(shippingMethod.Id);
                 if (!rates.Contains(rate))
                     rates.Add(rate);
             }

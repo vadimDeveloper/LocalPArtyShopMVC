@@ -44,13 +44,13 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService,
             IWebHelper webHelper)
 		{
-			this._localizationService = localizationService;
-            this._languageService = languageService;
-            this._currencyService = currencyService;
-            this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
-            this._permissionService = permissionService;
-            this._webHelper= webHelper;
+			_localizationService = localizationService;
+            _languageService = languageService;
+            _currencyService = currencyService;
+            _storeService = storeService;
+            _storeMappingService = storeMappingService;
+            _permissionService = permissionService;
+            _webHelper= webHelper;
 		}
 
 		#endregion 
@@ -61,7 +61,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareFlagsModel(LanguageModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
             
             model.FlagFileNames = Directory
                 .EnumerateFiles(_webHelper.MapPath("~/Content/Images/flags/"), "*.png", SearchOption.TopDirectoryOnly)
@@ -73,7 +73,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(LanguageModel model, Language language, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableStores = _storeService
                 .GetAllStores()
@@ -92,7 +92,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareCurrenciesModel(LanguageModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             //templates
             model.AvailableCurrencies.Add(new SelectListItem
@@ -227,7 +227,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             //set page timeout to 5 minutes
-            this.Server.ScriptTimeout = 300;
+            Server.ScriptTimeout = 300;
 
 		    var model = language.ToModel();
             //Stores
@@ -349,7 +349,7 @@ namespace Nop.Admin.Controllers
         //for some reasons it does not work with "filtering" support
         [AdminAntiForgery(true)] 
 		public ActionResult Resources(int languageId, DataSourceRequest command,
-            Nop.Web.Framework.Kendoui.Filter filter = null, IEnumerable<Sort> sort = null)
+            Web.Framework.Kendoui.Filter filter = null, IEnumerable<Sort> sort = null)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -498,7 +498,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             //set page timeout to 5 minutes
-            this.Server.ScriptTimeout = 300;
+            Server.ScriptTimeout = 300;
 
             try
             {
@@ -507,7 +507,7 @@ namespace Nop.Admin.Controllers
                 {
                     using (var sr = new StreamReader(file.InputStream, Encoding.UTF8))
                     {
-                        string content = sr.ReadToEnd();
+                        var content = sr.ReadToEnd();
                         _localizationService.ImportResourcesFromXml(language, content);
                     }
 

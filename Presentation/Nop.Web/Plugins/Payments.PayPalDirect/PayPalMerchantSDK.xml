@@ -2994,6 +2994,11 @@
             
             </summary>
         </member>
+        <member name="F:PayPal.PayPalAPIInterfaceService.Model.BuyerDetailType.buyerIPAddressField">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:PayPal.PayPalAPIInterfaceService.Model.BuyerDetailType.#ctor">
             <summary>
             Default Constructor
@@ -4045,6 +4050,11 @@
             
             </summary>
         </member>
+        <member name="F:PayPal.PayPalAPIInterfaceService.Model.BAUpdateResponseDetailsType.payeeInfoField">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:PayPal.PayPalAPIInterfaceService.Model.BAUpdateResponseDetailsType.#ctor">
             <summary>
             Default Constructor
@@ -4435,6 +4445,26 @@
             </summary>
         </member>
         <member name="M:PayPal.PayPalAPIInterfaceService.Model.PayerInfoType.#ctor">
+            <summary>
+            Default Constructor
+            </summary>
+        </member>
+        <member name="T:PayPal.PayPalAPIInterfaceService.Model.PayeeInfoType">
+            <summary>
+            PayeeInfoType Payee Information 
+            </summary>
+        </member>
+        <member name="F:PayPal.PayPalAPIInterfaceService.Model.PayeeInfoType.payeeEmailField">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:PayPal.PayPalAPIInterfaceService.Model.PayeeInfoType.payeeIDField">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:PayPal.PayPalAPIInterfaceService.Model.PayeeInfoType.#ctor">
             <summary>
             Default Constructor
             </summary>
@@ -5752,6 +5782,16 @@
             
             </summary>
         </member>
+        <member name="F:PayPal.PayPalAPIInterfaceService.Model.UserSelectedOptionType.scheduledShippingDateField">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:PayPal.PayPalAPIInterfaceService.Model.UserSelectedOptionType.scheduledShippingPeriodField">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:PayPal.PayPalAPIInterfaceService.Model.UserSelectedOptionType.#ctor">
             <summary>
             Default Constructor
@@ -5990,6 +6030,11 @@
             
             </summary>
         </member>
+        <member name="F:PayPal.PayPalAPIInterfaceService.Model.DoReferenceTransactionRequestDetailsType.riskSessionCorrelationIDField">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="F:PayPal.PayPalAPIInterfaceService.Model.DoReferenceTransactionRequestDetailsType.merchantSessionIdField">
             <summary>
             
@@ -6071,6 +6116,11 @@
             </summary>
         </member>
         <member name="F:PayPal.PayPalAPIInterfaceService.Model.DoReferenceTransactionResponseDetailsType.msgSubIDField">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:PayPal.PayPalAPIInterfaceService.Model.DoReferenceTransactionResponseDetailsType.pendingReasonField">
             <summary>
             
             </summary>
@@ -6915,6 +6965,11 @@
             </summary>
         </member>
         <member name="F:PayPal.PayPalAPIInterfaceService.Model.CreateRecurringPaymentsProfileResponseDetailsType.dCCReturnCodeField">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:PayPal.PayPalAPIInterfaceService.Model.CreateRecurringPaymentsProfileResponseDetailsType.pendingReasonField">
             <summary>
             
             </summary>
@@ -8253,20 +8308,15 @@
         </member>
         <member name="T:PayPal.PayPalAPIInterfaceService.Model.EnhancedPaymentDataType">
             <summary>
+            Enhanced data for different transactions. 
+            </summary>
+        </member>
+        <member name="F:PayPal.PayPalAPIInterfaceService.Model.EnhancedPaymentDataType.airlineItineraryField">
+            <summary>
             
             </summary>
         </member>
         <member name="M:PayPal.PayPalAPIInterfaceService.Model.EnhancedPaymentDataType.#ctor">
-            <summary>
-            Default Constructor
-            </summary>
-        </member>
-        <member name="T:PayPal.PayPalAPIInterfaceService.Model.EnhancedItemDataType">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:PayPal.PayPalAPIInterfaceService.Model.EnhancedItemDataType.#ctor">
             <summary>
             Default Constructor
             </summary>
@@ -8277,6 +8327,16 @@
             </summary>
         </member>
         <member name="M:PayPal.PayPalAPIInterfaceService.Model.EnhancedPaymentInfoType.#ctor">
+            <summary>
+            Default Constructor
+            </summary>
+        </member>
+        <member name="T:PayPal.PayPalAPIInterfaceService.Model.EnhancedItemDataType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:PayPal.PayPalAPIInterfaceService.Model.EnhancedItemDataType.#ctor">
             <summary>
             Default Constructor
             </summary>
@@ -9132,6 +9192,16 @@
             
             </summary>
         </member>
+        <member name="F:PayPal.PayPalAPIInterfaceService.Model.RefundTransactionRequestType.shippingAmountField">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:PayPal.PayPalAPIInterfaceService.Model.RefundTransactionRequestType.taxAmountField">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="F:PayPal.PayPalAPIInterfaceService.Model.RefundTransactionRequestType.memoField">
             <summary>
             
@@ -9163,6 +9233,11 @@
             </summary>
         </member>
         <member name="F:PayPal.PayPalAPIInterfaceService.Model.RefundTransactionRequestType.msgSubIDField">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:PayPal.PayPalAPIInterfaceService.Model.RefundTransactionRequestType.merchantDataField">
             <summary>
             
             </summary>
@@ -10654,6 +10729,11 @@
             </summary>
         </member>
         <member name="F:PayPal.PayPalAPIInterfaceService.Model.DoDirectPaymentResponseType.transactionIDField">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:PayPal.PayPalAPIInterfaceService.Model.DoDirectPaymentResponseType.transactionPendingReasonField">
             <summary>
             
             </summary>

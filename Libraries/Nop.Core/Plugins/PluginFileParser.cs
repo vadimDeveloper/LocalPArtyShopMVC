@@ -40,7 +40,7 @@ namespace Nop.Core.Plugins
 
         public static void SaveInstalledPluginsFile(IList<String> pluginSystemNames, string filePath)
         {
-            string result = "";
+            var result = "";
             foreach (var sn in pluginSystemNames)
                 result += string.Format("{0}{1}", sn, Environment.NewLine);
 
@@ -76,8 +76,8 @@ namespace Nop.Core.Plugins
                 {
                     continue;
                 }
-                string key = setting.Substring(0, separatorIndex).Trim();
-                string value = setting.Substring(separatorIndex + 1).Trim();
+                var key = setting.Substring(0, separatorIndex).Trim();
+                var value = setting.Substring(separatorIndex + 1).Trim();
 
                 switch (key)
                 {
@@ -169,7 +169,7 @@ namespace Nop.Core.Plugins
             }
 
             var sb = new StringBuilder();
-            for (int i = 0; i < keyValues.Count; i++)
+            for (var i = 0; i < keyValues.Count; i++)
             {
                 var key = keyValues[i].Key;
                 var value = keyValues[i].Value;

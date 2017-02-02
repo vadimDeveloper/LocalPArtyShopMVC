@@ -67,22 +67,22 @@ namespace Nop.Admin.Controllers
             IOrderService orderService,
             IPriceFormatter priceFormatter)
         {
-            this._discountService = discountService;
-            this._localizationService = localizationService;
-            this._currencyService = currencyService;
-            this._categoryService = categoryService;
-            this._productService = productService;
-            this._webHelper = webHelper;
-            this._dateTimeHelper = dateTimeHelper;
-            this._customerActivityService = customerActivityService;
-            this._currencySettings = currencySettings;
-            this._permissionService = permissionService;
-            this._workContext = workContext;
-            this._manufacturerService = manufacturerService;
-            this._storeService = storeService;
-            this._vendorService = vendorService;
-            this._orderService = orderService;
-            this._priceFormatter = priceFormatter;
+            _discountService = discountService;
+            _localizationService = localizationService;
+            _currencyService = currencyService;
+            _categoryService = categoryService;
+            _productService = productService;
+            _webHelper = webHelper;
+            _dateTimeHelper = dateTimeHelper;
+            _customerActivityService = customerActivityService;
+            _currencySettings = currencySettings;
+            _permissionService = permissionService;
+            _workContext = workContext;
+            _manufacturerService = manufacturerService;
+            _storeService = storeService;
+            _vendorService = vendorService;
+            _orderService = orderService;
+            _priceFormatter = priceFormatter;
         }
 
         #endregion
@@ -93,12 +93,12 @@ namespace Nop.Admin.Controllers
         protected virtual string GetRequirementUrlInternal(IDiscountRequirementRule discountRequirementRule, Discount discount, int? discountRequirementId)
         {   
             if (discountRequirementRule == null)
-                throw new ArgumentNullException("discountRequirementRule");
+                throw new ArgumentNullException(nameof(discountRequirementRule));
 
             if (discount == null)
-                throw new ArgumentNullException("discount");
+                throw new ArgumentNullException(nameof(discount));
 
-            string url = string.Format("{0}{1}", _webHelper.GetStoreLocation(), discountRequirementRule.GetConfigurationUrl(discount.Id, discountRequirementId));
+            var url = string.Format("{0}{1}", _webHelper.GetStoreLocation(), discountRequirementRule.GetConfigurationUrl(discount.Id, discountRequirementId));
             return url;
         }
         
@@ -106,7 +106,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareDiscountModel(DiscountModel model, Discount discount)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.AvailableDiscountRequirementRules.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Promotions.Discounts.Requirements.DiscountRequirementType.Select"), Value = "" });
@@ -339,8 +339,8 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
-            if (String.IsNullOrEmpty(systemName))
-                throw new ArgumentNullException("systemName");
+            if (string.IsNullOrEmpty(systemName))
+                throw new ArgumentNullException(nameof(systemName));
             
             var discountRequirementRule = _discountService.LoadDiscountRequirementRuleBySystemName(systemName);
             if (discountRequirementRule == null)
@@ -350,7 +350,7 @@ namespace Nop.Admin.Controllers
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
 
-            string url = GetRequirementUrlInternal(discountRequirementRule, discount, discountRequirementId);
+            var url = GetRequirementUrlInternal(discountRequirementRule, discount, discountRequirementId);
             return Json(new { url = url }, JsonRequestBehavior.AllowGet);
         }
 
@@ -371,8 +371,8 @@ namespace Nop.Admin.Controllers
             if (discountRequirementRule == null)
                 throw new ArgumentException("Discount requirement rule could not be loaded");
 
-            string url = GetRequirementUrlInternal(discountRequirementRule, discount, discountRequirementId);
-            string ruleName = discountRequirementRule.PluginDescriptor.FriendlyName;
+            var url = GetRequirementUrlInternal(discountRequirementRule, discount, discountRequirementId);
+            var ruleName = discountRequirementRule.PluginDescriptor.FriendlyName;
             return Json(new { url = url, ruleName = ruleName }, JsonRequestBehavior.AllowGet);
         }
 
@@ -520,7 +520,7 @@ namespace Nop.Admin.Controllers
 
             if (model.SelectedProductIds != null)
             {
-                foreach (int id in model.SelectedProductIds)
+                foreach (var id in model.SelectedProductIds)
                 {
                     var product = _productService.GetProductById(id);
                     if (product != null)
@@ -637,7 +637,7 @@ namespace Nop.Admin.Controllers
 
             if (model.SelectedCategoryIds != null)
             {
-                foreach (int id in model.SelectedCategoryIds)
+                foreach (var id in model.SelectedCategoryIds)
                 {
                     var category = _categoryService.GetCategoryById(id);
                     if (category != null)
@@ -748,7 +748,7 @@ namespace Nop.Admin.Controllers
 
             if (model.SelectedManufacturerIds != null)
             {
-                foreach (int id in model.SelectedManufacturerIds)
+                foreach (var id in model.SelectedManufacturerIds)
                 {
                     var manufacturer = _manufacturerService.GetManufacturerById(id);
                     if (manufacturer != null)

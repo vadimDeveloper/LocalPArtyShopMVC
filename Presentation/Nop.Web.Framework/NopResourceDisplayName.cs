@@ -35,9 +35,6 @@ namespace Nop.Web.Framework
             }
         }
 
-        public string Name
-        {
-            get { return "NopResourceDisplayName"; }
-        }
+        public string Name => "NopResourceDisplayName";
     }
 }

@@ -35,13 +35,8 @@ namespace Nop.Web.Framework
                 //ty to determine the current store by HTTP_HOST
                 var host = _webHelper.ServerVariables("HTTP_HOST");
                 var allStores = _storeService.GetAllStores();
-                var store = allStores.FirstOrDefault(s => s.ContainsHostValue(host));
+                var store = allStores.FirstOrDefault(s => s.ContainsHostValue(host)) ?? allStores.FirstOrDefault();
 
-                if (store == null)
-                {
-                    //load the first found store
-                    store = allStores.FirstOrDefault();
-                }
                 if (store == null)
                     throw new Exception("No store could be loaded");
 

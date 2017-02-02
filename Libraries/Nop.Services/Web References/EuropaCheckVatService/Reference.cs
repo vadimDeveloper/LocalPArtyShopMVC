@@ -81,7 +81,7 @@ namespace Nop.Services.EuropaCheckVatService {
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="urn:ec.europa.eu:taxud:vies:services:checkVat:types", ResponseNamespace="urn:ec.europa.eu:taxud:vies:services:checkVat:types", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("requestDate", DataType="date")]
         public System.DateTime checkVat(ref string countryCode, ref string vatNumber, out bool valid, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] out string name, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] out string address) {
-            object[] results = this.Invoke("checkVat", new object[] {
+            var results = this.Invoke("checkVat", new object[] {
                         countryCode,
                         vatNumber});
             countryCode = ((string)(results[1]));
@@ -109,7 +109,7 @@ namespace Nop.Services.EuropaCheckVatService {
         
         private void OncheckVatOperationCompleted(object arg) {
             if ((this.checkVatCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.checkVatCompleted(this, new checkVatCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -140,7 +140,7 @@ namespace Nop.Services.EuropaCheckVatService {
                     out matchCode traderCityMatch, 
                     [System.Xml.Serialization.XmlIgnoreAttribute()] out bool traderCityMatchSpecified, 
                     out string requestIdentifier) {
-            object[] results = this.Invoke("checkVatApprox", new object[] {
+            var results = this.Invoke("checkVatApprox", new object[] {
                         countryCode,
                         vatNumber,
                         traderName,
@@ -197,7 +197,7 @@ namespace Nop.Services.EuropaCheckVatService {
         
         private void OncheckVatApproxOperationCompleted(object arg) {
             if ((this.checkVatApproxCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.checkVatApproxCompleted(this, new checkVatApproxCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -212,7 +212,7 @@ namespace Nop.Services.EuropaCheckVatService {
                         || (url == string.Empty))) {
                 return false;
             }
-            System.Uri wsUri = new System.Uri(url);
+            var wsUri = new System.Uri(url);
             if (((wsUri.Port >= 1024) 
                         && (string.Compare(wsUri.Host, "localHost", System.StringComparison.OrdinalIgnoreCase) == 0))) {
                 return true;

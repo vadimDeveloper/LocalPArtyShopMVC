@@ -86,8 +86,8 @@ namespace Nop.Web.Framework.Themes
 
             string[] searched;
             var theme = GetCurrentTheme();
-            string controllerName = controllerContext.RouteData.GetRequiredString("controller");
-            string partialPath = GetPath(controllerContext, PartialViewLocationFormats, AreaPartialViewLocationFormats, "PartialViewLocationFormats", partialViewName, controllerName, theme, CacheKeyPrefixPartial, useCache, out searched);
+            var controllerName = controllerContext.RouteData.GetRequiredString("controller");
+            var partialPath = GetPath(controllerContext, PartialViewLocationFormats, AreaPartialViewLocationFormats, "PartialViewLocationFormats", partialViewName, controllerName, theme, CacheKeyPrefixPartial, useCache, out searched);
 
             if (String.IsNullOrEmpty(partialPath))
             {
@@ -112,9 +112,9 @@ namespace Nop.Web.Framework.Themes
             string[] masterLocationsSearched;
 
             var theme = GetCurrentTheme();
-            string controllerName = controllerContext.RouteData.GetRequiredString("controller");
-            string viewPath = GetPath(controllerContext, ViewLocationFormats, AreaViewLocationFormats, "ViewLocationFormats", viewName, controllerName, theme, CacheKeyPrefixView, useCache, out viewLocationsSearched);
-            string masterPath = GetPath(controllerContext, MasterLocationFormats, AreaMasterLocationFormats, "MasterLocationFormats", masterName, controllerName, theme, CacheKeyPrefixMaster, useCache, out masterLocationsSearched);
+            var controllerName = controllerContext.RouteData.GetRequiredString("controller");
+            var viewPath = GetPath(controllerContext, ViewLocationFormats, AreaViewLocationFormats, "ViewLocationFormats", viewName, controllerName, theme, CacheKeyPrefixView, useCache, out viewLocationsSearched);
+            var masterPath = GetPath(controllerContext, MasterLocationFormats, AreaMasterLocationFormats, "MasterLocationFormats", masterName, controllerName, theme, CacheKeyPrefixMaster, useCache, out masterLocationsSearched);
 
             if (String.IsNullOrEmpty(viewPath) || (String.IsNullOrEmpty(masterPath) && !String.IsNullOrEmpty(masterName)))
             {
@@ -133,7 +133,7 @@ namespace Nop.Web.Framework.Themes
                 return String.Empty;
             }
 
-            string areaName = GetAreaName(controllerContext.RouteData);
+            var areaName = GetAreaName(controllerContext.RouteData);
 
             //little hack to get nop's admin area to be in /Administration/ instead of /Nop/Admin/ or Areas/Admin/
             if (!string.IsNullOrEmpty(areaName) && areaName.Equals("admin", StringComparison.InvariantCultureIgnoreCase))
@@ -144,24 +144,24 @@ namespace Nop.Web.Framework.Themes
                 areaLocations = newLocations.ToArray();
             }
 
-            bool usingAreas = !String.IsNullOrEmpty(areaName);
-            List<ViewLocation> viewLocations = GetViewLocations(locations, (usingAreas) ? areaLocations : null);
+            var usingAreas = !String.IsNullOrEmpty(areaName);
+            var viewLocations = GetViewLocations(locations, (usingAreas) ? areaLocations : null);
 
             if (viewLocations.Count == 0)
             {
                 throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "Properties cannot be null or empty - {0}", locationsPropertyName));
             }
 
-            bool nameRepresentsPath = IsSpecificPath(name);
-            string cacheKey = CreateCacheKey(cacheKeyPrefix, name, (nameRepresentsPath) ? String.Empty : controllerName, areaName, theme);
+            var nameRepresentsPath = IsSpecificPath(name);
+            var cacheKey = CreateCacheKey(cacheKeyPrefix, name, (nameRepresentsPath) ? String.Empty : controllerName, areaName, theme);
 
             if (useCache)
             {
                 // Only look at cached display modes that can handle the context.
-                IEnumerable<IDisplayMode> possibleDisplayModes = DisplayModeProvider.GetAvailableDisplayModesForContext(controllerContext.HttpContext, controllerContext.DisplayMode);
-                foreach (IDisplayMode displayMode in possibleDisplayModes)
+                var possibleDisplayModes = DisplayModeProvider.GetAvailableDisplayModesForContext(controllerContext.HttpContext, controllerContext.DisplayMode);
+                foreach (var displayMode in possibleDisplayModes)
                 {
-                    string cachedLocation = ViewLocationCache.GetViewLocation(controllerContext.HttpContext, AppendDisplayModeToCacheKey(cacheKey, displayMode.DisplayModeId));
+                    var cachedLocation = ViewLocationCache.GetViewLocation(controllerContext.HttpContext, AppendDisplayModeToCacheKey(cacheKey, displayMode.DisplayModeId));
 
                     if (cachedLocation == null)
                     {
@@ -195,18 +195,18 @@ namespace Nop.Web.Framework.Themes
 
         protected virtual string GetPathFromGeneralName(ControllerContext controllerContext, List<ViewLocation> locations, string name, string controllerName, string areaName, string theme, string cacheKey, ref string[] searchedLocations)
         {
-            string result = String.Empty;
+            var result = String.Empty;
             searchedLocations = new string[locations.Count];
 
-            for (int i = 0; i < locations.Count; i++)
+            for (var i = 0; i < locations.Count; i++)
             {
-                ViewLocation location = locations[i];
-                string virtualPath = location.Format(name, controllerName, areaName, theme);
-                DisplayInfo virtualPathDisplayInfo = DisplayModeProvider.GetDisplayInfoForVirtualPath(virtualPath, controllerContext.HttpContext, path => FileExists(controllerContext, path), controllerContext.DisplayMode);
+                var location = locations[i];
+                var virtualPath = location.Format(name, controllerName, areaName, theme);
+                var virtualPathDisplayInfo = DisplayModeProvider.GetDisplayInfoForVirtualPath(virtualPath, controllerContext.HttpContext, path => FileExists(controllerContext, path), controllerContext.DisplayMode);
 
                 if (virtualPathDisplayInfo != null)
                 {
-                    string resolvedVirtualPath = virtualPathDisplayInfo.FilePath;
+                    var resolvedVirtualPath = virtualPathDisplayInfo.FilePath;
 
                     searchedLocations = _emptyLocations;
                     result = resolvedVirtualPath;
@@ -220,13 +220,13 @@ namespace Nop.Web.Framework.Themes
                     // Populate the cache for all other display modes. We want to cache both file system hits and misses so that we can distinguish
                     // in future requests whether a file's status was evicted from the cache (null value) or if the file doesn't exist (empty string).
                     IEnumerable<IDisplayMode> allDisplayModes = DisplayModeProvider.Modes;
-                    foreach (IDisplayMode displayMode in allDisplayModes)
+                    foreach (var displayMode in allDisplayModes)
                     {
                         if (displayMode.DisplayModeId != virtualPathDisplayInfo.DisplayMode.DisplayModeId)
                         {
-                            DisplayInfo displayInfoToCache = displayMode.GetDisplayInfo(controllerContext.HttpContext, virtualPath, virtualPathExists: path => FileExists(controllerContext, path));
+                            var displayInfoToCache = displayMode.GetDisplayInfo(controllerContext.HttpContext, virtualPath, virtualPathExists: path => FileExists(controllerContext, path));
 
-                            string cacheValue = String.Empty;
+                            var cacheValue = String.Empty;
                             if (displayInfoToCache != null && displayInfoToCache.FilePath != null)
                             {
                                 cacheValue = displayInfoToCache.FilePath;
@@ -245,7 +245,7 @@ namespace Nop.Web.Framework.Themes
 
         protected virtual string GetPathFromSpecificName(ControllerContext controllerContext, string name, string cacheKey, ref string[] searchedLocations)
         {
-            string result = name;
+            var result = name;
 
             if (!(FilePathIsSupported(name) && FileExists(controllerContext, name)))
             {
@@ -267,18 +267,18 @@ namespace Nop.Web.Framework.Themes
             else
             {
                 // get rid of the '.' because the FileExtensions property expects extensions withouth a dot.
-                string extension = GetExtensionThunk(virtualPath).TrimStart('.');
+                var extension = GetExtensionThunk(virtualPath).TrimStart('.');
                 return FileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase);
             }
         }
 
         protected virtual List<ViewLocation> GetViewLocations(string[] viewLocationFormats, string[] areaViewLocationFormats)
         {
-            List<ViewLocation> allLocations = new List<ViewLocation>();
+            var allLocations = new List<ViewLocation>();
 
             if (areaViewLocationFormats != null)
             {
-                foreach (string areaViewLocationFormat in areaViewLocationFormats)
+                foreach (var areaViewLocationFormat in areaViewLocationFormats)
                 {
                     allLocations.Add(new AreaAwareViewLocation(areaViewLocationFormat));
                 }
@@ -286,7 +286,7 @@ namespace Nop.Web.Framework.Themes
 
             if (viewLocationFormats != null)
             {
-                foreach (string viewLocationFormat in viewLocationFormats)
+                foreach (var viewLocationFormat in viewLocationFormats)
                 {
                     allLocations.Add(new ViewLocation(viewLocationFormat));
                 }
@@ -297,7 +297,7 @@ namespace Nop.Web.Framework.Themes
 
         protected virtual bool IsSpecificPath(string name)
         {
-            char c = name[0];
+            var c = name[0];
             return (c == '~' || c == '/');
         }
 

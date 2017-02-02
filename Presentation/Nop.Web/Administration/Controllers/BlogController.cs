@@ -42,14 +42,14 @@ namespace Nop.Admin.Controllers
             IUrlRecordService urlRecordService,
             IStoreService storeService, IStoreMappingService storeMappingService)
         {
-            this._blogService = blogService;
-            this._languageService = languageService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._urlRecordService = urlRecordService;
-            this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
+            _blogService = blogService;
+            _languageService = languageService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _urlRecordService = urlRecordService;
+            _storeService = storeService;
+            _storeMappingService = storeMappingService;
 		}
 
 		#endregion 
@@ -60,18 +60,17 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(BlogPostModel model, BlogPost blogPost, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableStores = _storeService
                 .GetAllStores()
                 .Select(s => s.ToModel())
                 .ToList();
-            if (!excludeProperties)
+            if (excludeProperties) return;
+
+            if (blogPost != null)
             {
-                if (blogPost != null)
-                {
-                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(blogPost);
-                }
+                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(blogPost);
             }
         }
 
@@ -108,11 +107,8 @@ namespace Nop.Admin.Controllers
         }
 
 		public ActionResult List()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
-                return AccessDeniedView();
-
-			return View();
+		{
+		    return !_permissionService.Authorize(StandardPermissionProvider.ManageBlog) ? AccessDeniedView() : View();
 		}
 
 		[HttpPost]
@@ -235,14 +231,12 @@ namespace Nop.Admin.Controllers
                 SaveStoreMappings(blogPost, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Updated"));
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabIndex();
+                if (!continueEditing) return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new {id = blogPost.Id});
-                }
-                return RedirectToAction("List");
+                //selected tab
+                SaveSelectedTabIndex();
+
+                return RedirectToAction("Edit", new {id = blogPost.Id});
             }
 
             //If we got this far, something failed, redisplay form
@@ -305,11 +299,13 @@ namespace Nop.Admin.Controllers
             {
                 Data = comments.PagedForCommand(command).Select(blogComment =>
                 {
-                    var commentModel = new BlogCommentModel();
-                    commentModel.Id = blogComment.Id;
-                    commentModel.BlogPostId = blogComment.BlogPostId;
-                    commentModel.BlogPostTitle = blogComment.BlogPost.Title;
-                    commentModel.CustomerId = blogComment.CustomerId;
+                    var commentModel = new BlogCommentModel
+                    {
+                        Id = blogComment.Id,
+                        BlogPostId = blogComment.BlogPostId,
+                        BlogPostTitle = blogComment.BlogPost.Title,
+                        CustomerId = blogComment.CustomerId
+                    };
                     var customer = blogComment.Customer;
                     commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);
@@ -345,17 +341,16 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
+            if (selectedIds == null) return Json(new {Result = true});
+
+            var comments = _blogService.GetBlogCommentsByIds(selectedIds.ToArray());
+            foreach (var comment in comments)
             {
-                var comments = _blogService.GetBlogCommentsByIds(selectedIds.ToArray());
-                foreach (var comment in comments)
-                {
-                    var blogPost = comment.BlogPost;
-                    _blogService.DeleteBlogComment(comment);
-                    //update totals
-                    blogPost.CommentCount = blogPost.BlogComments.Count;
-                    _blogService.UpdateBlogPost(blogPost);
-                }
+                var blogPost = comment.BlogPost;
+                _blogService.DeleteBlogComment(comment);
+                //update totals
+                blogPost.CommentCount = blogPost.BlogComments.Count;
+                _blogService.UpdateBlogPost(blogPost);
             }
 
             return Json(new { Result = true });

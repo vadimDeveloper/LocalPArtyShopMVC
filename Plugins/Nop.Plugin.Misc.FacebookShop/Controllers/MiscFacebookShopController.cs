@@ -105,7 +105,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                 };
 
                 //load subcategories?
-                bool loadSubCategories = false;
+                var loadSubCategories = false;
                 if (loadSubCategoriesForIds == null)
                 {
                     //load all subcategories
@@ -114,7 +114,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                 else
                 {
                     //we load subcategories only for certain categories
-                    for (int i = 0; i <= loadSubCategoriesForIds.Count - 1; i++)
+                    for (var i = 0; i <= loadSubCategoriesForIds.Count - 1; i++)
                     {
                         if (loadSubCategoriesForIds[i] == category.Id)
                         {
@@ -216,8 +216,8 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                                                     {
                                                         //calculate prices
                                                         decimal taxRate;
-                                                        decimal finalPriceBase = _taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, out taxRate);
-                                                        decimal finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
+                                                        var finalPriceBase = _taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, out taxRate);
+                                                        var finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
 
                                                         priceModel.OldPrice = null;
                                                         priceModel.Price = String.Format(_localizationService.GetResource("Products.PriceRangeFrom"), _priceFormatter.FormatPrice(finalPrice));
@@ -286,15 +286,15 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                                             //prices
 
                                             //calculate for the maximum quantity (in case if we have tier prices)
-                                            decimal minPossiblePrice = _priceCalculationService.GetFinalPrice(product,
+                                            var minPossiblePrice = _priceCalculationService.GetFinalPrice(product,
                                                 _workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
 
                                             decimal taxRate;
-                                            decimal oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out taxRate);
-                                            decimal finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
+                                            var oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out taxRate);
+                                            var finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
 
-                                            decimal oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
-                                            decimal finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
+                                            var oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
+                                            var finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
 
                                             //do we have tier prices configured?
                                             var tierPrices = new List<TierPrice>();
@@ -309,7 +309,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                                             }
                                             //When there is just one tier (with  qty 1), 
                                             //there are no actual savings in the list.
-                                            bool displayFromMessage = tierPrices.Count > 0 &&
+                                            var displayFromMessage = tierPrices.Count > 0 &&
                                                 !(tierPrices.Count == 1 && tierPrices[0].Quantity <= 1);
                                             if (displayFromMessage)
                                             {
@@ -361,7 +361,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                     #region Prepare product picture
 
                     //If a size has been set in the view, we use it in priority
-                    int pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : 125;
+                    var pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : 125;
                     //prepare picture model
                     var picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
                     model.DefaultPictureModel = new PictureModel
@@ -414,7 +414,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
 
         public ActionResult CategoryNavigation()
         {
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, 
+            var cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, 
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -473,7 +473,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                     };
 
                     //prepare picture model
-                    int pictureSize = 125;
+                    var pictureSize = 125;
                     var picture = _pictureService.GetPictureById(x.PictureId);
                     subCatModel.PictureModel = new PictureModel
                         {

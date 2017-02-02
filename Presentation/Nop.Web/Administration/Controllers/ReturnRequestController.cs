@@ -48,16 +48,16 @@ namespace Nop.Admin.Controllers
             ICustomerActivityService customerActivityService, 
             IPermissionService permissionService)
         {
-            this._returnRequestService = returnRequestService;
-            this._orderService = orderService;
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
-            this._customerActivityService = customerActivityService;
-            this._permissionService = permissionService;
+            _returnRequestService = returnRequestService;
+            _orderService = orderService;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _customerActivityService = customerActivityService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -69,10 +69,10 @@ namespace Nop.Admin.Controllers
             ReturnRequest returnRequest, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (returnRequest == null)
-                throw new ArgumentNullException("returnRequest");
+                throw new ArgumentNullException(nameof(returnRequest));
 
             var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
             if (orderItem == null)
@@ -207,7 +207,7 @@ namespace Nop.Admin.Controllers
 
             //var customer = returnRequest.Customer;
             var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
-            int queuedEmailId = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, _localizationSettings.DefaultAdminLanguageId);
+            var queuedEmailId = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, _localizationSettings.DefaultAdminLanguageId);
             if (queuedEmailId > 0)
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Notified"));
             return RedirectToAction("Edit",  new {id = returnRequest.Id});

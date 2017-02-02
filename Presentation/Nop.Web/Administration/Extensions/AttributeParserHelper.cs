@@ -16,22 +16,22 @@ namespace Nop.Admin.Extensions
             IAddressAttributeService addressAttributeService)
         {
             if (form == null)
-                throw new ArgumentNullException("form");
+                throw new ArgumentNullException(nameof(form));
 
-            string attributesXml = "";
+            var attributesXml = "";
             var attributes = addressAttributeService.GetAllAddressAttributes();
             foreach (var attribute in attributes)
             {
-                string controlId = string.Format("address_attribute_{0}", attribute.Id);
+                var controlId = $"address_attribute_{attribute.Id}";
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
                     case AttributeControlType.RadioList:
                         {
                             var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
-                                int selectedAttributeId = int.Parse(ctrlAttributes);
+                                var selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
                                     attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
@@ -41,39 +41,26 @@ namespace Nop.Admin.Extensions
                     case AttributeControlType.Checkboxes:
                         {
                             var cblAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(cblAttributes))
+                            if (!string.IsNullOrEmpty(cblAttributes))
                             {
-                                foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                                {
-                                    int selectedAttributeId = int.Parse(item);
-                                    if (selectedAttributeId > 0)
-                                        attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
-                                }
+                                attributesXml = cblAttributes.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(item => int.Parse(item)).Where(selectedAttributeId => selectedAttributeId > 0).Aggregate(attributesXml, (current, selectedAttributeId) => addressAttributeParser.AddAddressAttribute(current, attribute, selectedAttributeId.ToString()));
                             }
                         }
                         break;
                     case AttributeControlType.ReadonlyCheckboxes:
-                        {
-                            //load read-only (already server-side selected) values
+                    {
+                        //load read-only (already server-side selected) values
                             var attributeValues = addressAttributeService.GetAddressAttributeValues(attribute.Id);
-                            foreach (var selectedAttributeId in attributeValues
-                                .Where(v => v.IsPreSelected)
-                                .Select(v => v.Id)
-                                .ToList())
-                            {
-                                attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
-                            }
-                        }
+                        attributesXml = attributeValues.Where(v => v.IsPreSelected).Select(v => v.Id).ToList().Aggregate(attributesXml, (current, selectedAttributeId) => addressAttributeParser.AddAddressAttribute(current, attribute, selectedAttributeId.ToString()));
+                    }
                         break;
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                         {
                             var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
-                                string enteredText = ctrlAttributes.Trim();
+                                var enteredText = ctrlAttributes.Trim();
                                 attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
                                     attribute, enteredText);
                             }

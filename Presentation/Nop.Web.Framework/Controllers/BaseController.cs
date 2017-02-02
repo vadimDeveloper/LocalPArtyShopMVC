@@ -64,7 +64,7 @@ namespace Nop.Web.Framework.Controllers
 
             using (var sw = new StringWriter())
             {
-                ViewEngineResult viewResult = System.Web.Mvc.ViewEngines.Engines.FindPartialView(this.ControllerContext, viewName);
+                var viewResult = System.Web.Mvc.ViewEngines.Engines.FindPartialView(this.ControllerContext, viewName);
                 var viewContext = new ViewContext(this.ControllerContext, viewResult.View, this.ViewData, this.TempData, sw);
                 viewResult.View.Render(viewContext, sw);
 
@@ -142,7 +142,7 @@ namespace Nop.Web.Framework.Controllers
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
         protected virtual void AddNotification(NotifyType type, string message, bool persistForTheNextRequest)
         {
-            string dataKey = string.Format("nop.notifications.{0}", type);
+            var dataKey = string.Format("nop.notifications.{0}", type);
             if (persistForTheNextRequest)
             {
                 if (TempData[dataKey] == null)

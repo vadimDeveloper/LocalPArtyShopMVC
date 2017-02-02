@@ -88,7 +88,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             //now PayPal requires user-agent. otherwise, we can get 403 error
             req.UserAgent = HttpContext.Current.Request.UserAgent;
 
-            string formContent = string.Format("cmd=_notify-synch&at={0}&tx={1}", _paypalStandardPaymentSettings.PdtToken, tx);
+            var formContent = string.Format("cmd=_notify-synch&at={0}&tx={1}", _paypalStandardPaymentSettings.PdtToken, tx);
             req.ContentLength = formContent.Length;
 
             using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))
@@ -99,9 +99,9 @@ namespace Nop.Plugin.Payments.PayPalStandard
 
             values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             bool firstLine = true, success = false;
-            foreach (string l in response.Split('\n'))
+            foreach (var l in response.Split('\n'))
             {
-                string line = l.Trim();
+                var line = l.Trim();
                 if (firstLine)
                 {
                     success = line.Equals("SUCCESS", StringComparison.OrdinalIgnoreCase);
@@ -109,7 +109,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 }
                 else
                 {
-                    int equalPox = line.IndexOf('=');
+                    var equalPox = line.IndexOf('=');
                     if (equalPox >= 0)
                         values.Add(line.Substring(0, equalPox), line.Substring(equalPox + 1));
                 }
@@ -132,7 +132,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             //now PayPal requires user-agent. otherwise, we can get 403 error
             req.UserAgent = HttpContext.Current.Request.UserAgent;
 
-            string formContent = string.Format("{0}&cmd=_notify-validate", formString);
+            var formContent = string.Format("{0}&cmd=_notify-validate", formString);
             req.ContentLength = formContent.Length;
 
             using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))
@@ -145,13 +145,13 @@ namespace Nop.Plugin.Payments.PayPalStandard
             {
                 response = HttpUtility.UrlDecode(sr.ReadToEnd());
             }
-            bool success = response.Trim().Equals("VERIFIED", StringComparison.OrdinalIgnoreCase);
+            var success = response.Trim().Equals("VERIFIED", StringComparison.OrdinalIgnoreCase);
 
             values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            foreach (string l in formString.Split('&'))
+            foreach (var l in formString.Split('&'))
             {
-                string line = l.Trim();
-                int equalPox = line.IndexOf('=');
+                var line = l.Trim();
+                var equalPox = line.IndexOf('=');
                 if (equalPox >= 0)
                     values.Add(line.Substring(0, equalPox), line.Substring(equalPox + 1));
             }
@@ -192,9 +192,9 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 builder.AppendFormat("&upload=1");
 
                 //get the items in the cart
-                decimal cartTotal = decimal.Zero;
+                var cartTotal = decimal.Zero;
                 var cartItems = postProcessPaymentRequest.Order.OrderItems;
-                int x = 1;
+                var x = 1;
                 foreach (var item in cartItems)
                 {
                     var unitPriceExclTax = item.UnitPriceExclTax;
@@ -277,7 +277,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                     /* Take the difference between what the order total is and what it should be and use that as the "discount".
                      * The difference equals the amount of the gift card and/or reward points used. 
                      */
-                    decimal discountTotal = cartTotal - postProcessPaymentRequest.Order.OrderTotal;
+                    var discountTotal = cartTotal - postProcessPaymentRequest.Order.OrderTotal;
                     discountTotal = Math.Round(discountTotal, 2);
                     //gift card or rewared point amount applied to cart in nopCommerce - shows in Paypal as "discount"
                     builder.AppendFormat("&discount_amount_cart={0}", discountTotal.ToString("0.00", CultureInfo.InvariantCulture));
@@ -301,8 +301,8 @@ namespace Nop.Plugin.Payments.PayPalStandard
             else
                 builder.AppendFormat("&no_shipping=1", new object[0]);
 
-            string returnUrl = _webHelper.GetStoreLocation(false) + "Plugins/PaymentPayPalStandard/PDTHandler";
-            string cancelReturnUrl = _webHelper.GetStoreLocation(false) + "Plugins/PaymentPayPalStandard/CancelOrder";
+            var returnUrl = _webHelper.GetStoreLocation(false) + "Plugins/PaymentPayPalStandard/PDTHandler";
+            var cancelReturnUrl = _webHelper.GetStoreLocation(false) + "Plugins/PaymentPayPalStandard/CancelOrder";
             builder.AppendFormat("&return={0}&cancel_return={1}", HttpUtility.UrlEncode(returnUrl), HttpUtility.UrlEncode(cancelReturnUrl));
             
             //Instant Payment Notification (server to server message)

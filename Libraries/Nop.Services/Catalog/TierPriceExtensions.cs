@@ -61,7 +61,7 @@ namespace Nop.Services.Catalog
                     if (customerRoles.Count == 0)
                         continue;
 
-                    bool roleIsFound = false;
+                    var roleIsFound = false;
                     foreach (var customerRole in customerRoles)
                         if (customerRole == tierPrice.CustomerRole)
                             roleIsFound = true;

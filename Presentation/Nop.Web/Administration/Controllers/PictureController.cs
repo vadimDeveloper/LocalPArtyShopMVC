@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Web;
 using System.Web.Mvc;
 using Nop.Services.Media;
 using Nop.Web.Framework.Security;
@@ -13,7 +12,7 @@ namespace Nop.Admin.Controllers
 
         public PictureController(IPictureService pictureService)
         {
-            this._pictureService = pictureService;
+            _pictureService = pictureService;
         }
 
         [HttpPost]
@@ -29,10 +28,10 @@ namespace Nop.Admin.Controllers
             Stream stream = null;
             var fileName = "";
             var contentType = "";
-            if (String.IsNullOrEmpty(Request["qqfile"]))
+            if (string.IsNullOrEmpty(Request["qqfile"]))
             {
                 // IE
-                HttpPostedFileBase httpPostedFile = Request.Files[0];
+                var httpPostedFile = Request.Files[0];
                 if (httpPostedFile == null)
                     throw new ArgumentException("No file uploaded");
                 stream = httpPostedFile.InputStream;
@@ -50,12 +49,12 @@ namespace Nop.Admin.Controllers
             stream.Read(fileBinary, 0, fileBinary.Length);
 
             var fileExtension = Path.GetExtension(fileName);
-            if (!String.IsNullOrEmpty(fileExtension))
+            if (!string.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
             //contentType is not always available 
             //that's why we manually update it here
             //http://www.sfsu.edu/training/mimetype.htm
-            if (String.IsNullOrEmpty(contentType))
+            if (string.IsNullOrEmpty(contentType))
             {
                 switch (fileExtension)
                 {

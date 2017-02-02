@@ -90,10 +90,10 @@ namespace Nop.Plugin.Shipping.UPS
             GetShippingOptionRequest getShippingOptionRequest, UPSCustomerClassification customerClassification,
             UPSPickupType pickupType, UPSPackagingType packagingType)
         {
-            string zipPostalCodeFrom = getShippingOptionRequest.ZipPostalCodeFrom;
-            string zipPostalCodeTo = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
-            string countryCodeFrom = getShippingOptionRequest.CountryFrom.TwoLetterIsoCode;
-            string countryCodeTo = getShippingOptionRequest.ShippingAddress.Country.TwoLetterIsoCode;
+            var zipPostalCodeFrom = getShippingOptionRequest.ZipPostalCodeFrom;
+            var zipPostalCodeTo = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
+            var countryCodeFrom = getShippingOptionRequest.CountryFrom.TwoLetterIsoCode;
+            var countryCodeTo = getShippingOptionRequest.ShippingAddress.Country.TwoLetterIsoCode;
 
             var sb = new StringBuilder();
             sb.Append("<?xml version='1.0'?>");
@@ -145,7 +145,7 @@ namespace Nop.Plugin.Shipping.UPS
             sb.Append("<Code>03</Code>");
             sb.Append("</Service>");
 
-            string currencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            var currencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
 
             //get subTotalWithoutDiscountBase, for use as insured value (when Settings.InsurePackage)
             //(note: prior versions used "with discount", but "without discount" better reflects true value to insure.)
@@ -222,10 +222,10 @@ namespace Nop.Plugin.Shipping.UPS
             decimal lengthTmp, widthTmp, heightTmp;
             _shippingService.GetDimensions(getShippingOptionRequest.Items, out widthTmp, out lengthTmp, out heightTmp);
 
-            int length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
-            int height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
-            int width = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
-            int weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetTotalWeight(getShippingOptionRequest), usedMeasureWeight);
+            var length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
+            var height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
+            var width = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
+            var weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetTotalWeight(getShippingOptionRequest), usedMeasureWeight);
             if (length < 1)
                 length = 1;
             if (height < 1)
@@ -240,13 +240,13 @@ namespace Nop.Plugin.Shipping.UPS
                 if (!_upsSettings.PassDimensions)
                     length = width = height = 0;
 
-                int insuranceAmount = _upsSettings.InsurePackage ? Convert.ToInt32(orderSubTotal) : 0;
+                var insuranceAmount = _upsSettings.InsurePackage ? Convert.ToInt32(orderSubTotal) : 0;
                 AppendPackageRequest(sb, packagingType, length, height, width, weight, insuranceAmount, currencyCode);
             }
             else
             {
-                int totalPackagesDims = 1;
-                int totalPackagesWeights = 1;
+                var totalPackagesDims = 1;
+                var totalPackagesWeights = 1;
                 if (IsPackageTooHeavy(weight))
                 {
                     totalPackagesWeights = Convert.ToInt32(Math.Ceiling((decimal)weight / (decimal)MAXPACKAGEWEIGHT));
@@ -259,10 +259,10 @@ namespace Nop.Plugin.Shipping.UPS
                 if (totalPackages == 0)
                     totalPackages = 1;
 
-                int weight2 = weight / totalPackages;
-                int height2 = height / totalPackages;
-                int width2 = width / totalPackages;
-                int length2 = length / totalPackages;
+                var weight2 = weight / totalPackages;
+                var height2 = height / totalPackages;
+                var width2 = width / totalPackages;
+                var length2 = length / totalPackages;
                 if (weight2 < 1)
                     weight2 = 1;
                 if (height2 < 1)
@@ -276,9 +276,9 @@ namespace Nop.Plugin.Shipping.UPS
                     length2 = width2 = height2 = 0;
 
                 //The maximum declared amount per package: 50000 USD.
-                int insuranceAmountPerPackage = _upsSettings.InsurePackage ? Convert.ToInt32(orderSubTotal / totalPackages) : 0;
+                var insuranceAmountPerPackage = _upsSettings.InsurePackage ? Convert.ToInt32(orderSubTotal / totalPackages) : 0;
 
-                for (int i = 0; i < totalPackages; i++)
+                for (var i = 0; i < totalPackages; i++)
                 {
                     AppendPackageRequest(sb, packagingType, length2, height2, width2, weight2, insuranceAmountPerPackage, currencyCode);
                 }
@@ -304,10 +304,10 @@ namespace Nop.Plugin.Shipping.UPS
                                                    new GetShippingOptionRequest.PackageItem(sci, 1)
                                                }, out widthTmp, out lengthTmp, out heightTmp);
 
-                int length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
-                int height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
-                int width = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
-                int weight = ConvertFromPrimaryMeasureWeight(sci.Product.Weight, usedMeasureWeight);
+                var length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
+                var height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
+                var width = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
+                var weight = ConvertFromPrimaryMeasureWeight(sci.Product.Weight, usedMeasureWeight);
                 if (length < 1)
                     length = 1;
                 if (height < 1)
@@ -323,9 +323,9 @@ namespace Nop.Plugin.Shipping.UPS
                 //One could argue that the insured value should be based on Cost rather than Price.
                 //GetUnitPrice handles Attribute Adjustments and also Customer Entered Price.
                 //But, even with includeDiscounts:false, it could apply a "discount" from Tier pricing.
-                int insuranceAmountPerPackage = _upsSettings.InsurePackage ? Convert.ToInt32(sci.Product.Price) : 0;
+                var insuranceAmountPerPackage = _upsSettings.InsurePackage ? Convert.ToInt32(sci.Product.Price) : 0;
 
-                for (int j = 0; j < qty; j++)
+                for (var j = 0; j < qty; j++)
                 {
                     AppendPackageRequest(sb, packagingType, length, height, width, weight, insuranceAmountPerPackage, currencyCode);
                 }
@@ -382,9 +382,9 @@ namespace Nop.Plugin.Shipping.UPS
                                                    new GetShippingOptionRequest.PackageItem(sci, 1)
                                                }, out widthTmp, out lengthTmp, out heightTmp);
 
-                    int productLength = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
-                    int productHeight = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
-                    int productWidth = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
+                    var productLength = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
+                    var productHeight = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
+                    var productWidth = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
                     totalVolume += item.GetQuantity() * (productHeight * productWidth * productLength);
                 }
 
@@ -397,7 +397,7 @@ namespace Nop.Plugin.Shipping.UPS
                 else
                 {
                     // cubic inches
-                    int packageVolume = _upsSettings.PackingPackageVolume;
+                    var packageVolume = _upsSettings.PackingPackageVolume;
                     if (packageVolume <= 0)
                         packageVolume = 5184;
 
@@ -421,24 +421,24 @@ namespace Nop.Plugin.Shipping.UPS
             if (width < 1)
                 width = 1;
 
-            int weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetTotalWeight(getShippingOptionRequest), usedMeasureWeight);
+            var weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetTotalWeight(getShippingOptionRequest), usedMeasureWeight);
             if (weight < 1)
                 weight = 1;
 
-            int totalPackagesWeights = 1;
+            var totalPackagesWeights = 1;
             if (IsPackageTooHeavy(weight))
             {
                 totalPackagesWeights = Convert.ToInt32(Math.Ceiling((decimal)weight / (decimal)MAXPACKAGEWEIGHT));
             }
 
-            int totalPackages = totalPackagesDims > totalPackagesWeights ? totalPackagesDims : totalPackagesWeights;
+            var totalPackages = totalPackagesDims > totalPackagesWeights ? totalPackagesDims : totalPackagesWeights;
 
-            int weightPerPackage = weight / totalPackages;
+            var weightPerPackage = weight / totalPackages;
 
             //The maximum declared amount per package: 50000 USD.
-            int insuranceAmountPerPackage = _upsSettings.InsurePackage ? Convert.ToInt32(orderSubTotal / totalPackages) : 0;
+            var insuranceAmountPerPackage = _upsSettings.InsurePackage ? Convert.ToInt32(orderSubTotal / totalPackages) : 0;
 
-            for (int i = 0; i < totalPackages; i++)
+            for (var i = 0; i < totalPackages; i++)
             {
                 AppendPackageRequest(sb, packagingType, length, height, width, weightPerPackage, insuranceAmountPerPackage, currencyCode);
             }
@@ -447,7 +447,7 @@ namespace Nop.Plugin.Shipping.UPS
 
         private string DoRequest(string url, string requestString)
         {
-            byte[] bytes = new ASCIIEncoding().GetBytes(requestString);
+            var bytes = new ASCIIEncoding().GetBytes(requestString);
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
@@ -567,14 +567,14 @@ namespace Nop.Plugin.Shipping.UPS
 
         private bool IsPackageTooLarge(int length, int height, int width)
         {
-            int total = TotalPackageSize(length, height, width);
+            var total = TotalPackageSize(length, height, width);
             return total > 165;
         }
 
         private int TotalPackageSize(int length, int height, int width)
         {
-            int girth = height + height + width + width;
-            int total = girth + length;
+            var girth = height + height + width + width;
+            var total = girth + length;
             return total;
         }
 
@@ -614,7 +614,7 @@ namespace Nop.Plugin.Shipping.UPS
         {
             var shippingOptions = new List<ShippingOption>();
 
-            string carrierServicesOffered = _upsSettings.CarrierServicesOffered;
+            var carrierServicesOffered = _upsSettings.CarrierServicesOffered;
 
             using (var sr = new StringReader(response))
             using (var tr = new XmlTextReader(sr))
@@ -622,7 +622,7 @@ namespace Nop.Plugin.Shipping.UPS
                 {
                     if ((tr.Name == "Error") && (tr.NodeType == XmlNodeType.Element))
                     {
-                        string errorText = "";
+                        var errorText = "";
                         while (tr.Read())
                         {
                             if ((tr.Name == "ErrorCode") && (tr.NodeType == XmlNodeType.Element))
@@ -638,8 +638,8 @@ namespace Nop.Plugin.Shipping.UPS
                     }
                     if ((tr.Name == "RatedShipment") && (tr.NodeType == XmlNodeType.Element))
                     {
-                        string serviceCode = "";
-                        string monetaryValue = "";
+                        var serviceCode = "";
+                        var monetaryValue = "";
                         while (tr.Read())
                         {
                             if ((tr.Name == "Service") && (tr.NodeType == XmlNodeType.Element))
@@ -677,8 +677,8 @@ namespace Nop.Plugin.Shipping.UPS
                                 }
                             }
                         }
-                        string service = GetServiceName(serviceCode);
-                        string serviceId = String.Format("[{0}]", serviceCode);
+                        var service = GetServiceName(serviceCode);
+                        var serviceId = String.Format("[{0}]", serviceCode);
 
                         // Go to the next rate if the service ID is not in the list of services to offer
                         if (!String.IsNullOrEmpty(carrierServicesOffered) && !carrierServicesOffered.Contains(serviceId))
@@ -742,16 +742,16 @@ namespace Nop.Plugin.Shipping.UPS
 
             try
             {
-                string requestString = CreateRequest(_upsSettings.AccessKey, _upsSettings.Username, _upsSettings.Password, getShippingOptionRequest,
+                var requestString = CreateRequest(_upsSettings.AccessKey, _upsSettings.Username, _upsSettings.Password, getShippingOptionRequest,
                     _upsSettings.CustomerClassification, _upsSettings.PickupType, _upsSettings.PackagingType);
                 if (_upsSettings.Tracing)
                     _traceMessages.AppendLine("Request:").AppendLine(requestString);
 
-                string responseXml = DoRequest(_upsSettings.Url, requestString);
+                var responseXml = DoRequest(_upsSettings.Url, requestString);
                 if (_upsSettings.Tracing)
                     _traceMessages.AppendLine("Response:").AppendLine(responseXml);
 
-                string error = "";
+                var error = "";
                 var shippingOptions = ParseResponse(responseXml, ref error);
                 if (String.IsNullOrEmpty(error))
                 {
@@ -772,7 +772,7 @@ namespace Nop.Plugin.Shipping.UPS
             {
                 if (_upsSettings.Tracing && _traceMessages.Length > 0)
                 {
-                    string shortMessage = String.Format("UPS Get Shipping Options for customer {0}.  {1} item(s) in cart",
+                    var shortMessage = String.Format("UPS Get Shipping Options for customer {0}.  {1} item(s) in cart",
                         getShippingOptionRequest.Customer.Email, getShippingOptionRequest.Items.Count);
                     _logger.Information(shortMessage, new Exception(_traceMessages.ToString()), getShippingOptionRequest.Customer);
                 }

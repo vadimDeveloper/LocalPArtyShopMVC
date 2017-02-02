@@ -29,13 +29,13 @@ namespace Nop.Admin.Controllers
             IEmailSender emailSender, IStoreContext storeContext,
             EmailAccountSettings emailAccountSettings, IPermissionService permissionService)
 		{
-            this._emailAccountService = emailAccountService;
-            this._localizationService = localizationService;
-            this._emailAccountSettings = emailAccountSettings;
-            this._emailSender = emailSender;
-            this._settingService = settingService;
-            this._storeContext = storeContext;
-            this._permissionService = permissionService;
+            _emailAccountService = emailAccountService;
+            _localizationService = localizationService;
+            _emailAccountSettings = emailAccountSettings;
+            _emailSender = emailSender;
+            _settingService = settingService;
+            _storeContext = storeContext;
+            _permissionService = permissionService;
 		}
 
 		public ActionResult List()
@@ -76,11 +76,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var defaultEmailAccount = _emailAccountService.GetEmailAccountById(id);
-            if (defaultEmailAccount != null)
-            {
-                _emailAccountSettings.DefaultEmailAccountId = defaultEmailAccount.Id;
-                _settingService.SaveSetting(_emailAccountSettings);
-            }
+            if (defaultEmailAccount == null) return RedirectToAction("List");
+
+            _emailAccountSettings.DefaultEmailAccountId = defaultEmailAccount.Id;
+            _settingService.SaveSetting(_emailAccountSettings);
             return RedirectToAction("List");
         }
 
@@ -141,18 +140,16 @@ namespace Nop.Admin.Controllers
                 //No email account found with the specified id
                 return RedirectToAction("List");
 
-            if (ModelState.IsValid)
-            {
-                emailAccount = model.ToEntity(emailAccount);
-                _emailAccountService.UpdateEmailAccount(emailAccount);
+            if (!ModelState.IsValid) return View(model);
 
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Updated"));
-                return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
-            }
+            emailAccount = model.ToEntity(emailAccount);
+            _emailAccountService.UpdateEmailAccount(emailAccount);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Updated"));
+            return continueEditing ? RedirectToAction("Edit", new { id = emailAccount.Id }) : RedirectToAction("List");
 
             //If we got this far, something failed, redisplay form
-            return View(model);
-		}
+        }
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("changepassword")]
@@ -187,11 +184,11 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                if (String.IsNullOrWhiteSpace(model.SendTestEmailTo))
+                if (string.IsNullOrWhiteSpace(model.SendTestEmailTo))
                     throw new NopException("Enter test email address");
 
-                string subject = _storeContext.CurrentStore.Name + ". Testing email functionality.";
-                string body = "Email works fine.";
+                var subject = _storeContext.CurrentStore.Name + ". Testing email functionality.";
+                const string body = "Email works fine.";
                 _emailSender.SendEmail(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, model.SendTestEmailTo, null);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.SendTestEmail.Success"), false);
             }

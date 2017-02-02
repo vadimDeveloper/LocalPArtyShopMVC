@@ -62,7 +62,7 @@ namespace Nop.Plugin.Shipping.ByWeight
             }
 
             //additional fixed cost
-            decimal shippingTotal = shippingByWeightRecord.AdditionalFixedCost;
+            var shippingTotal = shippingByWeightRecord.AdditionalFixedCost;
             //charge amount per weight unit
             if (shippingByWeightRecord.RatePerWeightUnit > decimal.Zero)
             {
@@ -112,11 +112,11 @@ namespace Nop.Plugin.Shipping.ByWeight
             var storeId = getShippingOptionRequest.StoreId;
             if (storeId == 0)
                 storeId = _storeContext.CurrentStore.Id;
-            int countryId = getShippingOptionRequest.ShippingAddress.CountryId.HasValue ? getShippingOptionRequest.ShippingAddress.CountryId.Value : 0;
-            int stateProvinceId = getShippingOptionRequest.ShippingAddress.StateProvinceId.HasValue ? getShippingOptionRequest.ShippingAddress.StateProvinceId.Value : 0;
-            int warehouseId = getShippingOptionRequest.WarehouseFrom != null ? getShippingOptionRequest.WarehouseFrom.Id : 0;
-            string zip = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
-            decimal subTotal = decimal.Zero;
+            var countryId = getShippingOptionRequest.ShippingAddress.CountryId.HasValue ? getShippingOptionRequest.ShippingAddress.CountryId.Value : 0;
+            var stateProvinceId = getShippingOptionRequest.ShippingAddress.StateProvinceId.HasValue ? getShippingOptionRequest.ShippingAddress.StateProvinceId.Value : 0;
+            var warehouseId = getShippingOptionRequest.WarehouseFrom != null ? getShippingOptionRequest.WarehouseFrom.Id : 0;
+            var zip = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
+            var subTotal = decimal.Zero;
             foreach (var packageItem in getShippingOptionRequest.Items)
             {
                 if (packageItem.ShoppingCartItem.IsFreeShipping)
@@ -124,12 +124,12 @@ namespace Nop.Plugin.Shipping.ByWeight
                 //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
                 subTotal += _priceCalculationService.GetSubTotal(packageItem.ShoppingCartItem);
             }
-            decimal weight = _shippingService.GetTotalWeight(getShippingOptionRequest);
+            var weight = _shippingService.GetTotalWeight(getShippingOptionRequest);
 
             var shippingMethods = _shippingService.GetAllShippingMethods(countryId);
             foreach (var shippingMethod in shippingMethods)
             {
-                decimal? rate = GetRate(subTotal, weight, shippingMethod.Id,
+                var rate = GetRate(subTotal, weight, shippingMethod.Id,
                     storeId, warehouseId, countryId, stateProvinceId, zip);
                 if (rate.HasValue)
                 {

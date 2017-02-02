@@ -27,7 +27,7 @@ namespace Nop.Services.Tasks
 
             this.StartedUtc = DateTime.UtcNow;
             this.IsRunning = true;
-            foreach (Task task in this._tasks.Values)
+            foreach (var task in this._tasks.Values)
             {
                 task.Execute();
             }

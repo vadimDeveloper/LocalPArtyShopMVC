@@ -77,7 +77,7 @@ namespace Nop.Web.Framework.Seo
         /// </returns>
         public override RouteData GetRouteData(HttpContextBase httpContext)
         {
-            RouteData data = base.GetRouteData(httpContext);
+            var data = base.GetRouteData(httpContext);
             if (data != null && DataSettingsHelper.DatabaseIsInstalled())
             {
                 var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();

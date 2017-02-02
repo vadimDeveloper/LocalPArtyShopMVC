@@ -48,17 +48,17 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService, ILanguageService languageService,
             ICustomerActivityService customerActivityService, IPermissionService permissionService)
         {
-            this._giftCardService = giftCardService;
-            this._priceFormatter = priceFormatter;
-            this._workflowMessageService = workflowMessageService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationSettings = localizationSettings;
-            this._currencyService = currencyService;
-            this._currencySettings = currencySettings;
-            this._localizationService = localizationService;
-            this._languageService = languageService;
-            this._customerActivityService = customerActivityService;
-            this._permissionService = permissionService;
+            _giftCardService = giftCardService;
+            _priceFormatter = priceFormatter;
+            _workflowMessageService = workflowMessageService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationSettings = localizationSettings;
+            _currencyService = currencyService;
+            _currencySettings = currencySettings;
+            _localizationService = localizationService;
+            _languageService = languageService;
+            _customerActivityService = customerActivityService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -206,14 +206,12 @@ namespace Nop.Admin.Controllers
 
                 SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Updated"));
 
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabIndex();
+                if (!continueEditing) return RedirectToAction("List");
 
-                    return RedirectToAction("Edit",  new {id = giftCard.Id});
-                }
-                return RedirectToAction("List");
+                //selected tab
+                SaveSelectedTabIndex();
+
+                return RedirectToAction("Edit",  new {id = giftCard.Id});
             }
 
             //If we got this far, something failed, redisplay form
@@ -263,7 +261,7 @@ namespace Nop.Admin.Controllers
                 {
                     languageId = _localizationSettings.DefaultAdminLanguageId;
                 }
-                int queuedEmailId = _workflowMessageService.SendGiftCardNotification(giftCard, languageId);
+                var queuedEmailId = _workflowMessageService.SendGiftCardNotification(giftCard, languageId);
                 if (queuedEmailId > 0)
                 {
                     giftCard.IsRecipientNotified = true;

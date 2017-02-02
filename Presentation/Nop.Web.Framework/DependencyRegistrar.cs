@@ -297,7 +297,7 @@ namespace Nop.Web.Framework
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
 
-            bool databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
+            var databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
             if (!databaseInstalled)
             {
                 //installation service

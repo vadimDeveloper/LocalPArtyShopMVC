@@ -2,14 +2,13 @@
 @using System.Globalization
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Infrastructure
-@using Nop.Services.Security
 @using Nop.Web.Models.Catalog
 @if (Model.IsRental)
 {
     <div class="attributes rental-attributes">
         @{
-            string startDateControlId = string.Format("rental_start_date_{0}", Model.Id);
-            string endDateControlId = string.Format("rental_end_date_{0}", Model.Id);
+            var startDateControlId = string.Format("rental_start_date_{0}", Model.Id);
+            var endDateControlId = string.Format("rental_end_date_{0}", Model.Id);
             //currenly we support only this format
             //java-script format
             const string datePickerFormat = "mm/dd/yy";

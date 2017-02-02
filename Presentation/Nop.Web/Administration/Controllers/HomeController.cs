@@ -31,11 +31,11 @@ namespace Nop.Admin.Controllers
             IWorkContext workContext,
             ICacheManager cacheManager)
         {
-            this._storeContext = storeContext;
-            this._commonSettings = commonSettings;
-            this._settingService = settingService;
-            this._workContext = workContext;
-            this._cacheManager= cacheManager;
+            _storeContext = storeContext;
+            _commonSettings = commonSettings;
+            _settingService = settingService;
+            _workContext = workContext;
+            _cacheManager= cacheManager;
         }
 
         #endregion
@@ -54,7 +54,7 @@ namespace Nop.Admin.Controllers
         {
             try
             {
-                string feedUrl = string.Format("http://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}",
+                var feedUrl = string.Format("http://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}",
                     NopVersion.CurrentVersion, 
                     Request.Url.IsLoopback, 
                     _commonSettings.HideAdvertisementsOnAdminArea,

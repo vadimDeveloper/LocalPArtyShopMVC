@@ -44,7 +44,7 @@ namespace Nop.Web.Framework.Themes
                 if (_themeIsCached)
                     return _cachedThemeName;
 
-                string theme = "";
+                var theme = "";
                 if (_storeInformationSettings.AllowCustomerToSelectTheme)
                 {
                     if (_workContext.CurrentCustomer != null)

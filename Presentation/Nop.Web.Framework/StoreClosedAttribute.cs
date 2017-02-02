@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Data;
@@ -24,7 +23,7 @@ namespace Nop.Web.Framework
         /// <param name="ignore">Pass false in order to ignore this functionality for a certain action method</param>
         public StoreClosedAttribute(bool ignore = false)
         {
-            this._ignore = ignore;
+            _ignore = ignore;
         }
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -37,16 +36,16 @@ namespace Nop.Web.Framework
             if (_ignore)
                 return;
 
-            HttpRequestBase request = filterContext.HttpContext.Request;
+            var request = filterContext.HttpContext.Request;
             if (request == null)
                 return;
 
-            string actionName = filterContext.ActionDescriptor.ActionName;
-            if (String.IsNullOrEmpty(actionName))
+            var actionName = filterContext.ActionDescriptor.ActionName;
+            if (string.IsNullOrEmpty(actionName))
                 return;
 
-            string controllerName = filterContext.Controller.ToString();
-            if (String.IsNullOrEmpty(controllerName))
+            var controllerName = filterContext.Controller.ToString();
+            if (string.IsNullOrEmpty(controllerName))
                 return;
 
             //don't apply filter to child methods

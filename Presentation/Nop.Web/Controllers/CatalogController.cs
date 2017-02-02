@@ -106,37 +106,37 @@ namespace Nop.Web.Controllers
             ForumSettings  forumSettings,
             ICacheManager cacheManager)
         {
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._productService = productService;
-            this._vendorService = vendorService;
-            this._categoryTemplateService = categoryTemplateService;
-            this._manufacturerTemplateService = manufacturerTemplateService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._taxService = taxService;
-            this._currencyService = currencyService;
-            this._pictureService = pictureService;
-            this._localizationService = localizationService;
-            this._priceCalculationService = priceCalculationService;
-            this._priceFormatter = priceFormatter;
-            this._webHelper = webHelper;
-            this._specificationAttributeService = specificationAttributeService;
-            this._productTagService = productTagService;
-            this._genericAttributeService = genericAttributeService;
-            this._aclService = aclService;
-            this._storeMappingService = storeMappingService;
-            this._permissionService = permissionService;
-            this._customerActivityService = customerActivityService;
-            this._topicService = topicService;
-            this._eventPublisher = eventPublisher;
-            this._searchTermService = searchTermService;
-            this._mediaSettings = mediaSettings;
-            this._catalogSettings = catalogSettings;
-            this._vendorSettings = vendorSettings;
-            this._blogSettings = blogSettings;
-            this._forumSettings = forumSettings;
-            this._cacheManager = cacheManager;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _productService = productService;
+            _vendorService = vendorService;
+            _categoryTemplateService = categoryTemplateService;
+            _manufacturerTemplateService = manufacturerTemplateService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _taxService = taxService;
+            _currencyService = currencyService;
+            _pictureService = pictureService;
+            _localizationService = localizationService;
+            _priceCalculationService = priceCalculationService;
+            _priceFormatter = priceFormatter;
+            _webHelper = webHelper;
+            _specificationAttributeService = specificationAttributeService;
+            _productTagService = productTagService;
+            _genericAttributeService = genericAttributeService;
+            _aclService = aclService;
+            _storeMappingService = storeMappingService;
+            _permissionService = permissionService;
+            _customerActivityService = customerActivityService;
+            _topicService = topicService;
+            _eventPublisher = eventPublisher;
+            _searchTermService = searchTermService;
+            _mediaSettings = mediaSettings;
+            _catalogSettings = catalogSettings;
+            _vendorSettings = vendorSettings;
+            _blogSettings = blogSettings;
+            _forumSettings = forumSettings;
+            _cacheManager = cacheManager;
         }
 
         #endregion
@@ -147,10 +147,10 @@ namespace Nop.Web.Controllers
         protected virtual void PrepareSortingOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {
             if (pagingFilteringModel == null)
-                throw new ArgumentNullException("pagingFilteringModel");
+                throw new ArgumentNullException(nameof(pagingFilteringModel));
 
             if (command == null)
-                throw new ArgumentNullException("command");
+                throw new ArgumentNullException(nameof(command));
 
             pagingFilteringModel.AllowProductSorting = _catalogSettings.AllowProductSorting;
             if (pagingFilteringModel.AllowProductSorting)
@@ -175,10 +175,10 @@ namespace Nop.Web.Controllers
         protected virtual void PrepareViewModes(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {
             if (pagingFilteringModel == null)
-                throw new ArgumentNullException("pagingFilteringModel");
+                throw new ArgumentNullException(nameof(pagingFilteringModel));
 
             if (command == null)
-                throw new ArgumentNullException("command");
+                throw new ArgumentNullException(nameof(command));
 
             pagingFilteringModel.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
 
@@ -186,25 +186,22 @@ namespace Nop.Web.Controllers
                 ? command.ViewMode
                 : _catalogSettings.DefaultViewMode;
             pagingFilteringModel.ViewMode = viewMode;
-            if (pagingFilteringModel.AllowProductViewModeChanging)
+            if (!pagingFilteringModel.AllowProductViewModeChanging) return;
+            var currentPageUrl = _webHelper.GetThisPageUrl(true);
+            //grid
+            pagingFilteringModel.AvailableViewModes.Add(new SelectListItem
             {
-                var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                //grid
-                pagingFilteringModel.AvailableViewModes.Add(new SelectListItem
-                {
-                    Text = _localizationService.GetResource("Catalog.ViewMode.Grid"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
-                    Selected = viewMode == "grid"
-                });
-                //list
-                pagingFilteringModel.AvailableViewModes.Add(new SelectListItem
-                {
-                    Text = _localizationService.GetResource("Catalog.ViewMode.List"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
-                    Selected = viewMode == "list"
-                });
-            }
-
+                Text = _localizationService.GetResource("Catalog.ViewMode.Grid"),
+                Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
+                Selected = viewMode == "grid"
+            });
+            //list
+            pagingFilteringModel.AvailableViewModes.Add(new SelectListItem
+            {
+                Text = _localizationService.GetResource("Catalog.ViewMode.List"),
+                Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
+                Selected = viewMode == "list"
+            });
         }
 
         [NonAction]
@@ -212,10 +209,10 @@ namespace Nop.Web.Controllers
             bool allowCustomersToSelectPageSize, string pageSizeOptions, int fixedPageSize)
         {
             if (pagingFilteringModel == null)
-                throw new ArgumentNullException("pagingFilteringModel");
+                throw new ArgumentNullException(nameof(pagingFilteringModel));
 
             if (command == null)
-                throw new ArgumentNullException("command");
+                throw new ArgumentNullException(nameof(command));
 
             if (command.PageNumber <= 0)
             {
@@ -260,7 +257,7 @@ namespace Nop.Web.Controllers
                         pagingFilteringModel.PageSizeOptions.Add(new SelectListItem
                         {
                             Text = pageSize,
-                            Value = String.Format(sortUrl, pageSize),
+                            Value = string.Format(sortUrl, pageSize),
                             Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.InvariantCultureIgnoreCase)
                         });
                     }
@@ -293,7 +290,7 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected virtual List<int> GetChildCategoryIds(int parentCategoryId)
         {
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, 
+            var cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, 
                 parentCategoryId, 
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
                 _storeContext.CurrentStore.Id);
@@ -351,14 +348,13 @@ namespace Nop.Web.Controllers
                 //product number for each category
                 if (_catalogSettings.ShowCategoryProductNumber)
                 {
-                    string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY,
+                    var cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY,
                         string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                         _storeContext.CurrentStore.Id, 
                         category.Id);
                     categoryModel.NumberOfProducts = _cacheManager.Get(cacheKey, () =>
                     {
-                        var categoryIds = new List<int>();
-                        categoryIds.Add(category.Id);
+                        var categoryIds = new List<int> {category.Id};
                         //include subcategories
                         if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
                             categoryIds.AddRange(GetChildCategoryIds(category.Id));
@@ -459,7 +455,7 @@ namespace Nop.Web.Controllers
             {
                 model.DisplayCategoryBreadcrumb = true;
 
-                string breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_BREADCRUMB_KEY,
+                var breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_BREADCRUMB_KEY,
                     categoryId,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                     _storeContext.CurrentStore.Id,
@@ -482,7 +478,7 @@ namespace Nop.Web.Controllers
 
 
             //subcategories
-            string subCategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_SUBCATEGORIES_KEY,
+            var subCategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_SUBCATEGORIES_KEY,
                 categoryId,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id,
@@ -501,7 +497,7 @@ namespace Nop.Web.Controllers
                     };
 
                     //prepare picture model
-                    int pictureSize = _mediaSettings.CategoryThumbPictureSize;
+                    var pictureSize = _mediaSettings.CategoryThumbPictureSize;
                     var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                     subCatModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
                     {
@@ -529,7 +525,7 @@ namespace Nop.Web.Controllers
             {
                 //We cache a value indicating whether we have featured products
                 IPagedList<Product> featuredProducts = null;
-                string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, categoryId,
+                var cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, categoryId,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id);
                 var hasFeaturedProductsCache = _cacheManager.Get<bool?>(cacheKey);
                 if (!hasFeaturedProductsCache.HasValue)
@@ -561,8 +557,7 @@ namespace Nop.Web.Controllers
             }
 
 
-            var categoryIds = new List<int>();
-            categoryIds.Add(category.Id);
+            var categoryIds = new List<int> {category.Id};
             if (_catalogSettings.ShowProductsFromSubcategories)
             {
                 //include subcategories
@@ -589,7 +584,7 @@ namespace Nop.Web.Controllers
 
             //specs
             model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
-                filterableSpecificationAttributeOptionIds != null ? filterableSpecificationAttributeOptionIds.ToArray() : null, 
+                filterableSpecificationAttributeOptionIds?.ToArray(), 
                 _specificationAttributeService, 
                 _webHelper, 
                 _workContext,
@@ -600,9 +595,8 @@ namespace Nop.Web.Controllers
             var templateCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_TEMPLATE_MODEL_KEY, category.CategoryTemplateId);
             var templateViewPath = _cacheManager.Get(templateCacheKey, () =>
                 {
-                    var template = _categoryTemplateService.GetCategoryTemplateById(category.CategoryTemplateId);
-                    if (template == null)
-                        template = _categoryTemplateService.GetAllCategoryTemplates().FirstOrDefault();
+                    var template = _categoryTemplateService.GetCategoryTemplateById(category.CategoryTemplateId) ??
+                                   _categoryTemplateService.GetAllCategoryTemplates().FirstOrDefault();
                     if (template == null)
                         throw new Exception("No default template could be loaded");
                     return template.ViewPath;
@@ -618,7 +612,7 @@ namespace Nop.Web.Controllers
         public ActionResult CategoryNavigation(int currentCategoryId, int currentProductId)
         {
             //get active category
-            int activeCategoryId = 0;
+            var activeCategoryId = 0;
             if (currentCategoryId > 0)
             {
                 //category details page
@@ -632,7 +626,7 @@ namespace Nop.Web.Controllers
                     activeCategoryId = productCategories[0].CategoryId;
             }
 
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, 
+            var cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, 
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
                 _storeContext.CurrentStore.Id);
@@ -651,14 +645,14 @@ namespace Nop.Web.Controllers
         public ActionResult TopMenu()
         {
             //categories
-            string categoryCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_MENU_MODEL_KEY,
+            var categoryCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_MENU_MODEL_KEY,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
                 _storeContext.CurrentStore.Id);
             var cachedCategoriesModel = _cacheManager.Get(categoryCacheKey, () => PrepareCategorySimpleModels(0));
 
             //top menu topics
-            string topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TOP_MENU_MODEL_KEY, 
+            var topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TOP_MENU_MODEL_KEY, 
                 _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
@@ -687,7 +681,7 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult HomepageCategories()
         {
-            string categoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HOMEPAGE_KEY,
+            var categoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HOMEPAGE_KEY,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
                 _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id, 
@@ -700,7 +694,7 @@ namespace Nop.Web.Controllers
                     var catModel = x.ToModel();
 
                     //prepare picture model
-                    int pictureSize = _mediaSettings.CategoryThumbPictureSize;
+                    var pictureSize = _mediaSettings.CategoryThumbPictureSize;
                     var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                     catModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
                     {
@@ -794,7 +788,7 @@ namespace Nop.Web.Controllers
                 IPagedList<Product> featuredProducts = null;
 
                 //We cache a value indicating whether we have featured products
-                string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_HAS_FEATURED_PRODUCTS_KEY, 
+                var cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_HAS_FEATURED_PRODUCTS_KEY, 
                     manufacturerId,
                     string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                     _storeContext.CurrentStore.Id);
@@ -874,7 +868,7 @@ namespace Nop.Web.Controllers
                 var modelMan = manufacturer.ToModel();
                 
                 //prepare picture model
-                int pictureSize = _mediaSettings.ManufacturerThumbPictureSize;
+                var pictureSize = _mediaSettings.ManufacturerThumbPictureSize;
                 var manufacturerPictureCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_PICTURE_MODEL_KEY, manufacturer.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                 modelMan.PictureModel = _cacheManager.Get(manufacturerPictureCacheKey, () =>
                 {
@@ -900,7 +894,7 @@ namespace Nop.Web.Controllers
             if (_catalogSettings.ManufacturersBlockItemsToDisplay == 0)
                 return Content("");
 
-            string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY, 
+            var cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY, 
                 currentManufacturerId, 
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
@@ -1019,7 +1013,7 @@ namespace Nop.Web.Controllers
                     AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors
                 };
                 //prepare picture model
-                int pictureSize = _mediaSettings.VendorThumbPictureSize;
+                var pictureSize = _mediaSettings.VendorThumbPictureSize;
                 var pictureCacheKey = string.Format(ModelCacheEventConsumer.VENDOR_PICTURE_MODEL_KEY, vendor.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                 vendorModel.PictureModel = _cacheManager.Get(pictureCacheKey, () =>
                 {
@@ -1045,7 +1039,7 @@ namespace Nop.Web.Controllers
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
                 return Content("");
 
-            string cacheKey = ModelCacheEventConsumer.VENDOR_NAVIGATION_MODEL_KEY;
+            var cacheKey = ModelCacheEventConsumer.VENDOR_NAVIGATION_MODEL_KEY;
             var cacheModel = _cacheManager.Get(cacheKey, () =>
             {
                 var vendors = _vendorService.GetAllVendors(pageSize: _vendorSettings.VendorsBlockItemsToDisplay);
@@ -1200,9 +1194,7 @@ namespace Nop.Web.Controllers
             if (model == null)
                 model = new SearchModel();
 
-            var searchTerms = model.q;
-            if (searchTerms == null)
-                searchTerms = "";
+            var searchTerms = model.q ?? "";
             searchTerms = searchTerms.Trim();
 
 
@@ -1218,7 +1210,7 @@ namespace Nop.Web.Controllers
                 _catalogSettings.SearchPageProductsPerPage);
 
 
-            string cacheKey = string.Format(ModelCacheEventConsumer.SEARCH_CATEGORIES_MODEL_KEY, 
+            var cacheKey = string.Format(ModelCacheEventConsumer.SEARCH_CATEGORIES_MODEL_KEY, 
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
                 _storeContext.CurrentStore.Id); 
@@ -1230,9 +1222,9 @@ namespace Nop.Web.Controllers
                 foreach (var c in allCategories)
                 {
                     //generate full category name (breadcrumb)
-                    string categoryBreadcrumb= "";
+                    var categoryBreadcrumb= "";
                     var breadcrumb = c.GetCategoryBreadCrumb(allCategories, _aclService, _storeMappingService);
-                    for (int i = 0; i <= breadcrumb.Count - 1; i++)
+                    for (var i = 0; i <= breadcrumb.Count - 1; i++)
                     {
                         categoryBreadcrumb += breadcrumb[i].GetLocalized(x => x.Name);
                         if (i != breadcrumb.Count - 1)
@@ -1294,10 +1286,10 @@ namespace Nop.Web.Controllers
                 else
                 {
                     var categoryIds = new List<int>();
-                    int manufacturerId = 0;
+                    var manufacturerId = 0;
                     decimal? minPriceConverted = null;
                     decimal? maxPriceConverted = null;
-                    bool searchInDescriptions = false;
+                    var searchInDescriptions = false;
                     if (model.adv)
                     {
                         //advanced search
@@ -1357,7 +1349,7 @@ namespace Nop.Web.Controllers
                     model.NoResults = !model.Products.Any();
 
                     //search term statistics
-                    if (!String.IsNullOrEmpty(searchTerms))
+                    if (!string.IsNullOrEmpty(searchTerms))
                     {
                         var searchTerm = _searchTermService.GetSearchTermByKeyword(searchTerms, _storeContext.CurrentStore.Id);
                         if (searchTerm != null)
@@ -1407,7 +1399,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult SearchTermAutoComplete(string term)
         {
-            if (String.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
+            if (string.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");
 
             //products

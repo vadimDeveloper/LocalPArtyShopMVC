@@ -51,7 +51,7 @@ namespace Nop.Web.Framework.Themes
         private void LoadConfigurations()
         {
             //TODO:Use IFileStorage?
-            foreach (string themeName in Directory.GetDirectories(_basePath))
+            foreach (var themeName in Directory.GetDirectories(_basePath))
             {
                 var configuration = CreateThemeConfiguration(themeName);
                 if(configuration != null)

@@ -124,7 +124,7 @@ namespace Nop.Core.Domain.Orders
         {
             get
             {
-                decimal additionalShippingCharge = decimal.Zero;
+                var additionalShippingCharge = decimal.Zero;
                 var product = this.Product;
                 if (product != null)
                     additionalShippingCharge = product.AdditionalShippingCharge * Quantity;

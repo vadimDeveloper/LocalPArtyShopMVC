@@ -52,7 +52,7 @@ namespace Nop.Web.Controllers
         public ActionResult SubscribeNewsletter(string email, bool subscribe)
         {
             string result;
-            bool success = false;
+            var success = false;
 
             if (!CommonHelper.IsValidEmail(email))
             {

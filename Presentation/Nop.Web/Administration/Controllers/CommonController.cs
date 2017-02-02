@@ -14,7 +14,6 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
@@ -87,27 +86,27 @@ namespace Nop.Admin.Controllers
             CatalogSettings catalogSettings,
             HttpContextBase httpContext)
         {
-            this._paymentService = paymentService;
-            this._shippingService = shippingService;
-            this._shoppingCartService = shoppingCartService;
-            this._currencyService = currencyService;
-            this._measureService = measureService;
-            this._customerService = customerService;
-            this._urlRecordService = urlRecordService;
-            this._webHelper = webHelper;
-            this._currencySettings = currencySettings;
-            this._measureSettings = measureSettings;
-            this._dateTimeHelper = dateTimeHelper;
-            this._languageService = languageService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._permissionService = permissionService;
-            this._localizationService = localizationService;
-            this._searchTermService = searchTermService;
-            this._settingService = settingService;
-            this._storeService = storeService;
-            this._catalogSettings = catalogSettings;
-            this._httpContext = httpContext;
+            _paymentService = paymentService;
+            _shippingService = shippingService;
+            _shoppingCartService = shoppingCartService;
+            _currencyService = currencyService;
+            _measureService = measureService;
+            _customerService = customerService;
+            _urlRecordService = urlRecordService;
+            _webHelper = webHelper;
+            _currencySettings = currencySettings;
+            _measureSettings = measureSettings;
+            _dateTimeHelper = dateTimeHelper;
+            _languageService = languageService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _permissionService = permissionService;
+            _localizationService = localizationService;
+            _searchTermService = searchTermService;
+            _settingService = settingService;
+            _storeService = storeService;
+            _catalogSettings = catalogSettings;
+            _httpContext = httpContext;
         }
 
         #endregion
@@ -119,8 +118,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            var model = new SystemInfoModel();
-            model.NopVersion = NopVersion.CurrentVersion;
+            var model = new SystemInfoModel {NopVersion = NopVersion.CurrentVersion};
             try
             {
                 model.OperatingSystem = Environment.OSVersion.VersionString;
@@ -136,6 +134,7 @@ namespace Nop.Admin.Controllers
                 model.IsFullTrust = AppDomain.CurrentDomain.IsFullyTrusted.ToString();
             }
             catch (Exception) { }
+
             model.ServerTimeZone = TimeZone.CurrentTimeZone.StandardName;
             model.ServerLocalTime = DateTime.Now;
             model.UtcTime = DateTime.UtcNow;
@@ -171,7 +170,7 @@ namespace Nop.Admin.Controllers
 
             //store URL
             var currentStoreUrl = _storeContext.CurrentStore.Url;
-            if (!String.IsNullOrEmpty(currentStoreUrl) &&
+            if (!string.IsNullOrEmpty(currentStoreUrl) &&
                 (currentStoreUrl.Equals(_webHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase)
                 ||
                 currentStoreUrl.Equals(_webHelper.GetStoreLocation(true), StringComparison.InvariantCultureIgnoreCase)
@@ -324,12 +323,10 @@ namespace Nop.Admin.Controllers
 
             //incompatible plugins
             if (PluginManager.IncompatiblePlugins != null)
-                foreach (var pluginName in PluginManager.IncompatiblePlugins)
-                    model.Add(new SystemWarningModel
-                    {
-                        Level = SystemWarningLevel.Warning,
-                        Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.IncompatiblePlugin"), pluginName )
-                    });
+                model.AddRange(PluginManager.IncompatiblePlugins.Select(pluginName => new SystemWarningModel
+                {
+                    Level = SystemWarningLevel.Warning, Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.IncompatiblePlugin"), pluginName)
+                }));
 
             //performance settings
             if (!_catalogSettings.IgnoreStoreLimitations && _storeService.GetAllStores().Count == 1)
@@ -352,7 +349,7 @@ namespace Nop.Admin.Controllers
             //validate write permissions (the same procedure like during installation)
             var dirPermissionsOk = true;
             var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite(_webHelper);
-            foreach (string dir in dirsToCheck)
+            foreach (var dir in dirsToCheck)
                 if (!FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
                 {
                     model.Add(new SystemWarningModel
@@ -371,7 +368,7 @@ namespace Nop.Admin.Controllers
 
             var filePermissionsOk = true;
             var filesToCheck = FilePermissionHelper.GetFilesWrite(_webHelper);
-            foreach (string file in filesToCheck)
+            foreach (var file in filesToCheck)
                 if (!FilePermissionHelper.CheckPermissions(file, false, true, true, true))
                 {
                     model.Add(new SystemWarningModel
@@ -392,9 +389,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 var machineKeySection = ConfigurationManager.GetSection("system.web/machineKey") as MachineKeySection;
-                var machineKeySpecified = machineKeySection != null &&
-                    !String.IsNullOrEmpty(machineKeySection.DecryptionKey) &&
-                    !machineKeySection.DecryptionKey.StartsWith("AutoGenerate",StringComparison.InvariantCultureIgnoreCase);
+                var machineKeySpecified = !string.IsNullOrEmpty(machineKeySection?.DecryptionKey) && !machineKeySection.DecryptionKey.StartsWith("AutoGenerate",StringComparison.InvariantCultureIgnoreCase);
 
                 if (!machineKeySpecified)
                 {
@@ -427,10 +422,15 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            var model = new MaintenanceModel();
-            model.DeleteGuests.EndDate = DateTime.UtcNow.AddDays(-7);
-            model.DeleteGuests.OnlyWithoutShoppingCart = true;
-            model.DeleteAbandonedCarts.OlderThan = DateTime.UtcNow.AddDays(-182);
+            var model = new MaintenanceModel
+            {
+                DeleteGuests =
+                {
+                    EndDate = DateTime.UtcNow.AddDays(-7),
+                    OnlyWithoutShoppingCart = true
+                },
+                DeleteAbandonedCarts = {OlderThan = DateTime.UtcNow.AddDays(-182)}
+            };
             return View(model);
         }
         [HttpPost, ActionName("Maintenance")]
@@ -440,10 +440,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            DateTime? startDateValue = (model.DeleteGuests.StartDate == null) ? null
+            var startDateValue = (model.DeleteGuests.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteGuests.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.DeleteGuests.EndDate == null) ? null
+            var endDateValue = (model.DeleteGuests.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteGuests.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             model.DeleteGuests.NumberOfDeletedCustomers = _customerService.DeleteGuestCustomers(startDateValue, endDateValue, model.DeleteGuests.OnlyWithoutShoppingCart);
@@ -469,15 +469,15 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            DateTime? startDateValue = (model.DeleteExportedFiles.StartDate == null) ? null
+            var startDateValue = (model.DeleteExportedFiles.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.DeleteExportedFiles.EndDate == null) ? null
+            var endDateValue = (model.DeleteExportedFiles.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteExportedFiles.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
 
             model.DeleteExportedFiles.NumberOfDeletedFiles = 0;
-            string path = Path.Combine(this.Request.PhysicalApplicationPath, "content\\files\\exportimport");
+            var path = Path.Combine(Request.PhysicalApplicationPath, "content\\files\\exportimport");
             foreach (var fullPath in Directory.GetFiles(path))
             {
                 try
@@ -487,12 +487,10 @@ namespace Nop.Admin.Controllers
                         continue;
 
                     var info = new FileInfo(fullPath);
-                    if ((!startDateValue.HasValue || startDateValue.Value < info.CreationTimeUtc)&&
-                        (!endDateValue.HasValue || info.CreationTimeUtc < endDateValue.Value))
-                    {
-                        System.IO.File.Delete(fullPath);
-                        model.DeleteExportedFiles.NumberOfDeletedFiles++;
-                    }
+                    if ((startDateValue.HasValue && startDateValue.Value >= info.CreationTimeUtc) ||
+                        (endDateValue.HasValue && info.CreationTimeUtc >= endDateValue.Value)) continue;
+                    System.IO.File.Delete(fullPath);
+                    model.DeleteExportedFiles.NumberOfDeletedFiles++;
                 }
                 catch (Exception exc)
                 {
@@ -507,12 +505,14 @@ namespace Nop.Admin.Controllers
         [ChildActionOnly]
         public ActionResult LanguageSelector()
         {
-            var model = new LanguageSelectorModel();
-            model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
-            model.AvailableLanguages = _languageService
-                .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
-                .Select(x => x.ToModel())
-                .ToList();
+            var model = new LanguageSelectorModel
+            {
+                CurrentLanguage = _workContext.WorkingLanguage.ToModel(),
+                AvailableLanguages = _languageService
+                    .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
+                    .Select(x => x.ToModel())
+                    .ToList()
+            };
             return PartialView(model);
         }
         public ActionResult SetLanguage(int langid, string returnUrl = "")
@@ -524,7 +524,7 @@ namespace Nop.Admin.Controllers
             }
 
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.Action("Index", "Home", new { area = "Admin" });
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
@@ -542,7 +542,7 @@ namespace Nop.Admin.Controllers
             cacheManager.Clear();
 
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 return RedirectToAction("Index", "Home", new { area = "Admin" });
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
@@ -560,7 +560,7 @@ namespace Nop.Admin.Controllers
             _webHelper.RestartAppDomain();
 
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 return RedirectToAction("Index", "Home", new { area = "Admin" });
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
@@ -601,8 +601,8 @@ namespace Nop.Admin.Controllers
                     }
 
                     //details URL
-                    string detailsUrl = "";
-                    var entityName = x.EntityName != null ? x.EntityName.ToLowerInvariant() : "";
+                    var detailsUrl = "";
+                    var entityName = x.EntityName?.ToLowerInvariant() ?? "";
                     switch (entityName)
                     {
                         case "blogpost":
@@ -651,18 +651,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
-            if (selectedIds != null)
-            {
-                var urlRecords = new List<UrlRecord>();
-                foreach (var id in selectedIds)
-                {
-                    var urlRecord = _urlRecordService.GetUrlRecordById(id);
-                    if (urlRecord != null)
-                        urlRecords.Add(urlRecord);
-                }
-                foreach (var urlRecord in urlRecords)
-                    _urlRecordService.DeleteUrlRecord(urlRecord);
-            }
+            if (selectedIds == null) return Json(new {Result = true});
+            var urlRecords = selectedIds.Select(id => _urlRecordService.GetUrlRecordById(id)).Where(urlRecord => urlRecord != null).ToList();
+            foreach (var urlRecord in urlRecords)
+                _urlRecordService.DeleteUrlRecord(urlRecord);
 
             return Json(new { Result = true });
         }
@@ -701,18 +693,17 @@ namespace Nop.Admin.Controllers
         public ActionResult MultistoreDisabledWarning()
         {
             //default setting
-            bool enabled = _catalogSettings.IgnoreStoreLimitations;
+            var enabled = _catalogSettings.IgnoreStoreLimitations;
             if (!enabled)
             {
                 //overridden settings
                 var stores = _storeService.GetAllStores();
                 foreach (var store in stores)
                 {
-                    if (!enabled)
-                    {
-                        var catalogSettings = _settingService.LoadSetting<CatalogSettings>(store.Id);
-                        enabled = catalogSettings.IgnoreStoreLimitations;
-                    }
+                    if (enabled) continue;
+
+                    var catalogSettings = _settingService.LoadSetting<CatalogSettings>(store.Id);
+                    enabled = catalogSettings.IgnoreStoreLimitations;
                 }
             }
 
@@ -727,18 +718,17 @@ namespace Nop.Admin.Controllers
         public ActionResult AclDisabledWarning()
         {
             //default setting
-            bool enabled = _catalogSettings.IgnoreAcl;
+            var enabled = _catalogSettings.IgnoreAcl;
             if (!enabled)
             {
                 //overridden settings
                 var stores = _storeService.GetAllStores();
                 foreach (var store in stores)
                 {
-                    if (!enabled)
-                    {
-                        var catalogSettings = _settingService.LoadSetting<CatalogSettings>(store.Id);
-                        enabled = catalogSettings.IgnoreAcl;
-                    }
+                    if (enabled) continue;
+
+                    var catalogSettings = _settingService.LoadSetting<CatalogSettings>(store.Id);
+                    enabled = catalogSettings.IgnoreAcl;
                 }
             }
 

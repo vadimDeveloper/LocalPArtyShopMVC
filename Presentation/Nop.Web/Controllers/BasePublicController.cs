@@ -25,7 +25,7 @@ namespace Nop.Web.Controllers
             routeData.Values.Add("controller", "Common");
             routeData.Values.Add("action", "PageNotFound");
 
-            errorController.Execute(new RequestContext(this.HttpContext, routeData));
+            errorController.Execute(new RequestContext(HttpContext, routeData));
 
             return new EmptyResult();
         }

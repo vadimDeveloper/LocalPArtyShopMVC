@@ -70,7 +70,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Services
         /// <returns>Tax rates</returns>
         public virtual IPagedList<TaxRate> GetAllTaxRates(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            string key = string.Format(TAXRATE_ALL_KEY, pageIndex, pageSize);
+            var key = string.Format(TAXRATE_ALL_KEY, pageIndex, pageSize);
             return _cacheManager.Get(key, () =>
             {
                 var query = from tr in _taxRateRepository.Table

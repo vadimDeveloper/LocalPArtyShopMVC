@@ -31,11 +31,11 @@ namespace Nop.Admin.Controllers
             MeasureSettings measureSettings, ISettingService settingService,
             IPermissionService permissionService, ILocalizationService localizationService)
 		{
-            this._measureService = measureService;
-            this._measureSettings = measureSettings;
-            this._settingService = settingService;
-            this._permissionService = permissionService;
-            this._localizationService = localizationService;
+            _measureService = measureService;
+            _measureSettings = measureSettings;
+            _settingService = settingService;
+            _permissionService = permissionService;
+            _localizationService = localizationService;
 		}
 
 		#endregion 

@@ -38,13 +38,13 @@ namespace Nop.Admin.Controllers
             ICustomerActivityService customerActivityService,
             IPermissionService permissionService)
         {
-            this._productService = productService;
-            this._productAttributeService = productAttributeService;
-            this._languageService = languageService;
-            this._localizedEntityService = localizedEntityService;
-            this._localizationService = localizationService;
-            this._customerActivityService = customerActivityService;
-            this._permissionService = permissionService;
+            _productService = productService;
+            _productAttributeService = productAttributeService;
+            _languageService = languageService;
+            _localizedEntityService = localizedEntityService;
+            _localizationService = localizationService;
+            _customerActivityService = customerActivityService;
+            _permissionService = permissionService;
         }
 
         #endregion

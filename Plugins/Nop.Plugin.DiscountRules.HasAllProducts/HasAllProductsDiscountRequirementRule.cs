@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Plugins;
 using Nop.Services.Configuration;
@@ -65,13 +64,13 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts
                             select new { ProductId = g.Key, TotalQuantity = g.Sum(x => x.Quantity) };
             var cart = cartQuery.ToList();
 
-            bool allFound = true;
+            var allFound = true;
             foreach (var restrictedProduct in restrictedProducts)
             {
                 if (String.IsNullOrWhiteSpace(restrictedProduct))
                     continue;
 
-                bool found1 = false;
+                var found1 = false;
                 foreach (var sci in cart)
                 {
                     if (restrictedProduct.Contains(":"))
@@ -160,7 +159,7 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts
         public string GetConfigurationUrl(int discountId, int? discountRequirementId)
         {
             //configured in RouteProvider.cs
-            string result = "Plugins/DiscountRulesHasAllProducts/Configure/?discountId=" + discountId;
+            var result = "Plugins/DiscountRulesHasAllProducts/Configure/?discountId=" + discountId;
             if (discountRequirementId.HasValue)
                 result += string.Format("&discountRequirementId={0}", discountRequirementId.Value);
             return result;

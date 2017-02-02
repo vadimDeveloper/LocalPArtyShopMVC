@@ -72,9 +72,9 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
             }
 
-            int inboxPage = 0;
-            int sentItemsPage = 0;
-            bool sentItemsTabSelected = false;
+            var inboxPage = 0;
+            var sentItemsPage = 0;
+            var sentItemsTabSelected = false;
 
             switch (tab)
             {
@@ -286,7 +286,7 @@ namespace Nop.Web.Controllers
                     int privateMessageId;
                     if (Int32.TryParse(id, out privateMessageId))
                     {
-                        PrivateMessage pm = _forumService.GetPrivateMessageById(privateMessageId);
+                        var pm = _forumService.GetPrivateMessageById(privateMessageId);
                         if (pm != null)
                         {
                             if (pm.FromCustomerId == _workContext.CurrentCustomer.Id)
@@ -391,7 +391,7 @@ namespace Nop.Web.Controllers
             {
                 try
                 {
-                    string subject = model.Subject;
+                    var subject = model.Subject;
                     if (_forumSettings.PMSubjectMaxLength > 0 && subject.Length > _forumSettings.PMSubjectMaxLength)
                     {
                         subject = subject.Substring(0, _forumSettings.PMSubjectMaxLength);

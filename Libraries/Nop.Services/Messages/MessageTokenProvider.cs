@@ -137,7 +137,7 @@ namespace Nop.Services.Messages
             sb.AppendLine("</tr>");
 
             var table = order.OrderItems.ToList();
-            for (int i = 0; i <= table.Count - 1; i++)
+            for (var i = 0; i <= table.Count - 1; i++)
             {
                 var orderItem = table[i];
                 var product = orderItem.Product;
@@ -149,15 +149,15 @@ namespace Nop.Services.Messages
 
                 sb.AppendLine(string.Format("<tr style=\"background-color: {0};text-align: center;\">", _templatesSettings.Color2));
                 //product name
-                string productName = product.GetLocalized(x => x.Name, languageId);
+                var productName = product.GetLocalized(x => x.Name, languageId);
 
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + HttpUtility.HtmlEncode(productName));
                 //add download link
                 if (_downloadService.IsDownloadAllowed(orderItem))
                 {
                     //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-                    string downloadUrl = string.Format("{0}download/getdownload/{1}", GetStoreUrl(order.StoreId), orderItem.OrderItemGuid);
-                    string downloadLink = string.Format("<a class=\"link\" href=\"{0}\">{1}</a>", downloadUrl, _localizationService.GetResource("Messages.Order.Product(s).Download", languageId));
+                    var downloadUrl = string.Format("{0}download/getdownload/{1}", GetStoreUrl(order.StoreId), orderItem.OrderItemGuid);
+                    var downloadLink = string.Format("<a class=\"link\" href=\"{0}\">{1}</a>", downloadUrl, _localizationService.GetResource("Messages.Order.Product(s).Download", languageId));
                     sb.AppendLine("<br />");
                     sb.AppendLine(downloadLink);
                 }
@@ -165,8 +165,8 @@ namespace Nop.Services.Messages
                 if (_downloadService.IsLicenseDownloadAllowed(orderItem))
                 {
                     //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-                    string licenseUrl = string.Format("{0}download/getlicense/{1}", GetStoreUrl(order.StoreId), orderItem.OrderItemGuid);
-                    string licenseLink = string.Format("<a class=\"link\" href=\"{0}\">{1}</a>", licenseUrl, _localizationService.GetResource("Messages.Order.Product(s).License", languageId));
+                    var licenseUrl = string.Format("{0}download/getlicense/{1}", GetStoreUrl(order.StoreId), orderItem.OrderItemGuid);
+                    var licenseLink = string.Format("<a class=\"link\" href=\"{0}\">{1}</a>", licenseUrl, _localizationService.GetResource("Messages.Order.Product(s).License", languageId));
                     sb.AppendLine("<br />");
                     sb.AppendLine(licenseLink);
                 }
@@ -253,8 +253,8 @@ namespace Nop.Services.Messages
 
                 //subtotal
                 string cusSubTotal;
-                bool displaySubTotalDiscount = false;
-                string cusSubTotalDiscount = string.Empty;
+                var displaySubTotalDiscount = false;
+                var cusSubTotalDiscount = string.Empty;
                 if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
                 {
                     //including tax
@@ -290,8 +290,8 @@ namespace Nop.Services.Messages
                 string cusShipTotal;
                 string cusPaymentMethodAdditionalFee;
                 var taxRates = new SortedDictionary<decimal, decimal>();
-                string cusTaxTotal = string.Empty;
-                string cusDiscount = string.Empty;
+                var cusTaxTotal = string.Empty;
+                var cusDiscount = string.Empty;
                 string cusTotal; 
                 if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                 {
@@ -317,14 +317,14 @@ namespace Nop.Services.Messages
                 }
 
                 //shipping
-                bool displayShipping = order.ShippingStatus != ShippingStatus.ShippingNotRequired;
+                var displayShipping = order.ShippingStatus != ShippingStatus.ShippingNotRequired;
 
                 //payment method fee
-                bool displayPaymentMethodFee = order.PaymentMethodAdditionalFeeExclTax > decimal.Zero;
+                var displayPaymentMethodFee = order.PaymentMethodAdditionalFeeExclTax > decimal.Zero;
 
                 //tax
-                bool displayTax = true;
-                bool displayTaxRates = true;
+                var displayTax = true;
+                var displayTaxRates = true;
                 if (_taxSettings.HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                 {
                     displayTax = false;
@@ -347,13 +347,13 @@ namespace Nop.Services.Messages
                         displayTax = !displayTaxRates;
 
                         var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
-                        string taxStr = _priceFormatter.FormatPrice(orderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false, language);
+                        var taxStr = _priceFormatter.FormatPrice(orderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false, language);
                         cusTaxTotal = taxStr;
                     }
                 }
 
                 //discount
-                bool displayDiscount = false;
+                var displayDiscount = false;
                 if (order.OrderDiscount > decimal.Zero)
                 {
                     var orderDiscountInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderDiscount, order.CurrencyRate);
@@ -387,7 +387,7 @@ namespace Nop.Services.Messages
                 //payment method fee
                 if (displayPaymentMethodFee)
                 {
-                    string paymentMethodFeeTitle = _localizationService.GetResource("Messages.Order.PaymentMethodAdditionalFee", languageId);
+                    var paymentMethodFeeTitle = _localizationService.GetResource("Messages.Order.PaymentMethodAdditionalFee", languageId);
                     sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, paymentMethodFeeTitle, cusPaymentMethodAdditionalFee));
                 }
 
@@ -400,8 +400,8 @@ namespace Nop.Services.Messages
                 {
                     foreach (var item in taxRates)
                     {
-                        string taxRate = String.Format(_localizationService.GetResource("Messages.Order.TaxRateLine"), _priceFormatter.FormatTaxRate(item.Key));
-                        string taxValue = _priceFormatter.FormatPrice(item.Value, true, order.CustomerCurrencyCode, false, language);
+                        var taxRate = String.Format(_localizationService.GetResource("Messages.Order.TaxRateLine"), _priceFormatter.FormatTaxRate(item.Key));
+                        var taxValue = _priceFormatter.FormatPrice(item.Value, true, order.CustomerCurrencyCode, false, language);
                         sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, taxRate, taxValue));
                     }
                 }
@@ -416,16 +416,16 @@ namespace Nop.Services.Messages
                 var gcuhC = order.GiftCardUsageHistory;
                 foreach (var gcuh in gcuhC)
                 {
-                    string giftCardText = String.Format(_localizationService.GetResource("Messages.Order.GiftCardInfo", languageId), HttpUtility.HtmlEncode(gcuh.GiftCard.GiftCardCouponCode));
-                    string giftCardAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, language);
+                    var giftCardText = String.Format(_localizationService.GetResource("Messages.Order.GiftCardInfo", languageId), HttpUtility.HtmlEncode(gcuh.GiftCard.GiftCardCouponCode));
+                    var giftCardAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, language);
                     sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, giftCardText, giftCardAmount));
                 }
 
                 //reward points
                 if (order.RedeemedRewardPointsEntry != null)
                 {
-                    string rpTitle = string.Format(_localizationService.GetResource("Messages.Order.RewardPoints", languageId), -order.RedeemedRewardPointsEntry.Points);
-                    string rpAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, language);
+                    var rpTitle = string.Format(_localizationService.GetResource("Messages.Order.RewardPoints", languageId), -order.RedeemedRewardPointsEntry.Points);
+                    var rpAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, language);
                     sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, rpTitle, rpAmount));
                 }
 
@@ -460,7 +460,7 @@ namespace Nop.Services.Messages
             sb.AppendLine("</tr>");
 
             var table = shipment.ShipmentItems.ToList();
-            for (int i = 0; i <= table.Count - 1; i++)
+            for (var i = 0; i <= table.Count - 1; i++)
             {
                 var si = table[i];
                 var orderItem = _orderService.GetOrderItemById(si.OrderItemId);
@@ -473,7 +473,7 @@ namespace Nop.Services.Messages
 
                 sb.AppendLine(string.Format("<tr style=\"background-color: {0};text-align: center;\">", _templatesSettings.Color2));
                 //product name
-                string productName = product.GetLocalized(x => x.Name, languageId);
+                var productName = product.GetLocalized(x => x.Name, languageId);
 
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + HttpUtility.HtmlEncode(productName));
                 //attributes
@@ -612,7 +612,7 @@ namespace Nop.Services.Messages
             var language = _languageService.GetLanguageById(languageId);
             if (language != null && !String.IsNullOrEmpty(language.LanguageCulture))
             {
-                DateTime createdOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, TimeZoneInfo.Utc, _dateTimeHelper.GetCustomerTimeZone(order.Customer));
+                var createdOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, TimeZoneInfo.Utc, _dateTimeHelper.GetCustomerTimeZone(order.Customer));
                 tokens.Add(new Token("Order.CreatedOn", createdOn.ToString("D", new CultureInfo(language.LanguageCulture))));
             }
             else
@@ -737,8 +737,8 @@ namespace Nop.Services.Messages
 
             //note: we do not use SEO friendly URLS because we can get errors caused by having .(dot) in the URL (from the email address)
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-            string passwordRecoveryUrl = string.Format("{0}passwordrecovery/confirm?token={1}&email={2}", GetStoreUrl(), customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), HttpUtility.UrlEncode(customer.Email));
-            string accountActivationUrl = string.Format("{0}customer/activation?token={1}&email={2}", GetStoreUrl(), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), HttpUtility.UrlEncode(customer.Email));
+            var passwordRecoveryUrl = string.Format("{0}passwordrecovery/confirm?token={1}&email={2}", GetStoreUrl(), customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), HttpUtility.UrlEncode(customer.Email));
+            var accountActivationUrl = string.Format("{0}customer/activation?token={1}&email={2}", GetStoreUrl(), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), HttpUtility.UrlEncode(customer.Email));
             var wishlistUrl = string.Format("{0}wishlist/{1}", GetStoreUrl(), customer.CustomerGuid);
             tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
             tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
@@ -820,7 +820,7 @@ namespace Nop.Services.Messages
             //we cannot inject IProductAttributeFormatter into constructor because it'll cause circular references.
             //that's why we resolve it here this way
             var productAttributeFormatter = EngineContext.Current.Resolve<IProductAttributeFormatter>();
-            string attributes = productAttributeFormatter.FormatAttributes(combination.Product, 
+            var attributes = productAttributeFormatter.FormatAttributes(combination.Product, 
                 combination.AttributesXml, 
                 _workContext.CurrentCustomer, 
                 renderPrices: false);

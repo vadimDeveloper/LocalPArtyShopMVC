@@ -105,7 +105,7 @@ namespace Nop.Plugin.Shipping.Fedex
             _orderTotalCalculationService.GetShoppingCartSubTotal(getShippingOptionRequest.Items.Select(x=>x.ShoppingCartItem).ToList(),
                 false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
-            decimal subTotalBase = subTotalWithDiscountBase;
+            var subTotalBase = subTotalWithDiscountBase;
 
             request.RequestedShipment = new RequestedShipment();
 
@@ -236,7 +236,7 @@ namespace Nop.Plugin.Shipping.Fedex
             request.RequestedShipment.Shipper.Address.City = getShippingOptionRequest.CityFrom;
             if (IncludeStateProvinceCode(getShippingOptionRequest.CountryFrom.TwoLetterIsoCode))
             {
-                string stateProvinceAbbreviation = getShippingOptionRequest.StateProvinceFrom == null ? "" : getShippingOptionRequest.StateProvinceFrom.Abbreviation;
+                var stateProvinceAbbreviation = getShippingOptionRequest.StateProvinceFrom == null ? "" : getShippingOptionRequest.StateProvinceFrom.Abbreviation;
                 request.RequestedShipment.Shipper.Address.StateOrProvinceCode = stateProvinceAbbreviation;
             }
             request.RequestedShipment.Shipper.Address.PostalCode = getShippingOptionRequest.ZipPostalCodeFrom;
@@ -259,10 +259,10 @@ namespace Nop.Plugin.Shipping.Fedex
             decimal lengthTmp, widthTmp, heightTmp;
             _shippingService.GetDimensions(getShippingOptionRequest.Items, out widthTmp, out lengthTmp, out heightTmp);
 
-            int length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
-            int height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
-            int width = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
-            int weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetTotalWeight(getShippingOptionRequest), usedMeasureWeight);
+            var length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
+            var height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
+            var width = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
+            var weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetTotalWeight(getShippingOptionRequest), usedMeasureWeight);
             if (length < 1)
                 length = 1;
             if (height < 1)
@@ -299,8 +299,8 @@ namespace Nop.Plugin.Shipping.Fedex
             }
             else
             {
-                int totalPackagesDims = 1;
-                int totalPackagesWeights = 1;
+                var totalPackagesDims = 1;
+                var totalPackagesWeights = 1;
                 if (IsPackageTooHeavy(weight))
                 {
                     totalPackagesWeights = Convert.ToInt32(Math.Ceiling((decimal)weight / (decimal)MAXPACKAGEWEIGHT));
@@ -313,10 +313,10 @@ namespace Nop.Plugin.Shipping.Fedex
                 if (totalPackages == 0)
                     totalPackages = 1;
 
-                int weight2 = weight / totalPackages;
-                int height2 = height / totalPackages;
-                int width2 = width / totalPackages;
-                int length2 = length / totalPackages;
+                var weight2 = weight / totalPackages;
+                var height2 = height / totalPackages;
+                var width2 = width / totalPackages;
+                var length2 = length / totalPackages;
                 if (weight2 < 1)
                     weight2 = 1;
                 if (height2 < 1)
@@ -326,12 +326,12 @@ namespace Nop.Plugin.Shipping.Fedex
                 if (length2 < 1)
                     length2 = 1;
 
-                decimal orderSubTotal2 = orderSubTotal / totalPackages;
+                var orderSubTotal2 = orderSubTotal / totalPackages;
 
                 request.RequestedShipment.PackageCount = totalPackages.ToString();
                 request.RequestedShipment.RequestedPackageLineItems = new RequestedPackageLineItem[totalPackages];
 
-                for (int i = 0; i < totalPackages; i++)
+                for (var i = 0; i < totalPackages; i++)
                 {
                     request.RequestedShipment.RequestedPackageLineItems[i] = new RequestedPackageLineItem();
                     request.RequestedShipment.RequestedPackageLineItems[i].SequenceNumber = (i + 1).ToString(); // package sequence number            
@@ -367,7 +367,7 @@ namespace Nop.Plugin.Shipping.Fedex
             request.RequestedShipment.PackageCount = totalItems.ToString();
             request.RequestedShipment.RequestedPackageLineItems = new RequestedPackageLineItem[totalItems];
 
-            int i = 0;
+            var i = 0;
             foreach (var packageItem in items)
             {
                 var sci = packageItem.ShoppingCartItem;
@@ -380,10 +380,10 @@ namespace Nop.Plugin.Shipping.Fedex
                                                    new GetShippingOptionRequest.PackageItem(sci, 1)
                                                }, out widthTmp, out lengthTmp, out heightTmp);
 
-                int length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
-                int height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
-                int width = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
-                int weight = ConvertFromPrimaryMeasureWeight(sci.Product.Weight, usedMeasureWeight);
+                var length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
+                var height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
+                var width = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
+                var weight = ConvertFromPrimaryMeasureWeight(sci.Product.Weight, usedMeasureWeight);
                 if (length < 1)
                     length = 1;
                 if (height < 1)
@@ -393,7 +393,7 @@ namespace Nop.Plugin.Shipping.Fedex
                 if (weight < 1)
                     weight = 1;
 
-                for (int j = 0; j < qty; j++)
+                for (var j = 0; j < qty; j++)
                 {
                     request.RequestedShipment.RequestedPackageLineItems[i] = new RequestedPackageLineItem();
                     request.RequestedShipment.RequestedPackageLineItems[i].SequenceNumber = (i + 1).ToString(); // package sequence number                     
@@ -496,9 +496,9 @@ namespace Nop.Plugin.Shipping.Fedex
                                                    new GetShippingOptionRequest.PackageItem(sci, 1)
                                                }, out widthTmp, out lengthTmp, out heightTmp);
 
-                    int productLength = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
-                    int productHeight = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
-                    int productWidth = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
+                    var productLength = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
+                    var productHeight = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
+                    var productWidth = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
                     totalVolume += item.GetQuantity() * (productHeight * productWidth * productLength);
                 }
 
@@ -511,7 +511,7 @@ namespace Nop.Plugin.Shipping.Fedex
                 else
                 {
                     // cubic inches
-                    int packageVolume = _fedexSettings.PackingPackageVolume;
+                    var packageVolume = _fedexSettings.PackingPackageVolume;
                     if (packageVolume <= 0)
                         packageVolume = 5184;
 
@@ -535,25 +535,25 @@ namespace Nop.Plugin.Shipping.Fedex
             if (width < 1)
                 width = 1;
 
-            int weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetTotalWeight(getShippingOptionRequest), usedMeasureWeight);
+            var weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetTotalWeight(getShippingOptionRequest), usedMeasureWeight);
             if (weight < 1)
                 weight = 1;
 
-            int totalPackagesWeights = 1;
+            var totalPackagesWeights = 1;
             if (IsPackageTooHeavy(weight))
             {
                 totalPackagesWeights = Convert.ToInt32(Math.Ceiling((decimal)weight / (decimal)MAXPACKAGEWEIGHT));
             }
 
-            int totalPackages = totalPackagesDims > totalPackagesWeights ? totalPackagesDims : totalPackagesWeights;
+            var totalPackages = totalPackagesDims > totalPackagesWeights ? totalPackagesDims : totalPackagesWeights;
 
-            decimal orderSubTotalPerPackage = orderSubTotal / totalPackages;
-            int weightPerPackage = weight / totalPackages;
+            var orderSubTotalPerPackage = orderSubTotal / totalPackages;
+            var weightPerPackage = weight / totalPackages;
 
             request.RequestedShipment.PackageCount = totalPackages.ToString();
             request.RequestedShipment.RequestedPackageLineItems = new RequestedPackageLineItem[totalPackages];
 
-            for (int i = 0; i < totalPackages; i++)
+            for (var i = 0; i < totalPackages; i++)
             {
                 request.RequestedShipment.RequestedPackageLineItems[i] = new RequestedPackageLineItem();
                 request.RequestedShipment.RequestedPackageLineItems[i].SequenceNumber = (i + 1).ToString(); // package sequence number          
@@ -586,7 +586,7 @@ namespace Nop.Plugin.Shipping.Fedex
             foreach (var rateDetail in reply.RateReplyDetails)
             {
                 var shippingOption = new ShippingOption();
-                string serviceName = FedexServices.GetServiceName(rateDetail.ServiceType.ToString());
+                var serviceName = FedexServices.GetServiceName(rateDetail.ServiceType.ToString());
 
                 // Skip the current service if services are selected and this service hasn't been selected
                 if (!String.IsNullOrEmpty(_fedexSettings.CarrierServicesOffered) && !_fedexSettings.CarrierServicesOffered.Contains(rateDetail.ServiceType.ToString()))
@@ -599,7 +599,7 @@ namespace Nop.Plugin.Shipping.Fedex
                 {
                     shippingOption.Name = serviceName;
 
-                    foreach (RatedShipmentDetail shipmentDetail in rateDetail.RatedShipmentDetails)
+                    foreach (var shipmentDetail in rateDetail.RatedShipmentDetails)
                     {
                         Debug.WriteLine("RateType : " + shipmentDetail.ShipmentRateDetail.RateType);
                         Debug.WriteLine("Total Billing Weight : " + shipmentDetail.ShipmentRateDetail.TotalBillingWeight.Value);
@@ -614,14 +614,14 @@ namespace Nop.Plugin.Shipping.Fedex
                             (shipmentDetail.ShipmentRateDetail.RateType == ReturnedRateType.PAYOR_ACCOUNT_PACKAGE ||
                             shipmentDetail.ShipmentRateDetail.RateType == ReturnedRateType.PAYOR_ACCOUNT_SHIPMENT))
                         {
-                            decimal amount = ConvertChargeToPrimaryCurrency(shipmentDetail.ShipmentRateDetail.TotalNetCharge, requestedShipmentCurrency);
+                            var amount = ConvertChargeToPrimaryCurrency(shipmentDetail.ShipmentRateDetail.TotalNetCharge, requestedShipmentCurrency);
                             shippingOption.Rate = amount + _fedexSettings.AdditionalHandlingCharge;
                             break;
                         }
                         else if (shipmentDetail.ShipmentRateDetail.RateType == ReturnedRateType.PAYOR_LIST_PACKAGE ||
                             shipmentDetail.ShipmentRateDetail.RateType == ReturnedRateType.PAYOR_LIST_SHIPMENT) // Get List Rates (not discount rates)
                         {
-                            decimal amount = ConvertChargeToPrimaryCurrency(shipmentDetail.ShipmentRateDetail.TotalNetCharge, requestedShipmentCurrency);
+                            var amount = ConvertChargeToPrimaryCurrency(shipmentDetail.ShipmentRateDetail.TotalNetCharge, requestedShipmentCurrency);
                             shippingOption.Rate = amount + _fedexSettings.AdditionalHandlingCharge;
                             break;
                         }
@@ -669,7 +669,7 @@ namespace Nop.Plugin.Shipping.Fedex
         
         private bool IsPackageTooLarge(int length, int height, int width)
         {
-            int total = TotalPackageSize(length, height, width);
+            var total = TotalPackageSize(length, height, width);
             if (total > 165)
                 return true;
             
@@ -678,8 +678,8 @@ namespace Nop.Plugin.Shipping.Fedex
 
         private int TotalPackageSize(int length, int height, int width)
         {
-            int girth = height + height + width + width;
-            int total = girth + length;
+            var girth = height + height + width + width;
+            var total = girth + length;
             return total;
         }
 

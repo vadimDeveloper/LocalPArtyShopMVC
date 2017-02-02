@@ -14,10 +14,10 @@ namespace Nop.Data
         private static T InnerGetCopy<T>(IDbContext context, T currentCopy, Func<DbEntityEntry<T>, DbPropertyValues> func) where T : BaseEntity
         {
             //Get the database context
-            DbContext dbContext = CastOrThrow(context);
+            var dbContext = CastOrThrow(context);
 
             //Get the entity tracking object
-            DbEntityEntry<T> entry = GetEntityOrReturnNull(currentCopy, dbContext);
+            var entry = GetEntityOrReturnNull(currentCopy, dbContext);
 
             //The output 
             T output = null;
@@ -25,7 +25,7 @@ namespace Nop.Data
             //Try and get the values
             if (entry != null)
             {
-                DbPropertyValues dbPropertyValues = func(entry);
+                var dbPropertyValues = func(entry);
                 if (dbPropertyValues != null)
                 {
                     output = dbPropertyValues.ToObject() as T;
@@ -129,7 +129,7 @@ namespace Nop.Data
             var entitySetBase = containers.SelectMany(c => c.BaseEntitySets.Where(bes => bes.Name == typeof(T).Name)).First();
 
             // Here are variables that will hold table and schema name
-            string tableName = entitySetBase.MetadataProperties.First(p => p.Name == "Table").Value.ToString();
+            var tableName = entitySetBase.MetadataProperties.First(p => p.Name == "Table").Value.ToString();
             //string schemaName = productEntitySetBase.MetadataProperties.First(p => p.Name == "Schema").Value.ToString();
             return tableName;
         }
@@ -146,7 +146,7 @@ namespace Nop.Data
             //original: http://stackoverflow.com/questions/5081109/entity-framework-4-0-automatically-truncate-trim-string-before-insert
             int? result = null;
 
-            Type entType = Type.GetType(entityTypeName);
+            var entType = Type.GetType(entityTypeName);
             var adapter = ((IObjectContextAdapter)context).ObjectContext;
             var metadataWorkspace = adapter.MetadataWorkspace;
             var q = from meta in metadataWorkspace.GetItems(DataSpace.CSpace).Where(m => m.BuiltInTypeKind == BuiltInTypeKind.EntityType)
@@ -155,7 +155,7 @@ namespace Nop.Data
 
             var queryResult = q.Where(p =>
             {
-                bool match = p.DeclaringType.Name == entityTypeName;
+                var match = p.DeclaringType.Name == entityTypeName;
                 if (!match && entType != null)
                 {
                     //Is a fully qualified name....

@@ -111,8 +111,8 @@ namespace Nop.Services.Stores
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            int entityId = entity.Id;
-            string entityName = typeof(T).Name;
+            var entityId = entity.Id;
+            var entityName = typeof(T).Name;
 
             var query = from sm in _storeMappingRepository.Table
                         where sm.EntityId == entityId &&
@@ -155,8 +155,8 @@ namespace Nop.Services.Stores
             if (storeId == 0)
                 throw new ArgumentOutOfRangeException("storeId");
 
-            int entityId = entity.Id;
-            string entityName = typeof(T).Name;
+            var entityId = entity.Id;
+            var entityName = typeof(T).Name;
 
             var storeMapping = new StoreMapping
             {
@@ -197,10 +197,10 @@ namespace Nop.Services.Stores
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            int entityId = entity.Id;
-            string entityName = typeof(T).Name;
+            var entityId = entity.Id;
+            var entityName = typeof(T).Name;
 
-            string key = string.Format(STOREMAPPING_BY_ENTITYID_NAME_KEY, entityId, entityName);
+            var key = string.Format(STOREMAPPING_BY_ENTITYID_NAME_KEY, entityId, entityName);
             return _cacheManager.Get(key, () =>
             {
                 var query = from sm in _storeMappingRepository.Table

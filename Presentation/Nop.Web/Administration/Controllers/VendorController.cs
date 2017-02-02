@@ -48,16 +48,16 @@ namespace Nop.Admin.Controllers
             IDateTimeHelper dateTimeHelper,
             VendorSettings vendorSettings)
         {
-            this._customerService = customerService;
-            this._localizationService = localizationService;
-            this._vendorService = vendorService;
-            this._permissionService = permissionService;
-            this._urlRecordService = urlRecordService;
-            this._languageService = languageService;
-            this._localizedEntityService = localizedEntityService;
-            this._pictureService = pictureService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._vendorSettings = vendorSettings;
+            _customerService = customerService;
+            _localizationService = localizationService;
+            _vendorService = vendorService;
+            _permissionService = permissionService;
+            _urlRecordService = urlRecordService;
+            _languageService = languageService;
+            _localizedEntityService = localizedEntityService;
+            _pictureService = pictureService;
+            _dateTimeHelper = dateTimeHelper;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -245,7 +245,7 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                int prevPictureId = vendor.PictureId;
+                var prevPictureId = vendor.PictureId;
                 vendor = model.ToEntity(vendor);
                 _vendorService.UpdateVendor(vendor);
                 //search engine name

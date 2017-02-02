@@ -29,10 +29,10 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService,
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService)
 		{
-            this._scheduleTaskService = scheduleTaskService;
-            this._permissionService = permissionService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
+            _scheduleTaskService = scheduleTaskService;
+            _permissionService = permissionService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
 		}
 
 		#endregion 

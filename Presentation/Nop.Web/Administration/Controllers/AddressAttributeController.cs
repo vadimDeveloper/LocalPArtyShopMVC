@@ -36,12 +36,12 @@ namespace Nop.Admin.Controllers
             IWorkContext workContext,
             IPermissionService permissionService)
         {
-            this._addressAttributeService = addressAttributeService;
-            this._languageService = languageService;
-            this._localizedEntityService = localizedEntityService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._permissionService = permissionService;
+            _addressAttributeService = addressAttributeService;
+            _languageService = languageService;
+            _localizedEntityService = localizedEntityService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -274,28 +274,26 @@ namespace Nop.Admin.Controllers
             if (addressAttribute == null)
                 //No address attribute found with the specified id
                 return RedirectToAction("List");
-            
-            if (ModelState.IsValid)
+
+            if (!ModelState.IsValid) return View(model);
+
+            var cav = new AddressAttributeValue
             {
-                var cav = new AddressAttributeValue
-                {
-                    AddressAttributeId = model.AddressAttributeId,
-                    Name = model.Name,
-                    IsPreSelected = model.IsPreSelected,
-                    DisplayOrder = model.DisplayOrder
-                };
+                AddressAttributeId = model.AddressAttributeId,
+                Name = model.Name,
+                IsPreSelected = model.IsPreSelected,
+                DisplayOrder = model.DisplayOrder
+            };
 
-                _addressAttributeService.InsertAddressAttributeValue(cav);
-                UpdateValueLocales(cav, model);
+            _addressAttributeService.InsertAddressAttributeValue(cav);
+            UpdateValueLocales(cav, model);
 
-                ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
-                return View(model);
-            }
+            ViewBag.RefreshPage = true;
+            ViewBag.btnId = btnId;
+            ViewBag.formId = formId;
+            return View(model);
 
             //If we got this far, something failed, redisplay form
-            return View(model);
         }
 
         //edit

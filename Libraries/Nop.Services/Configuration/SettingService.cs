@@ -78,7 +78,7 @@ namespace Nop.Services.Configuration
         protected virtual IDictionary<string, IList<SettingForCaching>> GetAllSettingsCached()
         {
             //cache
-            string key = string.Format(SETTINGS_ALL_KEY);
+            var key = string.Format(SETTINGS_ALL_KEY);
             return _cacheManager.Get(key, () =>
             {
                 //we use no tracking here for performance optimization
@@ -268,7 +268,7 @@ namespace Nop.Services.Configuration
             if (key == null)
                 throw new ArgumentNullException("key");
             key = key.Trim().ToLowerInvariant();
-            string valueStr = CommonHelper.GetNopCustomTypeConverter(typeof(T)).ConvertToInvariantString(value);
+            var valueStr = CommonHelper.GetNopCustomTypeConverter(typeof(T)).ConvertToInvariantString(value);
 
             var allSettings = GetAllSettingsCached();
             var settingForCaching = allSettings.ContainsKey(key) ? 
@@ -319,7 +319,7 @@ namespace Nop.Services.Configuration
             Expression<Func<T, TPropType>> keySelector, int storeId = 0) 
             where T : ISettings, new()
         {
-            string key = settings.GetSettingKey(keySelector);
+            var key = settings.GetSettingKey(keySelector);
 
             var setting = GetSettingByKey<string>(key, storeId: storeId);
             return setting != null;
@@ -352,7 +352,7 @@ namespace Nop.Services.Configuration
                 if (!CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).IsValid(setting))
                     continue;
 
-                object value = CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).ConvertFromInvariantString(setting);
+                var value = CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).ConvertFromInvariantString(setting);
 
                 //set property
                 prop.SetValue(settings, value, null);
@@ -381,7 +381,7 @@ namespace Nop.Services.Configuration
                 if (!CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
                     continue;
 
-                string key = typeof(T).Name + "." + prop.Name;
+                var key = typeof(T).Name + "." + prop.Name;
                 //Duck typing is not supported in C#. That's why we're using dynamic type
                 dynamic value = prop.GetValue(settings, null);
                 if (value != null)
@@ -423,7 +423,7 @@ namespace Nop.Services.Configuration
                        keySelector));
             }
 
-            string key = settings.GetSettingKey(keySelector);
+            var key = settings.GetSettingKey(keySelector);
             //Duck typing is not supported in C#. That's why we're using dynamic type
             dynamic value = propInfo.GetValue(settings, null);
             if (value != null)
@@ -442,7 +442,7 @@ namespace Nop.Services.Configuration
             var allSettings = GetAllSettings();
             foreach (var prop in typeof(T).GetProperties())
             {
-                string key = typeof(T).Name + "." + prop.Name;
+                var key = typeof(T).Name + "." + prop.Name;
                 settingsToDelete.AddRange(allSettings.Where(x => x.Name.Equals(key, StringComparison.InvariantCultureIgnoreCase)));
             }
 
@@ -461,7 +461,7 @@ namespace Nop.Services.Configuration
         public virtual void DeleteSetting<T, TPropType>(T settings,
             Expression<Func<T, TPropType>> keySelector, int storeId = 0) where T : ISettings, new()
         {
-            string key = settings.GetSettingKey(keySelector);
+            var key = settings.GetSettingKey(keySelector);
             key = key.Trim().ToLowerInvariant();
 
             var allSettings = GetAllSettingsCached();

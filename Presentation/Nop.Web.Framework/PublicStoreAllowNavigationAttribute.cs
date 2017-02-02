@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using System.Web.Mvc;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
@@ -22,7 +21,7 @@ namespace Nop.Web.Framework
         
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (filterContext == null || filterContext.HttpContext == null)
+            if (filterContext?.HttpContext == null)
                 return;
 
             //search the solution by "[PublicStoreAllowNavigation(true)]" keyword 
@@ -30,16 +29,16 @@ namespace Nop.Web.Framework
             if (_ignore)
                 return;
 
-            HttpRequestBase request = filterContext.HttpContext.Request;
+            var request = filterContext.HttpContext.Request;
             if (request == null)
                 return;
 
-            string actionName = filterContext.ActionDescriptor.ActionName;
-            if (String.IsNullOrEmpty(actionName))
+            var actionName = filterContext.ActionDescriptor.ActionName;
+            if (string.IsNullOrEmpty(actionName))
                 return;
 
-            string controllerName = filterContext.Controller.ToString();
-            if (String.IsNullOrEmpty(controllerName))
+            var controllerName = filterContext.Controller.ToString();
+            if (string.IsNullOrEmpty(controllerName))
                 return;
 
             //don't apply filter to child methods

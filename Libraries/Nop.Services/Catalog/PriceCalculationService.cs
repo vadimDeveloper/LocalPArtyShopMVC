@@ -271,7 +271,7 @@ namespace Nop.Services.Catalog
                 .FilterForCustomer(customer)
                 .RemoveDuplicatedQuantities();
 
-            int previousQty = 1;
+            var previousQty = 1;
             decimal? previousPrice = null;
             foreach (var tierPrice in tierPrices)
             {
@@ -306,7 +306,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("product");
 
             appliedDiscount = null;
-            decimal appliedDiscountAmount = decimal.Zero;
+            var appliedDiscountAmount = decimal.Zero;
 
             //we don't apply discounts to products with price entered by a customer
             if (product.CustomerEntersPrice)
@@ -428,7 +428,7 @@ namespace Nop.Services.Catalog
                 var result = new ProductPriceForCaching();
 
                 //initial price
-                decimal price = product.Price;
+                var price = product.Price;
 
                 //special price
                 var specialPrice = product.GetSpecialPrice();
@@ -438,7 +438,7 @@ namespace Nop.Services.Catalog
                 //tier prices
                 if (product.HasTierPrices)
                 {
-                    decimal? tierPrice = GetMinimumTierPrice(product, customer, quantity);
+                    var tierPrice = GetMinimumTierPrice(product, customer, quantity);
                     if (tierPrice.HasValue)
                         price = Math.Min(price, tierPrice.Value);
                 }
@@ -455,7 +455,7 @@ namespace Nop.Services.Catalog
                 {
                     //discount
                     Discount tmpAppliedDiscount;
-                    decimal tmpDiscountAmount = GetDiscountAmount(product, customer, price, out tmpAppliedDiscount);
+                    var tmpDiscountAmount = GetDiscountAmount(product, customer, price, out tmpAppliedDiscount);
                     price = price - tmpDiscountAmount;
 
                     if (tmpAppliedDiscount != null)
@@ -576,7 +576,7 @@ namespace Nop.Services.Catalog
             else
             {
                 //summarize price of all attributes
-                decimal attributesTotalPrice = decimal.Zero;
+                var attributesTotalPrice = decimal.Zero;
                 var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
                 if (attributeValues != null)
                 {
@@ -709,7 +709,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            decimal cost = product.ProductCost;
+            var cost = product.ProductCost;
             var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
             foreach (var attributeValue in attributeValues)
             {

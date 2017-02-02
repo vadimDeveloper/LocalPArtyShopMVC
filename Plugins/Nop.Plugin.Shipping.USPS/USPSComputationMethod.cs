@@ -84,7 +84,7 @@ namespace Nop.Plugin.Shipping.USPS
         protected bool IsDomesticRequest(GetShippingOptionRequest getShippingOptionRequest)
         {
             //Origin Country must be USA, Collect USA from list of countries
-            bool result = true;
+            var result = true;
             if (getShippingOptionRequest != null &&
                 getShippingOptionRequest.ShippingAddress != null &&
                 getShippingOptionRequest.ShippingAddress.Country != null)
@@ -133,10 +133,10 @@ namespace Nop.Plugin.Shipping.USPS
             _shippingService.GetDimensions(getShippingOptionRequest.Items, out widthTmp, out lengthTmp, out heightTmp);
 
 
-            int length = Convert.ToInt32(Math.Ceiling(lengthTmp / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
-            int height = Convert.ToInt32(Math.Ceiling(heightTmp / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
-            int width = Convert.ToInt32(Math.Ceiling(widthTmp / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
-            int weight = Convert.ToInt32(Math.Ceiling(_shippingService.GetTotalWeight(getShippingOptionRequest) / baseusedMeasureWeight.Ratio * usedMeasureWeight.Ratio));
+            var length = Convert.ToInt32(Math.Ceiling(lengthTmp / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
+            var height = Convert.ToInt32(Math.Ceiling(heightTmp / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
+            var width = Convert.ToInt32(Math.Ceiling(widthTmp / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
+            var weight = Convert.ToInt32(Math.Ceiling(_shippingService.GetTotalWeight(getShippingOptionRequest) / baseusedMeasureWeight.Ratio * usedMeasureWeight.Ratio));
             
 
             if (length < 1)
@@ -149,8 +149,8 @@ namespace Nop.Plugin.Shipping.USPS
                 weight = 1;
 
 
-            string zipPostalCodeFrom = getShippingOptionRequest.ZipPostalCodeFrom;
-            string zipPostalCodeTo = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
+            var zipPostalCodeFrom = getShippingOptionRequest.ZipPostalCodeFrom;
+            var zipPostalCodeTo = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
 
             //valid values for testing. http://testing.shippingapis.com/ShippingAPITest.dll
             //Zip to = "20008"; Zip from ="10022"; weight = 2;
@@ -158,11 +158,11 @@ namespace Nop.Plugin.Shipping.USPS
 
 
 
-            int pounds = Convert.ToInt32(weight / 16);
-            int ounces = Convert.ToInt32(weight - (pounds * 16.0M));
-            int girth = height + height + width + width;
+            var pounds = Convert.ToInt32(weight / 16);
+            var ounces = Convert.ToInt32(weight - (pounds * 16.0M));
+            var girth = height + height + width + width;
             //Get shopping cart sub-total.  V2 International rates require the package value to be declared.
-            decimal subTotal = decimal.Zero;
+            var subTotal = decimal.Zero;
             foreach (var packageItem in getShippingOptionRequest.Items)
             {
                 //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
@@ -175,7 +175,7 @@ namespace Nop.Plugin.Shipping.USPS
 
             string requestString;
 
-            bool isDomestic = IsDomesticRequest(getShippingOptionRequest);
+            var isDomestic = IsDomesticRequest(getShippingOptionRequest);
             if (isDomestic)
             {
                 #region domestic request
@@ -196,7 +196,7 @@ namespace Nop.Plugin.Shipping.USPS
                     // AC - Updated to V4 API and made minor improvements to allow First Class Packages (package only - not envelopes).
 
 
-                    foreach (string element in xmlStrings.Elements) // Loop over elements with property
+                    foreach (var element in xmlStrings.Elements) // Loop over elements with property
                     {
                         if ((element == "First Class") && (weight >= 14))
                         {
@@ -229,8 +229,8 @@ namespace Nop.Plugin.Shipping.USPS
                 }
                 else
                 {
-                    int totalPackagesDims = 1;
-                    int totalPackagesWeights = 1;
+                    var totalPackagesDims = 1;
+                    var totalPackagesWeights = 1;
                     if (IsPackageTooHeavy(pounds))
                     {
                         totalPackagesWeights = Convert.ToInt32(Math.Ceiling((decimal)pounds / (decimal)MAXPACKAGEWEIGHT));
@@ -243,12 +243,12 @@ namespace Nop.Plugin.Shipping.USPS
                     if (totalPackages == 0)
                         totalPackages = 1;
 
-                    int pounds2 = pounds / totalPackages;
+                    var pounds2 = pounds / totalPackages;
                     //we don't use ounces
-                    int ounces2 = ounces / totalPackages;
-                    int height2 = height / totalPackages;
-                    int width2 = width / totalPackages;
-                    int length2 = length / totalPackages;
+                    var ounces2 = ounces / totalPackages;
+                    var height2 = height / totalPackages;
+                    var width2 = width / totalPackages;
+                    var length2 = length / totalPackages;
                     if (pounds2 < 1)
                         pounds2 = 1;
                     if (height2 < 1)
@@ -260,11 +260,11 @@ namespace Nop.Plugin.Shipping.USPS
 
                     var packageSize = GetPackageSize(length2, height2, width2);
                     
-                    int girth2 = height2 + height2 + width2 + width2;
+                    var girth2 = height2 + height2 + width2 + width2;
 
-                    for (int i = 0; i < totalPackages; i++)
+                    for (var i = 0; i < totalPackages; i++)
                     {
-                        foreach (string element in xmlStrings.Elements)
+                        foreach (var element in xmlStrings.Elements)
                         {
                             if ((element == "First Class") && (weight >= 14))
                             {
@@ -307,7 +307,7 @@ namespace Nop.Plugin.Shipping.USPS
                 sb.AppendFormat("<Revision>2</Revision>");
 
                 //V2 International rates require the package value to be declared.  Max content value for most shipping options is $400 so it is limited here.  
-                decimal intlSubTotal = subTotal > 400 ? 400 : subTotal;
+                var intlSubTotal = subTotal > 400 ? 400 : subTotal;
 
                 //little hack here for international requests
                 length = 12;
@@ -315,7 +315,7 @@ namespace Nop.Plugin.Shipping.USPS
                 height = 12;
                 girth = height + height + width + width;
 
-                string mailType = "Package"; //Package, Envelope
+                var mailType = "Package"; //Package, Envelope
                 var packageSize = GetPackageSize(length, height, width);
 
                 var countryName = getShippingOptionRequest.ShippingAddress.Country.Name;
@@ -352,8 +352,8 @@ namespace Nop.Plugin.Shipping.USPS
                 }
                 else
                 {
-                    int totalPackagesDims = 1;
-                    int totalPackagesWeights = 1;
+                    var totalPackagesDims = 1;
+                    var totalPackagesWeights = 1;
                     if (IsPackageTooHeavy(pounds))
                     {
                         totalPackagesWeights = Convert.ToInt32(Math.Ceiling((decimal)pounds / (decimal)MAXPACKAGEWEIGHT));
@@ -366,12 +366,12 @@ namespace Nop.Plugin.Shipping.USPS
                     if (totalPackages == 0)
                         totalPackages = 1;
 
-                    int pounds2 = pounds / totalPackages;
+                    var pounds2 = pounds / totalPackages;
                     //we don't use ounces
-                    int ounces2 = ounces / totalPackages;
-                    int height2 = height / totalPackages;
-                    int width2 = width / totalPackages;
-                    int length2 = length / totalPackages;
+                    var ounces2 = ounces / totalPackages;
+                    var height2 = height / totalPackages;
+                    var width2 = width / totalPackages;
+                    var length2 = length / totalPackages;
                     if (pounds2 < 1)
                         pounds2 = 1;
                     if (height2 < 1)
@@ -386,9 +386,9 @@ namespace Nop.Plugin.Shipping.USPS
                     width2 = 12;
                     height2 = 12;
                     var packageSize2 = GetPackageSize(length2, height2, width2);
-                    int girth2 = height2 + height2 + width2 + width2;
+                    var girth2 = height2 + height2 + width2 + width2;
 
-                    for (int i = 0; i < totalPackages; i++)
+                    for (var i = 0; i < totalPackages; i++)
                     {
                         sb.AppendFormat("<Package ID=\"{0}\">", i.ToString());
                         sb.AppendFormat("<Pounds>{0}</Pounds>", pounds2);
@@ -424,7 +424,7 @@ namespace Nop.Plugin.Shipping.USPS
 
         private string DoRequest(string url, string requestString)
         {
-            byte[] bytes = new ASCIIEncoding().GetBytes(requestString);
+            var bytes = new ASCIIEncoding().GetBytes(requestString);
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
@@ -442,14 +442,14 @@ namespace Nop.Plugin.Shipping.USPS
 
         private bool IsPackageTooLarge(int length, int height, int width)
         {
-            int total = TotalPackageSize(length, height, width);
+            var total = TotalPackageSize(length, height, width);
             return total > 130;
         }
 
         private int TotalPackageSize(int length, int height, int width)
         {
-            int girth = height + height + width + width;
-            int total = girth + length;
+            var girth = height + height + width + width;
+            var total = girth + length;
             return total;
         }
 
@@ -479,11 +479,11 @@ namespace Nop.Plugin.Shipping.USPS
         {
             var shippingOptions = new List<ShippingOption>();
 
-            string postageStr = isDomestic ? "Postage" : "Service";
-            string mailServiceStr = isDomestic ? "MailService" : "SvcDescription";
-            string rateStr = isDomestic ? "Rate" : "Postage";
-            string classStr = isDomestic ? "CLASSID" : "ID";
-            string carrierServicesOffered = isDomestic ? _uspsSettings.CarrierServicesOfferedDomestic : _uspsSettings.CarrierServicesOfferedInternational;
+            var postageStr = isDomestic ? "Postage" : "Service";
+            var mailServiceStr = isDomestic ? "MailService" : "SvcDescription";
+            var rateStr = isDomestic ? "Rate" : "Postage";
+            var classStr = isDomestic ? "CLASSID" : "ID";
+            var carrierServicesOffered = isDomestic ? _uspsSettings.CarrierServicesOfferedDomestic : _uspsSettings.CarrierServicesOfferedInternational;
 
             using (var sr = new StringReader(response))
             using (var tr = new XmlTextReader(sr))
@@ -494,7 +494,7 @@ namespace Nop.Plugin.Shipping.USPS
 
                     if ((tr.Name == "Error") && (tr.NodeType == XmlNodeType.Element))
                     {
-                        string errorText = "";
+                        var errorText = "";
                         while (tr.Read())
                         {
                             if ((tr.Name == "Description") && (tr.NodeType == XmlNodeType.Element))
@@ -507,12 +507,12 @@ namespace Nop.Plugin.Shipping.USPS
 
                     if ((tr.Name == postageStr) && (tr.NodeType == XmlNodeType.Element))
                     {
-                        string serviceId = string.Empty;
+                        var serviceId = string.Empty;
 
                         // Find the ID for the service
                         if (tr.HasAttributes)
                         {
-                            for (int i = 0; i < tr.AttributeCount; i++)
+                            for (var i = 0; i < tr.AttributeCount; i++)
                             {
                                 tr.MoveToAttribute(i);
                                 if (tr.Name.Equals(classStr))
@@ -532,8 +532,8 @@ namespace Nop.Plugin.Shipping.USPS
                             continue;
                         }
 
-                        string serviceCode = string.Empty;
-                        string postalRate = string.Empty;
+                        var serviceCode = string.Empty;
+                        var postalRate = string.Empty;
 
                         do
                         {
@@ -562,13 +562,13 @@ namespace Nop.Plugin.Shipping.USPS
 
                         //USPS issue fixed
                         var reg = (char)174; // registered sign "\u00AE"
-                        string tm = "\u2122"; // trademark sign
+                        var tm = "\u2122"; // trademark sign
                         serviceCode = serviceCode.Replace("&lt;sup&gt;&amp;reg;&lt;/sup&gt;", reg.ToString());
                         serviceCode = serviceCode.Replace("&lt;sup&gt;&#174;&lt;/sup&gt;", reg.ToString());
                         serviceCode = serviceCode.Replace("&lt;sup&gt;&amp;trade;&lt;/sup&gt;", tm);
                         serviceCode = serviceCode.Replace("&lt;sup&gt;&#8482;&lt;/sup&gt;", tm);
 
-                        ShippingOption shippingOption = shippingOptions.Find(s => s.Name == serviceCode);
+                        var shippingOption = shippingOptions.Find(s => s.Name == serviceCode);
                         if (shippingOption == null)
                         {
                             shippingOption = new ShippingOption();
@@ -611,10 +611,10 @@ namespace Nop.Plugin.Shipping.USPS
                 return response;
             }
             
-            bool isDomestic = IsDomesticRequest(getShippingOptionRequest);
-            string requestString = CreateRequest(_uspsSettings.Username, _uspsSettings.Password, getShippingOptionRequest);
-            string responseXml = DoRequest(_uspsSettings.Url, requestString);
-            string error = "";
+            var isDomestic = IsDomesticRequest(getShippingOptionRequest);
+            var requestString = CreateRequest(_uspsSettings.Username, _uspsSettings.Password, getShippingOptionRequest);
+            var responseXml = DoRequest(_uspsSettings.Url, requestString);
+            var error = "";
             var shippingOptions = ParseResponse(responseXml, isDomestic, ref error);
             if (String.IsNullOrEmpty(error))
             {

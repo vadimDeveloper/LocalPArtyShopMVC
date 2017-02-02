@@ -89,7 +89,7 @@ namespace Nop.Services.Stores
         /// <returns>Stores</returns>
         public virtual IList<Store> GetAllStores()
         {
-            string key = STORES_ALL_KEY;
+            var key = STORES_ALL_KEY;
             return _cacheManager.Get(key, () =>
             {
                 var query = from s in _storeRepository.Table
@@ -110,7 +110,7 @@ namespace Nop.Services.Stores
             if (storeId == 0)
                 return null;
             
-            string key = string.Format(STORES_BY_ID_KEY, storeId);
+            var key = string.Format(STORES_BY_ID_KEY, storeId);
             return _cacheManager.Get(key, () => _storeRepository.GetById(storeId));
         }
 

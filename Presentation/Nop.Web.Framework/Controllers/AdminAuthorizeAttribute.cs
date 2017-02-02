@@ -64,7 +64,7 @@ namespace Nop.Web.Framework.Controllers
         public virtual bool HasAdminAccess(AuthorizationContext filterContext)
         {
             var permissionService = EngineContext.Current.Resolve<IPermissionService>();
-            bool result = permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel);
+            var result = permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel);
             return result;
         }
     }

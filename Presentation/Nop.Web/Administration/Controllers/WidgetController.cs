@@ -32,11 +32,11 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService, ISettingService settingService,
             WidgetSettings widgetSettings, IPluginFinder pluginFinder)
 		{
-            this._widgetService = widgetService;
-            this._permissionService = permissionService;
-            this._settingService = settingService;
-            this._widgetSettings = widgetSettings;
-            this._pluginFinder = pluginFinder;
+            _widgetService = widgetService;
+            _permissionService = permissionService;
+            _settingService = settingService;
+            _widgetSettings = widgetSettings;
+            _pluginFinder = pluginFinder;
 		}
 
 		#endregion 

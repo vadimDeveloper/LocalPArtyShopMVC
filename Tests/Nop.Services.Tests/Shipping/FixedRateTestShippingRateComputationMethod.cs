@@ -11,7 +11,7 @@ namespace Nop.Services.Tests.Shipping
     {
         private decimal GetRate()
         {
-            decimal rate = 10M;
+            var rate = 10M;
             return rate;
         }
 

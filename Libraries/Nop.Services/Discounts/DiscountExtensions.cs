@@ -46,10 +46,10 @@ namespace Nop.Services.Discounts
             decimal amount)
         {
             Discount preferredDiscount = null;
-            decimal maximumDiscountValue = decimal.Zero;
+            var maximumDiscountValue = decimal.Zero;
             foreach (var discount in discounts)
             {
-                decimal currentDiscountValue = discount.GetDiscountAmount(amount);
+                var currentDiscountValue = discount.GetDiscountAmount(amount);
                 if (currentDiscountValue > maximumDiscountValue)
                 {
                     maximumDiscountValue = currentDiscountValue;

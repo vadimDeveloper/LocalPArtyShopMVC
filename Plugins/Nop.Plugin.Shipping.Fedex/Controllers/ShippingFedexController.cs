@@ -48,14 +48,14 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
 
             var services = new FedexServices();
             // Load service names
-            string carrierServicesOfferedDomestic = _fedexSettings.CarrierServicesOffered;
-            foreach (string service in services.Services)
+            var carrierServicesOfferedDomestic = _fedexSettings.CarrierServicesOffered;
+            foreach (var service in services.Services)
                 model.AvailableCarrierServices.Add(service);
 
             if (!String.IsNullOrEmpty(carrierServicesOfferedDomestic))
-                foreach (string service in services.Services)
+                foreach (var service in services.Services)
                 {
-                    string serviceId = FedexServices.GetServiceId(service);
+                    var serviceId = FedexServices.GetServiceId(service);
                     if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOfferedDomestic))
                     {
                         if (carrierServicesOfferedDomestic.Contains(serviceId))
@@ -93,13 +93,13 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
 
             // Save selected services
             var carrierServicesOfferedDomestic = new StringBuilder();
-            int carrierServicesDomesticSelectedCount = 0;
+            var carrierServicesDomesticSelectedCount = 0;
             if (model.CheckedCarrierServices != null)
             {
                 foreach (var cs in model.CheckedCarrierServices)
                 {
                     carrierServicesDomesticSelectedCount++;
-                    string serviceId = FedexServices.GetServiceId(cs);
+                    var serviceId = FedexServices.GetServiceId(cs);
                     if (!String.IsNullOrEmpty(serviceId))
                         carrierServicesOfferedDomestic.AppendFormat("{0}:", serviceId);
                 }

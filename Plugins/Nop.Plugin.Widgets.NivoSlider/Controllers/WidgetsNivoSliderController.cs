@@ -40,7 +40,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
 
         protected string GetPictureUrl(int pictureId)
         {
-            string cacheKey = string.Format(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY, pictureId);
+            var cacheKey = string.Format(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY, pictureId);
             return _cacheManager.Get(cacheKey, () =>
             {
                 var url = _pictureService.GetPictureUrl(pictureId, showDefaultPicture: false);

@@ -18,11 +18,11 @@ namespace Nop.Web.Extensions
             if (form == null)
                 throw new ArgumentNullException("form");
 
-            string attributesXml = "";
+            var attributesXml = "";
             var attributes = addressAttributeService.GetAllAddressAttributes();
             foreach (var attribute in attributes)
             {
-                string controlId = string.Format("address_attribute_{0}", attribute.Id);
+                var controlId = string.Format("address_attribute_{0}", attribute.Id);
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -31,7 +31,7 @@ namespace Nop.Web.Extensions
                             var ctrlAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                int selectedAttributeId = int.Parse(ctrlAttributes);
+                                var selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
                                     attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
@@ -45,7 +45,7 @@ namespace Nop.Web.Extensions
                             {
                                 foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    int selectedAttributeId = int.Parse(item);
+                                    var selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
                                         attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
                                             attribute, selectedAttributeId.ToString());
@@ -73,7 +73,7 @@ namespace Nop.Web.Extensions
                             var ctrlAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                string enteredText = ctrlAttributes.Trim();
+                                var enteredText = ctrlAttributes.Trim();
                                 attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
                                     attribute, enteredText);
                             }

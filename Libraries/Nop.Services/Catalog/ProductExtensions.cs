@@ -27,16 +27,16 @@ namespace Nop.Services.Catalog
                 return null;
 
             //check date range
-            DateTime now = DateTime.UtcNow;
+            var now = DateTime.UtcNow;
             if (product.SpecialPriceStartDateTimeUtc.HasValue)
             {
-                DateTime startDate = DateTime.SpecifyKind(product.SpecialPriceStartDateTimeUtc.Value, DateTimeKind.Utc);
+                var startDate = DateTime.SpecifyKind(product.SpecialPriceStartDateTimeUtc.Value, DateTimeKind.Utc);
                 if (startDate.CompareTo(now) > 0)
                     return null;
             }
             if (product.SpecialPriceEndDateTimeUtc.HasValue)
             {
-                DateTime endDate = DateTime.SpecifyKind(product.SpecialPriceEndDateTimeUtc.Value, DateTimeKind.Utc);
+                var endDate = DateTime.SpecifyKind(product.SpecialPriceEndDateTimeUtc.Value, DateTimeKind.Utc);
                 if (endDate.CompareTo(now) < 0)
                     return null;
             }
@@ -54,7 +54,7 @@ namespace Nop.Services.Catalog
         public static RelatedProduct FindRelatedProduct(this IList<RelatedProduct> source,
             int productId1, int productId2)
         {
-            foreach (RelatedProduct relatedProduct in source)
+            foreach (var relatedProduct in source)
                 if (relatedProduct.ProductId1 == productId1 && relatedProduct.ProductId2 == productId2)
                     return relatedProduct;
             return null;
@@ -70,7 +70,7 @@ namespace Nop.Services.Catalog
         public static CrossSellProduct FindCrossSellProduct(this IList<CrossSellProduct> source,
             int productId1, int productId2)
         {
-            foreach (CrossSellProduct crossSellProduct in source)
+            foreach (var crossSellProduct in source)
                 if (crossSellProduct.ProductId1 == productId1 && crossSellProduct.ProductId2 == productId2)
                     return crossSellProduct;
             return null;
@@ -96,7 +96,7 @@ namespace Nop.Services.Catalog
             if (productAttributeParser == null)
                 throw new ArgumentNullException("productAttributeParser");
 
-            string stockMessage = string.Empty;
+            var stockMessage = string.Empty;
 
             switch (product.ManageInventoryMethod)
             {
@@ -195,7 +195,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            bool result = product.ProductTags.ToList().Find(pt => pt.Id == productTagId) != null;
+            var result = product.ProductTags.ToList().Find(pt => pt.Id == productTagId) != null;
             return result;
         }
 
@@ -296,14 +296,14 @@ namespace Nop.Services.Catalog
                 case RentalPricePeriod.Days:
                 {
                     var totalDaysToRent = Math.Max((endDate - startDate).TotalDays, 1);
-                    int configuredPeriodDays = product.RentalPriceLength;
+                    var configuredPeriodDays = product.RentalPriceLength;
                     totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent/configuredPeriodDays));
                 }
                     break;
                 case RentalPricePeriod.Weeks:
                     {
                         var totalDaysToRent = Math.Max((endDate - startDate).TotalDays, 1);
-                        int configuredPeriodDays = 7 * product.RentalPriceLength;
+                        var configuredPeriodDays = 7 * product.RentalPriceLength;
                         totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent / configuredPeriodDays));
                     }
                     break;
@@ -316,14 +316,14 @@ namespace Nop.Services.Catalog
                             //several days added (not full month)
                             totalMonthsToRent++;
                         }
-                        int configuredPeriodMonths = product.RentalPriceLength;
+                        var configuredPeriodMonths = product.RentalPriceLength;
                         totalPeriods = Convert.ToInt32(Math.Ceiling((double)totalMonthsToRent / configuredPeriodMonths));
                     }
                     break;
                 case RentalPricePeriod.Years:
                     {
                         var totalDaysToRent = Math.Max((endDate - startDate).TotalDays, 1);
-                        int configuredPeriodDays = 365 * product.RentalPriceLength;
+                        var configuredPeriodDays = 365 * product.RentalPriceLength;
                         totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent / configuredPeriodDays));
                     }
                     break;
@@ -515,12 +515,12 @@ namespace Nop.Services.Catalog
 
             productPrice = productPrice.HasValue ? productPrice.Value : product.Price;
 
-            decimal basePrice = productPrice.Value /
+            var basePrice = productPrice.Value /
                 //do not round. otherwise, it can cause issues
                 measureService.ConvertWeight(productAmount, productUnit, referenceUnit, false) * 
                 referenceAmount;
-            decimal basePriceInCurrentCurrency = currencyService.ConvertFromPrimaryStoreCurrency(basePrice, workContext.WorkingCurrency);
-            string basePriceStr = priceFormatter.FormatPrice(basePriceInCurrentCurrency, true, false);
+            var basePriceInCurrentCurrency = currencyService.ConvertFromPrimaryStoreCurrency(basePrice, workContext.WorkingCurrency);
+            var basePriceStr = priceFormatter.FormatPrice(basePriceInCurrentCurrency, true, false);
 
             var result = string.Format(localizationService.GetResource("Products.BasePrice"),
                 basePriceStr, referenceAmount.ToString("G29"), referenceUnit.Name);

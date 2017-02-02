@@ -45,14 +45,14 @@ namespace Nop.Admin.Controllers
             IStoreService storeService, 
             IStoreMappingService storeMappingService)
         {
-            this._newsService = newsService;
-            this._languageService = languageService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._urlRecordService = urlRecordService;
-            this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
+            _newsService = newsService;
+            _languageService = languageService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _urlRecordService = urlRecordService;
+            _storeService = storeService;
+            _storeMappingService = storeMappingService;
 		}
 
 		#endregion 
@@ -63,7 +63,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(NewsItemModel model, NewsItem newsItem, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableStores = _storeService
                 .GetAllStores()

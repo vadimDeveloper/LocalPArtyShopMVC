@@ -207,10 +207,10 @@ namespace Nop.Plugin.Payments.PayPalDirect
 
             //send request
             var service = GetService();
-            DoDirectPaymentResponseType response = service.DoDirectPayment(req);
+            var response = service.DoDirectPayment(req);
 
             string error;
-            bool success = PaypalHelper.CheckSuccess(response, out error);
+            var success = PaypalHelper.CheckSuccess(response, out error);
             if (success)
             {
                 result.AvsResult = response.AVSCode;
@@ -251,7 +251,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             //now PayPal requires user-agent. otherwise, we can get 403 error
             req.UserAgent = HttpContext.Current.Request.UserAgent;
 
-            string formContent = string.Format("{0}&cmd=_notify-validate", formString);
+            var formContent = string.Format("{0}&cmd=_notify-validate", formString);
             req.ContentLength = formContent.Length;
 
             using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))
@@ -264,13 +264,13 @@ namespace Nop.Plugin.Payments.PayPalDirect
             {
                 response = HttpUtility.UrlDecode(sr.ReadToEnd());
             }
-            bool success = response.Trim().Equals("VERIFIED", StringComparison.OrdinalIgnoreCase);
+            var success = response.Trim().Equals("VERIFIED", StringComparison.OrdinalIgnoreCase);
 
             values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            foreach (string l in formString.Split('&'))
+            foreach (var l in formString.Split('&'))
             {
-                string line = l.Trim();
-                int equalPox = line.IndexOf('=');
+                var line = l.Trim();
+                var equalPox = line.IndexOf('=');
                 if (equalPox >= 0)
                     values.Add(line.Substring(0, equalPox), line.Substring(equalPox + 1));
             }
@@ -339,7 +339,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         {
             var result = new CapturePaymentResult();
 
-            string authorizationId = capturePaymentRequest.Order.AuthorizationTransactionId;
+            var authorizationId = capturePaymentRequest.Order.AuthorizationTransactionId;
             var req = new DoCaptureReq();
             req.DoCaptureRequest = new DoCaptureRequestType();
             req.DoCaptureRequest.Version = GetApiVersion();
@@ -350,10 +350,10 @@ namespace Nop.Plugin.Payments.PayPalDirect
             req.DoCaptureRequest.CompleteType = CompleteCodeType.COMPLETE;
 
             var service = GetService();
-            DoCaptureResponseType response = service.DoCapture(req);
+            var response = service.DoCapture(req);
 
             string error;
-            bool success = PaypalHelper.CheckSuccess(response, out error);
+            var success = PaypalHelper.CheckSuccess(response, out error);
             if (success)
             {
                 result.NewPaymentStatus = PaymentStatus.Paid;
@@ -376,7 +376,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         {
             var result = new RefundPaymentResult();
 
-            string transactionId = refundPaymentRequest.Order.CaptureTransactionId;
+            var transactionId = refundPaymentRequest.Order.CaptureTransactionId;
 
             var req = new RefundTransactionReq();
             req.RefundTransactionRequest = new RefundTransactionRequestType();
@@ -386,10 +386,10 @@ namespace Nop.Plugin.Payments.PayPalDirect
             req.RefundTransactionRequest.TransactionID = transactionId;
 
             var service = GetService();
-            RefundTransactionResponseType response = service.RefundTransaction(req);
+            var response = service.RefundTransaction(req);
 
             string error;
-            bool success = PaypalHelper.CheckSuccess(response, out error);
+            var success = PaypalHelper.CheckSuccess(response, out error);
             if (success)
             {
                 result.NewPaymentStatus = PaymentStatus.Refunded;
@@ -412,7 +412,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         {
             var result = new VoidPaymentResult();
 
-            string transactionId = voidPaymentRequest.Order.AuthorizationTransactionId;
+            var transactionId = voidPaymentRequest.Order.AuthorizationTransactionId;
             if (String.IsNullOrEmpty(transactionId))
                 transactionId = voidPaymentRequest.Order.CaptureTransactionId;
 
@@ -422,10 +422,10 @@ namespace Nop.Plugin.Payments.PayPalDirect
             req.DoVoidRequest.AuthorizationID = transactionId;
 
             var service = GetService();
-            DoVoidResponseType response = service.DoVoid(req);
+            var response = service.DoVoid(req);
 
             string error;
-            bool success = PaypalHelper.CheckSuccess(response, out error);
+            var success = PaypalHelper.CheckSuccess(response, out error);
             if (success)
             {
                 result.NewPaymentStatus = PaymentStatus.Voided;
@@ -514,10 +514,10 @@ namespace Nop.Plugin.Payments.PayPalDirect
 
 
             var service = GetService();
-            CreateRecurringPaymentsProfileResponseType response = service.CreateRecurringPaymentsProfile(req);
+            var response = service.CreateRecurringPaymentsProfile(req);
 
             string error;
-            bool success = PaypalHelper.CheckSuccess(response, out error);
+            var success = PaypalHelper.CheckSuccess(response, out error);
             if (success)
             {
                 result.NewPaymentStatus = PaymentStatus.Pending;

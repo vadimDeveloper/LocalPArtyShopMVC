@@ -102,29 +102,29 @@ namespace Nop.Admin.Controllers
             ILanguageService languageService,
             ILocalizedEntityService localizedEntityService)
         {
-            this._settingService = settingService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._addressService = addressService;
-            this._taxCategoryService = taxCategoryService;
-            this._currencyService = currencyService;
-            this._pictureService = pictureService;
-            this._localizationService = localizationService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._orderService = orderService;
-            this._encryptionService = encryptionService;
-            this._themeProvider = themeProvider;
-            this._customerService = customerService;
-            this._customerActivityService = customerActivityService;
-            this._permissionService = permissionService;
-            this._fulltextService = fulltextService;
-            this._maintenanceService = maintenanceService;
-            this._storeService = storeService;
-            this._workContext = workContext;
-            this._genericAttributeService = genericAttributeService;
-            this._returnRequestService = returnRequestService;
-            this._languageService = languageService;
-            this._localizedEntityService = localizedEntityService;
+            _settingService = settingService;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _addressService = addressService;
+            _taxCategoryService = taxCategoryService;
+            _currencyService = currencyService;
+            _pictureService = pictureService;
+            _localizationService = localizationService;
+            _dateTimeHelper = dateTimeHelper;
+            _orderService = orderService;
+            _encryptionService = encryptionService;
+            _themeProvider = themeProvider;
+            _customerService = customerService;
+            _customerActivityService = customerActivityService;
+            _permissionService = permissionService;
+            _fulltextService = fulltextService;
+            _maintenanceService = maintenanceService;
+            _storeService = storeService;
+            _workContext = workContext;
+            _genericAttributeService = genericAttributeService;
+            _returnRequestService = returnRequestService;
+            _languageService = languageService;
+            _localizedEntityService = localizedEntityService;
         }
 
         #endregion
@@ -175,7 +175,7 @@ namespace Nop.Admin.Controllers
                     Name = s.Name
                 });
             }
-            model.StoreId = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            model.StoreId = GetActiveStoreScopeConfiguration(_storeService, _workContext);
 
             return PartialView(model);
         }
@@ -189,7 +189,7 @@ namespace Nop.Admin.Controllers
             }
 
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.Action("Index", "Home", new { area = "Admin" });
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
@@ -203,7 +203,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var blogSettings = _settingService.LoadSetting<BlogSettings>(storeScope);
             var model = blogSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -226,7 +226,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var blogSettings = _settingService.LoadSetting<BlogSettings>(storeScope);
             blogSettings = model.ToEntity(blogSettings);
 
@@ -282,7 +282,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var vendorSettings = _settingService.LoadSetting<VendorSettings>(storeScope);
             var model = vendorSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -303,7 +303,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var vendorSettings = _settingService.LoadSetting<VendorSettings>(storeScope);
             vendorSettings = model.ToEntity(vendorSettings);
 
@@ -350,7 +350,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var forumSettings = _settingService.LoadSetting<ForumSettings>(storeScope);
             var model = forumSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -390,7 +390,7 @@ namespace Nop.Admin.Controllers
 
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var forumSettings = _settingService.LoadSetting<ForumSettings>(storeScope);
             forumSettings = model.ToEntity(forumSettings);
 
@@ -521,7 +521,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var newsSettings = _settingService.LoadSetting<NewsSettings>(storeScope);
             var model = newsSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -544,7 +544,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var newsSettings = _settingService.LoadSetting<NewsSettings>(storeScope);
             newsSettings = model.ToEntity(newsSettings);
 
@@ -606,7 +606,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var shippingSettings = _settingService.LoadSetting<ShippingSettings>(storeScope);
             var model = shippingSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -663,7 +663,7 @@ namespace Nop.Admin.Controllers
 
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var shippingSettings = _settingService.LoadSetting<ShippingSettings>(storeScope);
             shippingSettings = model.ToEntity(shippingSettings);
 
@@ -771,7 +771,7 @@ namespace Nop.Admin.Controllers
 
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var taxSettings = _settingService.LoadSetting<TaxSettings>(storeScope);
             var model = taxSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -854,7 +854,7 @@ namespace Nop.Admin.Controllers
 
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var taxSettings = _settingService.LoadSetting<TaxSettings>(storeScope);
             taxSettings = model.ToEntity(taxSettings);
 
@@ -1015,7 +1015,7 @@ namespace Nop.Admin.Controllers
 
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
             var model = catalogSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -1085,7 +1085,7 @@ namespace Nop.Admin.Controllers
 
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
             catalogSettings = model.ToEntity(catalogSettings);
 
@@ -1380,7 +1380,7 @@ namespace Nop.Admin.Controllers
 
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var rewardPointsSettings = _settingService.LoadSetting<RewardPointsSettings>(storeScope);
             var model = rewardPointsSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -1410,7 +1410,7 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 //load settings for a chosen store scope
-                var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+                var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
                 var rewardPointsSettings = _settingService.LoadSetting<RewardPointsSettings>(storeScope);
                 rewardPointsSettings = model.ToEntity(rewardPointsSettings);
 
@@ -1493,7 +1493,7 @@ namespace Nop.Admin.Controllers
 
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var orderSettings = _settingService.LoadSetting<OrderSettings>(storeScope);
             var model = orderSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -1540,7 +1540,7 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 //load settings for a chosen store scope
-                var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+                var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
                 var orderSettings = _settingService.LoadSetting<OrderSettings>(storeScope);
                 orderSettings = model.ToEntity(orderSettings);
 
@@ -1932,7 +1932,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var shoppingCartSettings = _settingService.LoadSetting<ShoppingCartSettings>(storeScope);
             var model = shoppingCartSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -1965,7 +1965,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var shoppingCartSettings = _settingService.LoadSetting<ShoppingCartSettings>(storeScope);
             shoppingCartSettings = model.ToEntity(shoppingCartSettings);
 
@@ -2077,7 +2077,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var mediaSettings = _settingService.LoadSetting<MediaSettings>(storeScope);
             var model = mediaSettings.ToModel();
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -2108,7 +2108,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var mediaSettings = _settingService.LoadSetting<MediaSettings>(storeScope);
             mediaSettings = model.ToEntity(mediaSettings);
 
@@ -2212,7 +2212,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var customerSettings = _settingService.LoadSetting<CustomerSettings>(storeScope);
             var addressSettings = _settingService.LoadSetting<AddressSettings>(storeScope);
             var dateTimeSettings = _settingService.LoadSetting<DateTimeSettings>(storeScope);
@@ -2225,7 +2225,7 @@ namespace Nop.Admin.Controllers
 
             model.DateTimeSettings.AllowCustomersToSetTimeZone = dateTimeSettings.AllowCustomersToSetTimeZone;
             model.DateTimeSettings.DefaultStoreTimeZoneId = _dateTimeHelper.DefaultStoreTimeZone.Id;
-            foreach (TimeZoneInfo timeZone in _dateTimeHelper.GetSystemTimeZones())
+            foreach (var timeZone in _dateTimeHelper.GetSystemTimeZones())
             {
                 model.DateTimeSettings.AvailableTimeZones.Add(new SelectListItem
                     {
@@ -2246,7 +2246,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
 
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var customerSettings = _settingService.LoadSetting<CustomerSettings>(storeScope);
             var addressSettings = _settingService.LoadSetting<AddressSettings>(storeScope);
             var dateTimeSettings = _settingService.LoadSetting<DateTimeSettings>(storeScope);
@@ -2287,10 +2287,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //set page timeout to 5 minutes
-            this.Server.ScriptTimeout = 300;
+            Server.ScriptTimeout = 300;
 
             var model = new GeneralCommonSettingsModel();
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             model.ActiveStoreScopeConfiguration = storeScope;
             //store information
             var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeScope);
@@ -2376,7 +2376,7 @@ namespace Nop.Admin.Controllers
             var captchaSettings = _settingService.LoadSetting<CaptchaSettings>(storeScope);
             model.SecuritySettings.EncryptionKey = securitySettings.EncryptionKey;
             if (securitySettings.AdminAreaAllowedIpAddresses != null)
-                for (int i = 0; i < securitySettings.AdminAreaAllowedIpAddresses.Count; i++)
+                for (var i = 0; i < securitySettings.AdminAreaAllowedIpAddresses.Count; i++)
                 {
                     model.SecuritySettings.AdminAreaAllowedIpAddresses += securitySettings.AdminAreaAllowedIpAddresses[i];
                     if (i != securitySettings.AdminAreaAllowedIpAddresses.Count - 1)
@@ -2443,7 +2443,7 @@ namespace Nop.Admin.Controllers
 
 
             //load settings for a chosen store scope
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
 
             //store information settings
             var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeScope);
@@ -2616,9 +2616,9 @@ namespace Nop.Admin.Controllers
             if (securitySettings.AdminAreaAllowedIpAddresses == null)
                 securitySettings.AdminAreaAllowedIpAddresses = new List<string>();
             securitySettings.AdminAreaAllowedIpAddresses.Clear();
-            if (!String.IsNullOrEmpty(model.SecuritySettings.AdminAreaAllowedIpAddresses))
-                foreach (string s in model.SecuritySettings.AdminAreaAllowedIpAddresses.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                    if (!String.IsNullOrWhiteSpace(s))
+            if (!string.IsNullOrEmpty(model.SecuritySettings.AdminAreaAllowedIpAddresses))
+                foreach (var s in model.SecuritySettings.AdminAreaAllowedIpAddresses.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    if (!string.IsNullOrWhiteSpace(s))
                         securitySettings.AdminAreaAllowedIpAddresses.Add(s.Trim());
             securitySettings.ForceSslForAllPages = model.SecuritySettings.ForceSslForAllPages;
             securitySettings.EnableXsrfProtectionForAdminArea = model.SecuritySettings.EnableXsrfProtectionForAdminArea;
@@ -2639,7 +2639,7 @@ namespace Nop.Admin.Controllers
             captchaSettings.ReCaptchaPrivateKey = model.SecuritySettings.ReCaptchaPrivateKey;
             _settingService.SaveSetting(captchaSettings);
             if (captchaSettings.Enabled &&
-                (String.IsNullOrWhiteSpace(captchaSettings.ReCaptchaPublicKey) || String.IsNullOrWhiteSpace(captchaSettings.ReCaptchaPrivateKey)))
+                (string.IsNullOrWhiteSpace(captchaSettings.ReCaptchaPublicKey) || string.IsNullOrWhiteSpace(captchaSettings.ReCaptchaPrivateKey)))
             {
                 //captcha is enabled but the keys are not entered
                 ErrorNotification("Captcha is enabled but the appropriate keys are not entered");
@@ -2724,9 +2724,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //set page timeout to 5 minutes
-            this.Server.ScriptTimeout = 300;
+            Server.ScriptTimeout = 300;
 
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var securitySettings = _settingService.LoadSetting<SecuritySettings>(storeScope);
 
             try
@@ -2737,10 +2737,10 @@ namespace Nop.Admin.Controllers
                 model.SecuritySettings.EncryptionKey = model.SecuritySettings.EncryptionKey.Trim();
 
                 var newEncryptionPrivateKey = model.SecuritySettings.EncryptionKey;
-                if (String.IsNullOrEmpty(newEncryptionPrivateKey) || newEncryptionPrivateKey.Length != 16)
+                if (string.IsNullOrEmpty(newEncryptionPrivateKey) || newEncryptionPrivateKey.Length != 16)
                     throw new NopException(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.EncryptionKey.TooShort"));
 
-                string oldEncryptionPrivateKey = securitySettings.EncryptionKey;
+                var oldEncryptionPrivateKey = securitySettings.EncryptionKey;
                 if (oldEncryptionPrivateKey == newEncryptionPrivateKey)
                     throw new NopException(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.EncryptionKey.TheSame"));
 
@@ -2748,21 +2748,21 @@ namespace Nop.Admin.Controllers
                 var orders = _orderService.SearchOrders();
                 foreach (var order in orders)
                 {
-                    string decryptedCardType = _encryptionService.DecryptText(order.CardType, oldEncryptionPrivateKey);
-                    string decryptedCardName = _encryptionService.DecryptText(order.CardName, oldEncryptionPrivateKey);
-                    string decryptedCardNumber = _encryptionService.DecryptText(order.CardNumber, oldEncryptionPrivateKey);
-                    string decryptedMaskedCreditCardNumber = _encryptionService.DecryptText(order.MaskedCreditCardNumber, oldEncryptionPrivateKey);
-                    string decryptedCardCvv2 = _encryptionService.DecryptText(order.CardCvv2, oldEncryptionPrivateKey);
-                    string decryptedCardExpirationMonth = _encryptionService.DecryptText(order.CardExpirationMonth, oldEncryptionPrivateKey);
-                    string decryptedCardExpirationYear = _encryptionService.DecryptText(order.CardExpirationYear, oldEncryptionPrivateKey);
+                    var decryptedCardType = _encryptionService.DecryptText(order.CardType, oldEncryptionPrivateKey);
+                    var decryptedCardName = _encryptionService.DecryptText(order.CardName, oldEncryptionPrivateKey);
+                    var decryptedCardNumber = _encryptionService.DecryptText(order.CardNumber, oldEncryptionPrivateKey);
+                    var decryptedMaskedCreditCardNumber = _encryptionService.DecryptText(order.MaskedCreditCardNumber, oldEncryptionPrivateKey);
+                    var decryptedCardCvv2 = _encryptionService.DecryptText(order.CardCvv2, oldEncryptionPrivateKey);
+                    var decryptedCardExpirationMonth = _encryptionService.DecryptText(order.CardExpirationMonth, oldEncryptionPrivateKey);
+                    var decryptedCardExpirationYear = _encryptionService.DecryptText(order.CardExpirationYear, oldEncryptionPrivateKey);
 
-                    string encryptedCardType = _encryptionService.EncryptText(decryptedCardType, newEncryptionPrivateKey);
-                    string encryptedCardName = _encryptionService.EncryptText(decryptedCardName, newEncryptionPrivateKey);
-                    string encryptedCardNumber = _encryptionService.EncryptText(decryptedCardNumber, newEncryptionPrivateKey);
-                    string encryptedMaskedCreditCardNumber = _encryptionService.EncryptText(decryptedMaskedCreditCardNumber, newEncryptionPrivateKey);
-                    string encryptedCardCvv2 = _encryptionService.EncryptText(decryptedCardCvv2, newEncryptionPrivateKey);
-                    string encryptedCardExpirationMonth = _encryptionService.EncryptText(decryptedCardExpirationMonth, newEncryptionPrivateKey);
-                    string encryptedCardExpirationYear = _encryptionService.EncryptText(decryptedCardExpirationYear, newEncryptionPrivateKey);
+                    var encryptedCardType = _encryptionService.EncryptText(decryptedCardType, newEncryptionPrivateKey);
+                    var encryptedCardName = _encryptionService.EncryptText(decryptedCardName, newEncryptionPrivateKey);
+                    var encryptedCardNumber = _encryptionService.EncryptText(decryptedCardNumber, newEncryptionPrivateKey);
+                    var encryptedMaskedCreditCardNumber = _encryptionService.EncryptText(decryptedMaskedCreditCardNumber, newEncryptionPrivateKey);
+                    var encryptedCardCvv2 = _encryptionService.EncryptText(decryptedCardCvv2, newEncryptionPrivateKey);
+                    var encryptedCardExpirationMonth = _encryptionService.EncryptText(decryptedCardExpirationMonth, newEncryptionPrivateKey);
+                    var encryptedCardExpirationYear = _encryptionService.EncryptText(decryptedCardExpirationYear, newEncryptionPrivateKey);
 
                     order.CardType = encryptedCardType;
                     order.CardName = encryptedCardName;
@@ -2779,8 +2779,8 @@ namespace Nop.Admin.Controllers
                 var customers = _customerService.GetAllCustomersByPasswordFormat(PasswordFormat.Encrypted);
                 foreach (var customer in customers)
                 {
-                    string decryptedPassword = _encryptionService.DecryptText(customer.Password, oldEncryptionPrivateKey);
-                    string encryptedPassword = _encryptionService.EncryptText(decryptedPassword, newEncryptionPrivateKey);
+                    var decryptedPassword = _encryptionService.DecryptText(customer.Password, oldEncryptionPrivateKey);
+                    var encryptedPassword = _encryptionService.EncryptText(decryptedPassword, newEncryptionPrivateKey);
 
                     customer.Password = encryptedPassword;
                     _customerService.UpdateCustomer(customer);
@@ -2807,7 +2807,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var storeScope = GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var commonSettings = _settingService.LoadSetting<CommonSettings>(storeScope);
             try
             {
@@ -2860,7 +2860,7 @@ namespace Nop.Admin.Controllers
         //for some reasons it does not work with "filtering" support
         [AdminAntiForgery(true)] 
         public ActionResult AllSettings(DataSourceRequest command,
-            Nop.Web.Framework.Kendoui.Filter filter = null, IEnumerable<Sort> sort = null)
+            Web.Framework.Kendoui.Filter filter = null, IEnumerable<Sort> sort = null)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();

@@ -33,7 +33,7 @@ namespace Nop.Plugin.ExchangeRate.EcbExchange
             var exchangeRates = new List<Nop.Core.Domain.Directory.ExchangeRate>();
 
             var request = WebRequest.Create("http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml") as HttpWebRequest;
-            using (WebResponse response = request.GetResponse())
+            using (var response = request.GetResponse())
             {
                 var document = new XmlDocument();
                 document.Load(response.GetResponseStream());

@@ -70,25 +70,25 @@ namespace Nop.Admin.Controllers
             ICustomerActivityService customerActivityService,
             CatalogSettings catalogSettings)
         {
-            this._categoryService = categoryService;
-            this._categoryTemplateService = categoryTemplateService;
-            this._manufacturerService = manufacturerService;
-            this._productService = productService;
-            this._customerService = customerService;
-            this._urlRecordService = urlRecordService;
-            this._pictureService = pictureService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._discountService = discountService;
-            this._permissionService = permissionService;
-            this._vendorService = vendorService;
-            this._aclService = aclService;
-            this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
-            this._exportManager = exportManager;
-            this._customerActivityService = customerActivityService;
-            this._catalogSettings = catalogSettings;
+            _categoryService = categoryService;
+            _categoryTemplateService = categoryTemplateService;
+            _manufacturerService = manufacturerService;
+            _productService = productService;
+            _customerService = customerService;
+            _urlRecordService = urlRecordService;
+            _pictureService = pictureService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _discountService = discountService;
+            _permissionService = permissionService;
+            _vendorService = vendorService;
+            _aclService = aclService;
+            _storeService = storeService;
+            _storeMappingService = storeMappingService;
+            _exportManager = exportManager;
+            _customerActivityService = customerActivityService;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -143,7 +143,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareAllCategoriesModel(CategoryModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableCategories.Add(new SelectListItem
             {
@@ -165,7 +165,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareTemplatesModel(CategoryModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             var templates = _categoryTemplateService.GetAllCategoryTemplates();
             foreach (var template in templates)
@@ -182,7 +182,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareDiscountModel(CategoryModel model, Category category, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableDiscounts = _discountService
                 .GetAllDiscounts(DiscountType.AssignedToCategories, showHidden: true)
@@ -199,7 +199,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareAclModel(CategoryModel model, Category category, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableCustomerRoles = _customerService
                 .GetAllCustomerRoles(true)
@@ -241,18 +241,17 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(CategoryModel model, Category category, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableStores = _storeService
                 .GetAllStores()
                 .Select(s => s.ToModel())
                 .ToList();
-            if (!excludeProperties)
+            if (excludeProperties) return;
+
+            if (category != null)
             {
-                if (category != null)
-                {
-                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(category);
-                }
+                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(category);
             }
         }
 
@@ -320,10 +319,7 @@ namespace Nop.Admin.Controllers
         
         public ActionResult Tree()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
-            return View();
+            return !_permissionService.Authorize(StandardPermissionProvider.ManageCategories) ? AccessDeniedView() : View();
         }
 
         [HttpPost,]
@@ -474,7 +470,7 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                int prevPictureId = category.PictureId;
+                var prevPictureId = category.PictureId;
                 category = model.ToEntity(category);
                 category.UpdatedOnUtc = DateTime.UtcNow;
                 _categoryService.UpdateCategory(category);
@@ -714,7 +710,7 @@ namespace Nop.Admin.Controllers
 
             if (model.SelectedProductIds != null)
             {
-                foreach (int id in model.SelectedProductIds)
+                foreach (var id in model.SelectedProductIds)
                 {
                     var product = _productService.GetProductById(id);
                     if (product != null)

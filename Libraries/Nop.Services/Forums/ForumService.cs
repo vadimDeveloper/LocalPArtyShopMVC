@@ -134,19 +134,19 @@ namespace Nop.Services.Forums
             var queryNumTopics = from ft in _forumTopicRepository.Table
                                  where ft.ForumId == forumId
                                  select ft.Id;
-            int numTopics = queryNumTopics.Count();
+            var numTopics = queryNumTopics.Count();
 
             //number of posts
             var queryNumPosts = from ft in _forumTopicRepository.Table
                                 join fp in _forumPostRepository.Table on ft.Id equals fp.TopicId
                                 where ft.ForumId == forumId
                                 select fp.Id;
-            int numPosts = queryNumPosts.Count();
+            var numPosts = queryNumPosts.Count();
 
             //last values
-            int lastTopicId = 0;
-            int lastPostId = 0;
-            int lastPostCustomerId = 0;
+            var lastTopicId = 0;
+            var lastPostId = 0;
+            var lastPostCustomerId = 0;
             DateTime? lastPostTime = null;
             var queryLastValues = from ft in _forumTopicRepository.Table
                                   join fp in _forumPostRepository.Table on ft.Id equals fp.TopicId
@@ -198,11 +198,11 @@ namespace Nop.Services.Forums
             var queryNumPosts = from fp in _forumPostRepository.Table
                                 where fp.TopicId == forumTopicId
                                 select fp.Id;
-            int numPosts = queryNumPosts.Count();
+            var numPosts = queryNumPosts.Count();
 
             //last values
-            int lastPostId = 0;
-            int lastPostCustomerId = 0;
+            var lastPostId = 0;
+            var lastPostCustomerId = 0;
             DateTime? lastPostTime = null;
             var queryLastValues = from fp in _forumPostRepository.Table
                                   where fp.TopicId == forumTopicId
@@ -250,7 +250,7 @@ namespace Nop.Services.Forums
             var query = from fp in _forumPostRepository.Table
                         where fp.CustomerId == customerId
                         select fp.Id;
-            int numPosts = query.Count();
+            var numPosts = query.Count();
 
             _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.ForumPostCount, numPosts);
         }
@@ -309,7 +309,7 @@ namespace Nop.Services.Forums
         /// <returns>Forum groups</returns>
         public virtual IList<ForumGroup> GetAllForumGroups()
         {
-            string key = string.Format(FORUMGROUP_ALL_KEY);
+            var key = string.Format(FORUMGROUP_ALL_KEY);
             return _cacheManager.Get(key, () =>
             {
                 var query = from fg in _forumGroupRepository.Table
@@ -427,7 +427,7 @@ namespace Nop.Services.Forums
         /// <returns>Forums</returns>
         public virtual IList<Forum> GetAllForumsByGroupId(int forumGroupId)
         {
-            string key = string.Format(FORUM_ALLBYFORUMGROUPID_KEY, forumGroupId);
+            var key = string.Format(FORUM_ALLBYFORUMGROUPID_KEY, forumGroupId);
             return _cacheManager.Get(key, () =>
             {
                 var query = from f in _forumRepository.Table
@@ -490,8 +490,8 @@ namespace Nop.Services.Forums
                 throw new ArgumentNullException("forumTopic");
             }                
 
-            int customerId = forumTopic.CustomerId;
-            int forumId = forumTopic.ForumId;
+            var customerId = forumTopic.CustomerId;
+            var forumId = forumTopic.ForumId;
 
             //delete topic
             _forumTopicRepository.Delete(forumTopic);
@@ -575,9 +575,9 @@ namespace Nop.Services.Forums
             }
             //we need to cast it to int, otherwise it won't work in SQLCE4
             //we cannot use String.IsNullOrEmpty in query because it causes SqlCeException on SQLCE4
-            bool searchKeywords = !String.IsNullOrEmpty(keywords);
-            bool searchTopicTitles = searchType == ForumSearchType.All || searchType == ForumSearchType.TopicTitlesOnly;
-            bool searchPostText = searchType == ForumSearchType.All || searchType == ForumSearchType.PostTextOnly;
+            var searchKeywords = !String.IsNullOrEmpty(keywords);
+            var searchTopicTitles = searchType == ForumSearchType.All || searchType == ForumSearchType.TopicTitlesOnly;
+            var searchPostText = searchType == ForumSearchType.All || searchType == ForumSearchType.PostTextOnly;
             var query1 = from ft in _forumTopicRepository.Table
                          join fp in _forumPostRepository.Table on ft.Id equals fp.TopicId
                          where
@@ -705,7 +705,7 @@ namespace Nop.Services.Forums
 
             if (this.IsCustomerAllowedToMoveTopic(_workContext.CurrentCustomer, forumTopic))
             {
-                int previousForumId = forumTopic.ForumId;
+                var previousForumId = forumTopic.ForumId;
                 var newForum = GetForumById(newForumId);
 
                 if (newForum != null)
@@ -736,14 +736,14 @@ namespace Nop.Services.Forums
                 throw new ArgumentNullException("forumPost");
             }
 
-            int forumTopicId = forumPost.TopicId;
-            int customerId = forumPost.CustomerId;
+            var forumTopicId = forumPost.TopicId;
+            var customerId = forumPost.CustomerId;
             var forumTopic = this.GetTopicById(forumTopicId);
-            int forumId = forumTopic.ForumId;
+            var forumId = forumTopic.ForumId;
 
             //delete topic if it was the first post
-            bool deleteTopic = false;
-            ForumPost firstPost = forumTopic.GetFirstPost(this);
+            var deleteTopic = false;
+            var firstPost = forumTopic.GetFirstPost(this);
             if (firstPost != null && firstPost.Id == forumPost.Id)
             {
                 deleteTopic = true;
@@ -856,9 +856,9 @@ namespace Nop.Services.Forums
             _forumPostRepository.Insert(forumPost);
 
             //update stats
-            int customerId = forumPost.CustomerId;
+            var customerId = forumPost.CustomerId;
             var forumTopic = this.GetTopicById(forumPost.TopicId);
-            int forumId = forumTopic.ForumId;
+            var forumId = forumTopic.ForumId;
             UpdateForumTopicStats(forumPost.TopicId);
             UpdateForumStats(forumId);
             UpdateCustomerStats(customerId);
@@ -878,11 +878,11 @@ namespace Nop.Services.Forums
 
                 var languageId = _workContext.WorkingLanguage.Id;
 
-                int friendlyTopicPageIndex = CalculateTopicPageIndex(forumPost.TopicId,
+                var friendlyTopicPageIndex = CalculateTopicPageIndex(forumPost.TopicId,
                     _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10, 
                     forumPost.Id) + 1;
 
-                foreach (ForumSubscription subscription in subscriptions)
+                foreach (var subscription in subscriptions)
                 {
                     if (subscription.CustomerId == forumPost.CustomerId)
                     {
@@ -1201,7 +1201,7 @@ namespace Nop.Services.Forums
 
             if (_forumSettings.AllowCustomersToEditPosts)
             {
-                bool ownTopic = customer.Id == topic.CustomerId;
+                var ownTopic = customer.Id == topic.CustomerId;
                 return ownTopic;
             }
 
@@ -1269,7 +1269,7 @@ namespace Nop.Services.Forums
 
             if (_forumSettings.AllowCustomersToDeletePosts)
             {
-                bool ownTopic = customer.Id == topic.CustomerId;
+                var ownTopic = customer.Id == topic.CustomerId;
                 return ownTopic;
             }
 
@@ -1332,7 +1332,7 @@ namespace Nop.Services.Forums
 
             if (_forumSettings.AllowCustomersToEditPosts)
             {
-                bool ownPost = customer.Id == post.CustomerId;
+                var ownPost = customer.Id == post.CustomerId;
                 return ownPost;
             }
 
@@ -1369,7 +1369,7 @@ namespace Nop.Services.Forums
 
             if (_forumSettings.AllowCustomersToDeletePosts)
             {
-                bool ownPost = customer.Id == post.CustomerId;
+                var ownPost = customer.Id == post.CustomerId;
                 return ownPost;
             }
 
@@ -1430,10 +1430,10 @@ namespace Nop.Services.Forums
         /// <returns>Page index</returns>
         public virtual int CalculateTopicPageIndex(int forumTopicId, int pageSize, int postId)
         {
-            int pageIndex = 0;
+            var pageIndex = 0;
             var forumPosts = GetAllPosts(forumTopicId: forumTopicId, ascSort: true);
 
-            for (int i = 0; i < forumPosts.TotalCount; i++)
+            for (var i = 0; i < forumPosts.TotalCount; i++)
             {
                 if (forumPosts[i].Id == postId)
                 {

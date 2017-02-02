@@ -33,11 +33,11 @@ namespace Nop.Admin.Controllers
             ISettingService settingService, IPermissionService permissionService,
             IPluginFinder pluginFinder)
 		{
-            this._openAuthenticationService = openAuthenticationService;
-            this._externalAuthenticationSettings = externalAuthenticationSettings;
-            this._settingService = settingService;
-            this._permissionService = permissionService;
-            this._pluginFinder = pluginFinder;
+            _openAuthenticationService = openAuthenticationService;
+            _externalAuthenticationSettings = externalAuthenticationSettings;
+            _settingService = settingService;
+            _permissionService = permissionService;
+            _pluginFinder = pluginFinder;
 		}
 
 		#endregion 

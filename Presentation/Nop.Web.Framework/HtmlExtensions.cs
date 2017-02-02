@@ -89,7 +89,7 @@ namespace Nop.Web.Framework
                     tabStrip.AppendLine(standardTemplate(helper.ViewData.Model).ToHtmlString());
                     tabStrip.AppendLine("</div>");
 
-                    for (int i = 0; i < helper.ViewData.Model.Locales.Count; i++)
+                    for (var i = 0; i < helper.ViewData.Model.Locales.Count; i++)
                     {
                         //languages
                         tabStrip.AppendLine("<div>");
@@ -241,7 +241,7 @@ namespace Nop.Web.Framework
             {
                 //render only when a certain store is chosen
                 const string cssClass = "multi-store-override-option";
-                string dataInputSelector = "";
+                var dataInputSelector = "";
                 if (!String.IsNullOrEmpty(parentContainer))
                 {
                     dataInputSelector = "#" + parentContainer + " input, #" + parentContainer + " textarea, #" + parentContainer + " select";
@@ -370,13 +370,13 @@ namespace Nop.Web.Framework
             }
 
             days.AppendFormat("<option value='{0}'>{1}</option>", "0", dayLocale);
-            for (int i = 1; i <= 31; i++)
+            for (var i = 1; i <= 31; i++)
                 days.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
                     (selectedDay.HasValue && selectedDay.Value == i) ? " selected=\"selected\"" : null);
 
 
             months.AppendFormat("<option value='{0}'>{1}</option>", "0", monthLocale);
-            for (int i = 1; i <= 12; i++)
+            for (var i = 1; i <= 12; i++)
             {
                 months.AppendFormat("<option value='{0}'{1}>{2}</option>",
                                     i, 
@@ -394,13 +394,13 @@ namespace Nop.Web.Framework
 
             if (endYear > beginYear)
             {
-                for (int i = beginYear.Value; i <= endYear.Value; i++)
+                for (var i = beginYear.Value; i <= endYear.Value; i++)
                     years.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
                         (selectedYear.HasValue && selectedYear.Value == i) ? " selected=\"selected\"" : null);
             }
             else
             {
-                for (int i = beginYear.Value; i >= endYear.Value; i--)
+                for (var i = beginYear.Value; i >= endYear.Value; i--)
                     years.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
                         (selectedYear.HasValue && selectedYear.Value == i) ? " selected=\"selected\"" : null);
             }
@@ -429,9 +429,9 @@ namespace Nop.Web.Framework
         /// <returns>Label</returns>
         public static MvcHtmlString LabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, object htmlAttributes, string suffix)
         {
-            string htmlFieldName = ExpressionHelper.GetExpressionText(expression);
+            var htmlFieldName = ExpressionHelper.GetExpressionText(expression);
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
-            string resolvedLabelText = metadata.DisplayName ?? (metadata.PropertyName ?? htmlFieldName.Split(new [] { '.' }).Last());
+            var resolvedLabelText = metadata.DisplayName ?? (metadata.PropertyName ?? htmlFieldName.Split(new [] { '.' }).Last());
             if (string.IsNullOrEmpty(resolvedLabelText))
             {
                 return MvcHtmlString.Empty;

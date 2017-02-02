@@ -42,7 +42,7 @@ namespace Nop.Admin.Controllers
         protected ActionResult AccessDeniedView()
         {
             //return new HttpUnauthorizedResult();
-            return RedirectToAction("AccessDenied", "Security", new { pageUrl = this.Request.RawUrl });
+            return RedirectToAction("AccessDenied", "Security", new { pageUrl = Request.RawUrl });
         }
 
         /// <summary>
@@ -57,22 +57,21 @@ namespace Nop.Admin.Controllers
             if (!index.HasValue)
             {
                 int tmp;
-                if (int.TryParse(this.Request.Form["selected-tab-index"], out tmp))
+                if (int.TryParse(Request.Form["selected-tab-index"], out tmp))
                 {
                     index = tmp;
                 }
             }
-            if (index.HasValue)
+            if (!index.HasValue) return;
+
+            const string dataKey = "nop.selected-tab-index";
+            if (persistForTheNextRequest)
             {
-                string dataKey = "nop.selected-tab-index";
-                if (persistForTheNextRequest)
-                {
-                    TempData[dataKey] = index;
-                }
-                else
-                {
-                    ViewData[dataKey] = index;
-                }
+                TempData[dataKey] = index;
+            }
+            else
+            {
+                ViewData[dataKey] = index;
             }
         }
     }

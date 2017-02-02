@@ -33,11 +33,11 @@ namespace Nop.Admin.Controllers
             ITopicTemplateService topicTemplateService,
             IPermissionService permissionService)
         {
-            this._categoryTemplateService = categoryTemplateService;
-            this._manufacturerTemplateService = manufacturerTemplateService;
-            this._productTemplateService = productTemplateService;
-            this._topicTemplateService = topicTemplateService;
-            this._permissionService = permissionService;
+            _categoryTemplateService = categoryTemplateService;
+            _manufacturerTemplateService = manufacturerTemplateService;
+            _productTemplateService = productTemplateService;
+            _topicTemplateService = topicTemplateService;
+            _permissionService = permissionService;
         }
 
         #endregion

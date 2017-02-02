@@ -119,7 +119,7 @@ namespace Nop.Services.Directory
             if (currencyId == 0)
                 return null;
             
-            string key = string.Format(CURRENCIES_BY_ID_KEY, currencyId);
+            var key = string.Format(CURRENCIES_BY_ID_KEY, currencyId);
             return _cacheManager.Get(key, () => _currencyRepository.GetById(currencyId));
         }
 
@@ -143,7 +143,7 @@ namespace Nop.Services.Directory
         /// <returns>Currencies</returns>
         public virtual IList<Currency> GetAllCurrencies(bool showHidden = false, int storeId = 0)
         {
-            string key = string.Format(CURRENCIES_ALL_KEY, showHidden);
+            var key = string.Format(CURRENCIES_ALL_KEY, showHidden);
             var currencies = _cacheManager.Get(key, () =>
             {
                 var query = _currencyRepository.Table;
@@ -227,7 +227,7 @@ namespace Nop.Services.Directory
             if (targetCurrencyCode == null)
                 throw new ArgumentNullException("targetCurrencyCode");
 
-            decimal result = amount;
+            var result = amount;
             if (sourceCurrencyCode.Id == targetCurrencyCode.Id)
                 return result;
             if (result != decimal.Zero && sourceCurrencyCode.Id != targetCurrencyCode.Id)
@@ -253,10 +253,10 @@ namespace Nop.Services.Directory
             if (primaryExchangeRateCurrency == null)
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 
-            decimal result = amount; 
+            var result = amount; 
             if (result != decimal.Zero && sourceCurrencyCode.Id != primaryExchangeRateCurrency.Id)
             {
-                decimal exchangeRate = sourceCurrencyCode.Rate;
+                var exchangeRate = sourceCurrencyCode.Rate;
                 if (exchangeRate == decimal.Zero)
                     throw new NopException(string.Format("Exchange rate not found for currency [{0}]", sourceCurrencyCode.Name));
                 result = result / exchangeRate;
@@ -279,10 +279,10 @@ namespace Nop.Services.Directory
             if (primaryExchangeRateCurrency == null)
                 throw new Exception("Primary exchange rate currency cannot be loaded");
 
-            decimal result = amount;
+            var result = amount;
             if (result != decimal.Zero && targetCurrencyCode.Id != primaryExchangeRateCurrency.Id)
             {
-                decimal exchangeRate = targetCurrencyCode.Rate;
+                var exchangeRate = targetCurrencyCode.Rate;
                 if (exchangeRate == decimal.Zero)
                     throw new NopException(string.Format("Exchange rate not found for currency [{0}]", targetCurrencyCode.Name));
                 result = result * exchangeRate;
@@ -305,10 +305,10 @@ namespace Nop.Services.Directory
             if (primaryStoreCurrency == null)
                 throw new Exception("Primary store currency cannot be loaded");
 
-            decimal result = amount;
+            var result = amount;
             if (result != decimal.Zero && sourceCurrencyCode.Id != primaryStoreCurrency.Id)
             {
-                decimal exchangeRate = sourceCurrencyCode.Rate;
+                var exchangeRate = sourceCurrencyCode.Rate;
                 if (exchangeRate == decimal.Zero)
                     throw new NopException(string.Format("Exchange rate not found for currency [{0}]", sourceCurrencyCode.Name));
                 result = result / exchangeRate;

@@ -21,8 +21,8 @@ namespace Nop.Admin.Controllers
         public JbimagesController(IPermissionService permissionService,
             IWebHelper webHelper)
         {
-            this._permissionService = permissionService;
-            this._webHelper = webHelper;
+            _permissionService = permissionService;
+            _webHelper = webHelper;
         }
 
         [NonAction]
@@ -53,7 +53,7 @@ namespace Nop.Admin.Controllers
             }
 
             var fileName = Path.GetFileName(uploadFile.FileName);
-            if (String.IsNullOrEmpty(fileName))
+            if (string.IsNullOrEmpty(fileName))
             {
                 ViewData["resultCode"] = "failed";
                 ViewData["result"] = "No file name provided";
@@ -75,7 +75,7 @@ namespace Nop.Admin.Controllers
 
             ViewData["resultCode"] = "success";
             ViewData["result"] = "success";
-            ViewData["filename"] = this.Url.Content(string.Format("{0}{1}", directory, fileName));
+            ViewData["filename"] = Url.Content(string.Format("{0}{1}", directory, fileName));
             return View();
         }
     }

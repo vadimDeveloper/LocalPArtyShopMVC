@@ -33,12 +33,12 @@ namespace Nop.Admin.Controllers
             CustomerSettings customerSettings,
             IPermissionService permissionService, ILocalizationService localizationService)
         {
-            this._customerService = customerService;
-            this._geoLookupService = geoLookupService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._customerSettings = customerSettings;
-            this._permissionService = permissionService;
-            this._localizationService = localizationService;
+            _customerService = customerService;
+            _geoLookupService = geoLookupService;
+            _dateTimeHelper = dateTimeHelper;
+            _customerSettings = customerSettings;
+            _permissionService = permissionService;
+            _localizationService = localizationService;
         }
 
         #endregion

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Web;
 using System.Web.Mvc;
 using Nop.Core.Domain.Media;
 using Nop.Services.Media;
@@ -14,7 +13,7 @@ namespace Nop.Admin.Controllers
 
         public DownloadController(IDownloadService downloadService)
         {
-            this._downloadService = downloadService;
+            _downloadService = downloadService;
         }
 
         public ActionResult DownloadFile(Guid downloadGuid)
@@ -28,10 +27,10 @@ namespace Nop.Admin.Controllers
 
             //use stored data
             if (download.DownloadBinary == null)
-                return Content(string.Format("Download data is not available any more. Download GD={0}", download.Id));
+                return Content($"Download data is not available any more. Download GD={download.Id}");
 
-            string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
-            string contentType = !String.IsNullOrWhiteSpace(download.ContentType)
+            var fileName = !string.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
+            var contentType = !string.IsNullOrWhiteSpace(download.ContentType)
                 ? download.ContentType
                 : "application/octet-stream";
             return new FileContentResult(download.DownloadBinary, contentType)
@@ -66,13 +65,13 @@ namespace Nop.Admin.Controllers
         {
             //we process it distinct ways based on a browser
             //find more info here http://stackoverflow.com/questions/4884920/mvc3-valums-ajax-file-upload
-            Stream stream = null;
-            var fileName = "";
+            Stream stream;
+            string fileName;
             var contentType = "";
-            if (String.IsNullOrEmpty(Request["qqfile"]))
+            if (string.IsNullOrEmpty(Request["qqfile"]))
             {
                 // IE
-                HttpPostedFileBase httpPostedFile = Request.Files[0];
+                var httpPostedFile = Request.Files[0];
                 if (httpPostedFile == null)
                     throw new ArgumentException("No file uploaded");
                 stream = httpPostedFile.InputStream;
@@ -90,7 +89,7 @@ namespace Nop.Admin.Controllers
             stream.Read(fileBinary, 0, fileBinary.Length);
 
             var fileExtension = Path.GetExtension(fileName);
-            if (!String.IsNullOrEmpty(fileExtension))
+            if (!string.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
 
             var download = new Download

@@ -72,8 +72,8 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
             }
 
-            bool pagingPosts = false;
-            int postsPage = 0;
+            var pagingPosts = false;
+            var postsPage = 0;
 
             if (page.HasValue)
             {
@@ -118,8 +118,8 @@ namespace Nop.Web.Controllers
             }
 
             //location
-            bool locationEnabled = false;
-            string location = string.Empty;
+            var locationEnabled = false;
+            var location = string.Empty;
             if (_customerSettings.ShowCustomersLocation)
             {
                 locationEnabled = true;
@@ -137,11 +137,11 @@ namespace Nop.Web.Controllers
             }
 
             //private message
-            bool pmEnabled = _forumSettings.AllowPrivateMessages && !customer.IsGuest();
+            var pmEnabled = _forumSettings.AllowPrivateMessages && !customer.IsGuest();
 
             //total forum posts
-            bool totalPostsEnabled = false;
-            int totalPosts = 0;
+            var totalPostsEnabled = false;
+            var totalPosts = 0;
             if (_forumSettings.ForumsEnabled && _forumSettings.ShowCustomersPostCount)
             {
                 totalPostsEnabled = true;
@@ -149,8 +149,8 @@ namespace Nop.Web.Controllers
             }
 
             //registration date
-            bool joinDateEnabled = false;
-            string joinDate = string.Empty;
+            var joinDateEnabled = false;
+            var joinDate = string.Empty;
 
             if (_customerSettings.ShowCustomersJoinDate)
             {
@@ -159,8 +159,8 @@ namespace Nop.Web.Controllers
             }
 
             //birth date
-            bool dateOfBirthEnabled = false;
-            string dateOfBirth = string.Empty;
+            var dateOfBirthEnabled = false;
+            var dateOfBirth = string.Empty;
             if (_customerSettings.DateOfBirthEnabled)
             {
                 var dob = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);

@@ -243,7 +243,7 @@ namespace Nop.Plugin.Feed.Froogle
 
                         //description [description] - Description of the item
                         writer.WriteStartElement("description");
-                        string description = product.GetLocalized(x => x.FullDescription, languageId);
+                        var description = product.GetLocalized(x => x.FullDescription, languageId);
                         if (String.IsNullOrEmpty(description))
                             description = product.GetLocalized(x => x.ShortDescription, languageId);
                         if (String.IsNullOrEmpty(description))
@@ -257,7 +257,7 @@ namespace Nop.Plugin.Feed.Froogle
 
                         //google product category [google_product_category] - Google's category of the item
                         //the category of the product according to Google’s product taxonomy. http://www.google.com/support/merchants/bin/answer.py?answer=160081
-                        string googleProductCategory = "";
+                        var googleProductCategory = "";
                         //var googleProduct = _googleService.GetByProductId(product.Id);
                         var googleProduct = allGoogleProducts.FirstOrDefault(x => x.ProductId == product.Id);
                         if (googleProduct != null)
@@ -296,7 +296,7 @@ namespace Nop.Plugin.Feed.Froogle
                         //up to 10 pictures
                         const int maximumPictures = 10;
                         var pictures = _pictureService.GetPicturesByProductId(product.Id, maximumPictures);
-                        for (int i = 0; i < pictures.Count; i++)
+                        for (var i = 0; i < pictures.Count; i++)
                         {
                             var picture = pictures[i];
                             var imageUrl = _pictureService.GetPictureUrl(picture,
@@ -331,7 +331,7 @@ namespace Nop.Plugin.Feed.Froogle
                         #region Availability & Price
 
                         //availability [availability] - Availability status of the item
-                        string availability = "in stock"; //in stock by default
+                        var availability = "in stock"; //in stock by default
                         if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock
                             && product.BackorderMode == BackorderMode.NoBackorders
                             && product.GetTotalStockQuantity() <= 0)
@@ -353,7 +353,7 @@ namespace Nop.Plugin.Feed.Froogle
                         if (_froogleSettings.PricesConsiderPromotions)
                         {
                             //calculate for the maximum quantity (in case if we have tier prices)
-                            decimal minPossiblePrice = _priceCalculationService.GetFinalPrice(product,
+                            var minPossiblePrice = _priceCalculationService.GetFinalPrice(product,
                                 _workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
                             decimal taxRate;
                             finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
@@ -363,7 +363,7 @@ namespace Nop.Plugin.Feed.Froogle
                         {
                             finalPriceBase = product.Price;
                         }
-                        decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, currency);
+                        var price = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, currency);
                         writer.WriteElementString("g", "price", googleBaseNamespace,
                                                   price.ToString(new CultureInfo("en-US", false).NumberFormat) + " " +
                                                   currency.CurrencyCode);
@@ -631,7 +631,7 @@ namespace Nop.Plugin.Feed.Froogle
         {
             if (store == null)
                 throw new ArgumentNullException("store");
-            string filePath = Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", store.Id + "-" + _froogleSettings.StaticFileName);
+            var filePath = Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", store.Id + "-" + _froogleSettings.StaticFileName);
             using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
             {
                 GenerateFeed(fs, store);

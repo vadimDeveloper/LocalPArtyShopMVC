@@ -36,13 +36,13 @@ namespace Nop.Admin.Controllers
             IWorkContext workContext, IDateTimeHelper dateTimeHelper, IPaymentService paymentService,
             IPermissionService permissionService)
         {
-            this._orderService = orderService;
-            this._orderProcessingService = orderProcessingService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._dateTimeHelper = dateTimeHelper;
-            this._paymentService = paymentService;
-            this._permissionService = permissionService;
+            _orderService = orderService;
+            _orderProcessingService = orderProcessingService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _dateTimeHelper = dateTimeHelper;
+            _paymentService = paymentService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -54,10 +54,10 @@ namespace Nop.Admin.Controllers
             RecurringPayment recurringPayment)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (recurringPayment == null)
-                throw new ArgumentNullException("recurringPayment");
+                throw new ArgumentNullException(nameof(recurringPayment));
             
             model.Id = recurringPayment.Id;
             model.CycleLength = recurringPayment.CycleLength;
@@ -81,10 +81,10 @@ namespace Nop.Admin.Controllers
             RecurringPaymentHistory history)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (history == null)
-                throw new ArgumentNullException("history");
+                throw new ArgumentNullException(nameof(history));
 
             var order = _orderService.GetOrderById(history.OrderId);
 

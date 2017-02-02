@@ -100,7 +100,7 @@ namespace Nop.Core
         /// <returns>URL referrer</returns>
         public virtual string GetUrlReferrer()
         {
-            string referrerUrl = string.Empty;
+            var referrerUrl = string.Empty;
 
             //URL referrer is null in some case (for example, in IE 8)
             if (IsRequestAvailable(_httpContext) && _httpContext.Request.UrlReferrer != null)
@@ -135,7 +135,7 @@ namespace Nop.Core
                     
                 //it's used for identifying the originating IP address of a client connecting to a web server
                 //through an HTTP proxy or load balancer. 
-                string xff = _httpContext.Request.Headers.AllKeys
+                var xff = _httpContext.Request.Headers.AllKeys
                     .Where(x => forwardedHttpHeader.Equals(x, StringComparison.InvariantCultureIgnoreCase))
                     .Select(k => _httpContext.Request.Headers[k])
                     .FirstOrDefault();
@@ -143,7 +143,7 @@ namespace Nop.Core
                 //if you want to exclude private IP addresses, then see http://stackoverflow.com/questions/2577496/how-can-i-get-the-clients-ip-address-in-asp-net-mvc
                 if (!String.IsNullOrEmpty(xff))
                 {
-                    string lastIp = xff.Split(new [] { ',' }).FirstOrDefault();
+                    var lastIp = xff.Split(new [] { ',' }).FirstOrDefault();
                     result = lastIp;
                 }
             }
@@ -159,7 +159,7 @@ namespace Nop.Core
             //remove port
             if (!String.IsNullOrEmpty(result))
             {
-                int index = result.IndexOf(":", StringComparison.InvariantCultureIgnoreCase);
+                var index = result.IndexOf(":", StringComparison.InvariantCultureIgnoreCase);
                 if (index > 0)
                     result = result.Substring(0, index); 
             }
@@ -174,7 +174,7 @@ namespace Nop.Core
         /// <returns>Page name</returns>
         public virtual string GetThisPageUrl(bool includeQueryString)
         {
-            bool useSsl = IsCurrentConnectionSecured();
+            var useSsl = IsCurrentConnectionSecured();
             return GetThisPageUrl(includeQueryString, useSsl);
         }
 
@@ -186,13 +186,13 @@ namespace Nop.Core
         /// <returns>Page name</returns>
         public virtual string GetThisPageUrl(bool includeQueryString, bool useSsl)
         {
-            string url = string.Empty;
+            var url = string.Empty;
             if (!IsRequestAvailable(_httpContext))
                 return url;
 
             if (includeQueryString)
             {
-                string storeHost = GetStoreHost(useSsl);
+                var storeHost = GetStoreHost(useSsl);
                 if (storeHost.EndsWith("/"))
                     storeHost = storeHost.Substring(0, storeHost.Length - 1);
                 url = storeHost + _httpContext.Request.RawUrl;
@@ -214,7 +214,7 @@ namespace Nop.Core
         /// <returns>true - secured, false - not secured</returns>
         public virtual bool IsCurrentConnectionSecured()
         {
-            bool useSsl = false;
+            var useSsl = false;
             if (IsRequestAvailable(_httpContext))
             {
                 //when your hosting uses a load balancer on their server then the Request.IsSecureConnection is never got set to true
@@ -247,7 +247,7 @@ namespace Nop.Core
         /// <returns>Server variable</returns>
         public virtual string ServerVariables(string name)
         {
-            string result = string.Empty;
+            var result = string.Empty;
 
             try
             {
@@ -352,7 +352,7 @@ namespace Nop.Core
         /// <returns>Store location</returns>
         public virtual string GetStoreLocation()
         {
-            bool useSsl = IsCurrentConnectionSecured();
+            var useSsl = IsCurrentConnectionSecured();
             return GetStoreLocation(useSsl);
         }
 
@@ -365,7 +365,7 @@ namespace Nop.Core
         {
             //return HostingEnvironment.ApplicationVirtualPath;
 
-            string result = GetStoreHost(useSsl);
+            var result = GetStoreHost(useSsl);
             if (result.EndsWith("/"))
                 result = result.Substring(0, result.Length - 1);
             if (IsRequestAvailable(_httpContext))
@@ -397,8 +397,8 @@ namespace Nop.Core
             if (request == null)
                 throw new ArgumentNullException("request");
 
-            string path = request.Path;
-            string extension = VirtualPathUtility.GetExtension(path);
+            var path = request.Path;
+            var extension = VirtualPathUtility.GetExtension(path);
 
             if (extension == null) return false;
 
@@ -438,7 +438,7 @@ namespace Nop.Core
             }
 
             //not hosted. For example, run in unit tests
-            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             path = path.Replace("~/", "").TrimStart('/').Replace('/', '\\');
             return Path.Combine(baseDirectory, path);
         }
@@ -465,8 +465,8 @@ namespace Nop.Core
             anchor = anchor.ToLowerInvariant();
 
 
-            string str = string.Empty;
-            string str2 = string.Empty;
+            var str = string.Empty;
+            var str2 = string.Empty;
             if (url.Contains("#"))
             {
                 str2 = url.Substring(url.IndexOf("#") + 1);
@@ -482,11 +482,11 @@ namespace Nop.Core
                 if (!string.IsNullOrEmpty(str))
                 {
                     var dictionary = new Dictionary<string, string>();
-                    foreach (string str3 in str.Split(new [] { '&' }))
+                    foreach (var str3 in str.Split(new [] { '&' }))
                     {
                         if (!string.IsNullOrEmpty(str3))
                         {
-                            string[] strArray = str3.Split(new [] { '=' });
+                            var strArray = str3.Split(new [] { '=' });
                             if (strArray.Length == 2)
                             {
                                 if (!dictionary.ContainsKey(strArray[0]))
@@ -505,11 +505,11 @@ namespace Nop.Core
                             }
                         }
                     }
-                    foreach (string str4 in queryStringModification.Split(new [] { '&' }))
+                    foreach (var str4 in queryStringModification.Split(new [] { '&' }))
                     {
                         if (!string.IsNullOrEmpty(str4))
                         {
-                            string[] strArray2 = str4.Split(new [] { '=' });
+                            var strArray2 = str4.Split(new [] { '=' });
                             if (strArray2.Length == 2)
                             {
                                 dictionary[strArray2[0]] = strArray2[1];
@@ -521,7 +521,7 @@ namespace Nop.Core
                         }
                     }
                     var builder = new StringBuilder();
-                    foreach (string str5 in dictionary.Keys)
+                    foreach (var str5 in dictionary.Keys)
                     {
                         if (builder.Length > 0)
                         {
@@ -565,7 +565,7 @@ namespace Nop.Core
             queryString = queryString.ToLowerInvariant();
 
 
-            string str = string.Empty;
+            var str = string.Empty;
             if (url.Contains("?"))
             {
                 str = url.Substring(url.IndexOf("?") + 1);
@@ -576,11 +576,11 @@ namespace Nop.Core
                 if (!string.IsNullOrEmpty(str))
                 {
                     var dictionary = new Dictionary<string, string>();
-                    foreach (string str3 in str.Split(new [] { '&' }))
+                    foreach (var str3 in str.Split(new [] { '&' }))
                     {
                         if (!string.IsNullOrEmpty(str3))
                         {
-                            string[] strArray = str3.Split(new [] { '=' });
+                            var strArray = str3.Split(new [] { '=' });
                             if (strArray.Length == 2)
                             {
                                 dictionary[strArray[0]] = strArray[1];
@@ -594,7 +594,7 @@ namespace Nop.Core
                     dictionary.Remove(queryString);
 
                     var builder = new StringBuilder();
-                    foreach (string str5 in dictionary.Keys)
+                    foreach (var str5 in dictionary.Keys)
                     {
                         if (builder.Length > 0)
                         {
@@ -648,7 +648,7 @@ namespace Nop.Core
             else
             {
                 //medium trust
-                bool success = TryWriteWebConfig();
+                var success = TryWriteWebConfig();
                 if (!success)
                 {
                     throw new NopException("nopCommerce needs to be restarted due to a configuration change, but was unable to do so." + Environment.NewLine +

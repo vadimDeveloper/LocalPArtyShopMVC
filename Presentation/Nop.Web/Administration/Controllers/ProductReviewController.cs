@@ -36,11 +36,11 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService,
             IEventPublisher eventPublisher)
         {
-            this._productService = productService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._eventPublisher = eventPublisher;
+            _productService = productService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -52,10 +52,10 @@ namespace Nop.Admin.Controllers
             ProductReview productReview, bool excludeProperties, bool formatReviewText)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (productReview == null)
-                throw new ArgumentNullException("productReview");
+                throw new ArgumentNullException(nameof(productReview));
 
             model.Id = productReview.Id;
             model.ProductId = productReview.ProductId;
@@ -101,10 +101,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
 
-            DateTime? createdOnFromValue = (model.CreatedOnFrom == null) ? null
+            var createdOnFromValue = (model.CreatedOnFrom == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? createdToFromValue = (model.CreatedOnTo == null) ? null
+            var createdToFromValue = (model.CreatedOnTo == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             var productReviews = _productService.GetAllProductReviews(0, null, 

@@ -119,7 +119,7 @@ namespace Nop.Services.Localization
         /// <returns>Languages</returns>
         public virtual IList<Language> GetAllLanguages(bool showHidden = false, int storeId = 0)
         {
-            string key = string.Format(LANGUAGES_ALL_KEY, showHidden);
+            var key = string.Format(LANGUAGES_ALL_KEY, showHidden);
             var languages = _cacheManager.Get(key, () =>
             {
                 var query = _languageRepository.Table;
@@ -149,7 +149,7 @@ namespace Nop.Services.Localization
             if (languageId == 0)
                 return null;
             
-            string key = string.Format(LANGUAGES_BY_ID_KEY, languageId);
+            var key = string.Format(LANGUAGES_BY_ID_KEY, languageId);
             return _cacheManager.Get(key, () => _languageRepository.GetById(languageId));
         }
 

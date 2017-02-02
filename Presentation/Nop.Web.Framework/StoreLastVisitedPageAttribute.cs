@@ -15,7 +15,7 @@ namespace Nop.Web.Framework
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
-            if (filterContext == null || filterContext.HttpContext == null || filterContext.HttpContext.Request == null)
+            if (filterContext?.HttpContext?.Request == null)
                 return;
 
             //don't apply filter to child methods
@@ -32,16 +32,14 @@ namespace Nop.Web.Framework
 
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             var pageUrl = webHelper.GetThisPageUrl(true);
-            if (!String.IsNullOrEmpty(pageUrl))
-            {
-                var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
+            if (string.IsNullOrEmpty(pageUrl)) return;
+            var workContext = EngineContext.Current.Resolve<IWorkContext>();
+            var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
 
-                var previousPageUrl = workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
-                if (!pageUrl.Equals(previousPageUrl))
-                {
-                    genericAttributeService.SaveAttribute(workContext.CurrentCustomer, SystemCustomerAttributeNames.LastVisitedPage, pageUrl);
-                }
+            var previousPageUrl = workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
+            if (!pageUrl.Equals(previousPageUrl))
+            {
+                genericAttributeService.SaveAttribute(workContext.CurrentCustomer, SystemCustomerAttributeNames.LastVisitedPage, pageUrl);
             }
         }
     }

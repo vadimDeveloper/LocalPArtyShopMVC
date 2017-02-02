@@ -32,11 +32,11 @@ namespace Nop.Admin.Controllers
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
             IPermissionService permissionService)
         {
-            this._pollService = pollService;
-            this._languageService = languageService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
+            _pollService = pollService;
+            _languageService = languageService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
 		}
 
 		#endregion 
@@ -197,7 +197,7 @@ namespace Nop.Admin.Controllers
 
             var poll = _pollService.GetPollById(pollId);
             if (poll == null)
-                throw new ArgumentException("No poll found with the specified id", "pollId");
+                throw new ArgumentException("No poll found with the specified id", nameof(pollId));
 
             var answers = poll.PollAnswers.OrderBy(x=>x.DisplayOrder).ToList();
 
@@ -253,7 +253,7 @@ namespace Nop.Admin.Controllers
 
             var poll = _pollService.GetPollById(pollId);
             if (poll == null)
-                throw new ArgumentException("No poll found with the specified id", "pollId");
+                throw new ArgumentException("No poll found with the specified id", nameof(pollId));
 
             poll.PollAnswers.Add(new PollAnswer 
             {
@@ -274,7 +274,7 @@ namespace Nop.Admin.Controllers
 
             var pollAnswer = _pollService.GetPollAnswerById(id);
             if (pollAnswer == null)
-                throw new ArgumentException("No poll answer found with the specified id", "id");
+                throw new ArgumentException("No poll answer found with the specified id", nameof(id));
 
             //int pollId = pollAnswer.PollId;
             _pollService.DeletePollAnswer(pollAnswer);

@@ -121,40 +121,40 @@ namespace Nop.Web.Controllers
             CaptchaSettings captchaSettings,
             VendorSettings vendorSettings)
         {
-            this._categoryService = categoryService;
-            this._productService = productService;
-            this._manufacturerService = manufacturerService;
-            this._topicService = topicService;
-            this._languageService = languageService;
-            this._currencyService = currencyService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._queuedEmailService = queuedEmailService;
-            this._emailAccountService = emailAccountService;
-            this._sitemapGenerator = sitemapGenerator;
-            this._themeContext = themeContext;
-            this._themeProvider = themeProvider;
-            this._forumservice = forumService;
-            this._genericAttributeService = genericAttributeService;
-            this._webHelper = webHelper;
-            this._permissionService = permissionService;
-            this._cacheManager = cacheManager;
-            this._customerActivityService = customerActivityService;
-            this._vendorService = vendorService;
+            _categoryService = categoryService;
+            _productService = productService;
+            _manufacturerService = manufacturerService;
+            _topicService = topicService;
+            _languageService = languageService;
+            _currencyService = currencyService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _queuedEmailService = queuedEmailService;
+            _emailAccountService = emailAccountService;
+            _sitemapGenerator = sitemapGenerator;
+            _themeContext = themeContext;
+            _themeProvider = themeProvider;
+            _forumservice = forumService;
+            _genericAttributeService = genericAttributeService;
+            _webHelper = webHelper;
+            _permissionService = permissionService;
+            _cacheManager = cacheManager;
+            _customerActivityService = customerActivityService;
+            _vendorService = vendorService;
 
-            this._customerSettings = customerSettings;
-            this._taxSettings = taxSettings;
-            this._catalogSettings = catalogSettings;
-            this._storeInformationSettings = storeInformationSettings;
-            this._emailAccountSettings = emailAccountSettings;
-            this._commonSettings = commonSettings;
-            this._blogSettings = blogSettings;
-            this._newsSettings = newsSettings;
-            this._forumSettings = forumSettings;
-            this._localizationSettings = localizationSettings;
-            this._captchaSettings = captchaSettings;
-            this._vendorSettings = vendorSettings;
+            _customerSettings = customerSettings;
+            _taxSettings = taxSettings;
+            _catalogSettings = catalogSettings;
+            _storeInformationSettings = storeInformationSettings;
+            _emailAccountSettings = emailAccountSettings;
+            _commonSettings = commonSettings;
+            _blogSettings = blogSettings;
+            _newsSettings = newsSettings;
+            _forumSettings = forumSettings;
+            _localizationSettings = localizationSettings;
+            _captchaSettings = captchaSettings;
+            _vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -166,15 +166,13 @@ namespace Nop.Web.Controllers
         {
             var result = 0;
             var customer = _workContext.CurrentCustomer;
-            if (_forumSettings.AllowPrivateMessages && !customer.IsGuest())
-            {
-                var privateMessages = _forumservice.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
-                    0, customer.Id, false, null, false, string.Empty, 0, 1);
+            if (!_forumSettings.AllowPrivateMessages || customer.IsGuest()) return result;
+            var privateMessages = _forumservice.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
+                0, customer.Id, false, null, false, string.Empty, 0, 1);
 
-                if (privateMessages.TotalCount > 0)
-                {
-                    result = privateMessages.TotalCount;
-                }
+            if (privateMessages.TotalCount > 0)
+            {
+                result = privateMessages.TotalCount;
             }
 
             return result;
@@ -187,8 +185,8 @@ namespace Nop.Web.Controllers
         //page not found
         public ActionResult PageNotFound()
         {
-            this.Response.StatusCode = 404;
-            this.Response.TrySkipIisCustomErrors = true;
+            Response.StatusCode = 404;
+            Response.TrySkipIisCustomErrors = true;
 
             return View();
         }
@@ -236,7 +234,7 @@ namespace Nop.Web.Controllers
             }
 
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
 
             //prevent open redirection attack
@@ -246,7 +244,7 @@ namespace Nop.Web.Controllers
             //language part in URL
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
-                string applicationPath = HttpContext.Request.ApplicationPath;
+                var applicationPath = HttpContext.Request.ApplicationPath;
                 if (returnUrl.IsLocalizedUrl(applicationPath, true))
                 {
                     //already localized URL
@@ -268,11 +266,7 @@ namespace Nop.Web.Controllers
                     .Select(x =>
                     {
                         //currency char
-                        var currencySymbol = "";
-                        if (!string.IsNullOrEmpty(x.DisplayLocale))
-                            currencySymbol = new RegionInfo(x.DisplayLocale).CurrencySymbol;
-                        else
-                            currencySymbol = x.CurrencyCode;
+                        var currencySymbol = !string.IsNullOrEmpty(x.DisplayLocale) ? new RegionInfo(x.DisplayLocale).CurrencySymbol : x.CurrencyCode;
                         //model
                         var currencyModel = new CurrencyModel
                         {
@@ -306,7 +300,7 @@ namespace Nop.Web.Controllers
                 _workContext.WorkingCurrency = currency;
 
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
             
             //prevent open redirection attack
@@ -338,7 +332,7 @@ namespace Nop.Web.Controllers
             _workContext.TaxDisplayType = taxDisplayType;
 
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
 
             //prevent open redirection attack
@@ -391,19 +385,18 @@ namespace Nop.Web.Controllers
                 AlertMessage = alertMessage,
             };
             //performance optimization (use "HasShoppingCartItems" property)
-            if (customer.HasShoppingCartItems)
-            {
-                model.ShoppingCartItems = customer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .ToList()
-                    .GetTotalProducts();
-                model.WishlistItems = customer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .ToList()
-                    .GetTotalProducts();
-            }
+            if (!customer.HasShoppingCartItems) return PartialView(model);
+
+            model.ShoppingCartItems = customer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .ToList()
+                .GetTotalProducts();
+            model.WishlistItems = customer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .ToList()
+                .GetTotalProducts();
 
             return PartialView(model);
         }
@@ -427,7 +420,7 @@ namespace Nop.Web.Controllers
         public ActionResult Footer()
         {
             //footer topics
-            string topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_FOOTER_MODEL_KEY,
+            var topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_FOOTER_MODEL_KEY,
                 _workContext.WorkingLanguage.Id, 
                 _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
@@ -489,6 +482,7 @@ namespace Nop.Web.Controllers
             };
             return View(model);
         }
+
         [HttpPost, ActionName("ContactUs")]
         [PublicAntiForgery]
         [CaptchaValidator]
@@ -504,29 +498,27 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                string email = model.Email.Trim();
-                string fullName = model.FullName;
-                string subject = _commonSettings.SubjectFieldOnContactUsForm ?
+                var email = model.Email.Trim();
+                var fullName = model.FullName;
+                var subject = _commonSettings.SubjectFieldOnContactUsForm ?
                     model.Subject :
                     string.Format(_localizationService.GetResource("ContactUs.EmailSubject"), _storeContext.CurrentStore.GetLocalized(x => x.Name));
 
-                var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
-                if (emailAccount == null)
-                    emailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
+                var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId) ??
+                                   _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
                 if (emailAccount == null)
                     throw new Exception("No email account could be loaded");
 
                 string from;
                 string fromName;
-                string body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
+                var body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
                 //required for some SMTP servers
                 if (_commonSettings.UseSystemEmailForContactUsForm)
                 {
                     from = emailAccount.Email;
                     fromName = emailAccount.DisplayName;
-                    body = string.Format("<strong>From</strong>: {0} - {1}<br /><br />{2}", 
-                        Server.HtmlEncode(fullName), 
-                        Server.HtmlEncode(email), body);
+                    body =
+                        $"<strong>From</strong>: {Server.HtmlEncode(fullName)} - {Server.HtmlEncode(email)}<br /><br />{body}";
                 }
                 else
                 {
@@ -604,10 +596,10 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                string email = model.Email.Trim();
-                string fullName = model.FullName;
+                var email = model.Email.Trim();
+                var fullName = model.FullName;
 
-                string subject = _commonSettings.SubjectFieldOnContactUsForm ?
+                var subject = _commonSettings.SubjectFieldOnContactUsForm ?
                     model.Subject :
                     string.Format(_localizationService.GetResource("ContactVendor.EmailSubject"), _storeContext.CurrentStore.GetLocalized(x => x.Name));
 
@@ -620,15 +612,14 @@ namespace Nop.Web.Controllers
 
                 string from;
                 string fromName;
-                string body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
+                var body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
                 //required for some SMTP servers
                 if (_commonSettings.UseSystemEmailForContactUsForm)
                 {
                     from = emailAccount.Email;
                     fromName = emailAccount.DisplayName;
-                    body = string.Format("<strong>From</strong>: {0} - {1}<br /><br />{2}",
-                        Server.HtmlEncode(fullName),
-                        Server.HtmlEncode(email), body);
+                    body =
+                        $"<strong>From</strong>: {Server.HtmlEncode(fullName)} - {Server.HtmlEncode(email)}<br /><br />{body}";
                 }
                 else
                 {
@@ -667,7 +658,7 @@ namespace Nop.Web.Controllers
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
-            string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_PAGE_MODEL_KEY, 
+            var cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_PAGE_MODEL_KEY, 
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -736,11 +727,11 @@ namespace Nop.Web.Controllers
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
-            string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_SEO_MODEL_KEY, 
+            var cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_SEO_MODEL_KEY, 
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            var siteMap = _cacheManager.Get(cacheKey, () => _sitemapGenerator.Generate(this.Url));
+            var siteMap = _cacheManager.Get(cacheKey, () => _sitemapGenerator.Generate(Url));
             return Content(siteMap, "text/xml");
         }
 
@@ -772,7 +763,7 @@ namespace Nop.Web.Controllers
             _themeContext.WorkingThemeName = themeName;
 
             //home page
-            if (String.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
 
             //prevent open redirection attack
@@ -787,7 +778,7 @@ namespace Nop.Web.Controllers
         public ActionResult Favicon()
         {
             //try loading a store specific favicon
-            var faviconFileName = string.Format("favicon-{0}.ico", _storeContext.CurrentStore.Id);
+            var faviconFileName = $"favicon-{_storeContext.CurrentStore.Id}.ico";
             var localFaviconPath = System.IO.Path.Combine(Request.PhysicalApplicationPath, faviconFileName);
             if (!System.IO.File.Exists(localFaviconPath))
             {
@@ -856,11 +847,11 @@ namespace Nop.Web.Controllers
             var sb = new StringBuilder();
 
             //if robots.txt exists, let's use it
-            string robotsFile = System.IO.Path.Combine(_webHelper.MapPath("~/"), "robots.custom.txt");
+            var robotsFile = System.IO.Path.Combine(_webHelper.MapPath("~/"), "robots.custom.txt");
             if (System.IO.File.Exists(robotsFile))
             {
                 //the robots.txt file exists
-                string robotsFileContent = System.IO.File.ReadAllText(robotsFile);
+                var robotsFileContent = System.IO.File.ReadAllText(robotsFile);
                 sb.Append(robotsFileContent);
             }
             else
@@ -981,10 +972,10 @@ namespace Nop.Web.Controllers
                 }
 
                 //load and add robots.txt additions to the end of file.
-                string robotsAdditionsFile = System.IO.Path.Combine(_webHelper.MapPath("~/"), "robots.additions.txt");
+                var robotsAdditionsFile = System.IO.Path.Combine(_webHelper.MapPath("~/"), "robots.additions.txt");
                 if (System.IO.File.Exists(robotsAdditionsFile))
                 {
-                    string robotsFileContent = System.IO.File.ReadAllText(robotsAdditionsFile);
+                    var robotsFileContent = System.IO.File.ReadAllText(robotsAdditionsFile);
                     sb.Append(robotsFileContent);
                 }
             }

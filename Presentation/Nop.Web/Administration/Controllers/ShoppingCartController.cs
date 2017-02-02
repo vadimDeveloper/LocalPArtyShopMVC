@@ -44,15 +44,15 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService,
             IProductAttributeFormatter productAttributeFormatter)
         {
-            this._customerService = customerService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._priceFormatter = priceFormatter;
-            this._storeService = storeService;
-            this._taxService = taxService;
-            this._priceCalculationService = priceCalculationService;
-            this._permissionService = permissionService;
-            this._localizationService = localizationService;
-            this._productAttributeFormatter = productAttributeFormatter;
+            _customerService = customerService;
+            _dateTimeHelper = dateTimeHelper;
+            _priceFormatter = priceFormatter;
+            _storeService = storeService;
+            _taxService = taxService;
+            _priceCalculationService = priceCalculationService;
+            _permissionService = permissionService;
+            _localizationService = localizationService;
+            _productAttributeFormatter = productAttributeFormatter;
         }
 
         #endregion

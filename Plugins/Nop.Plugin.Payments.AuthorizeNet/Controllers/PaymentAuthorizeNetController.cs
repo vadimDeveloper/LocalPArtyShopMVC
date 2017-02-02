@@ -130,9 +130,9 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
             var model = new PaymentInfoModel();
             
             //years
-            for (int i = 0; i < 15; i++)
+            for (var i = 0; i < 15; i++)
             {
-                string year = Convert.ToString(DateTime.Now.Year + i);
+                var year = Convert.ToString(DateTime.Now.Year + i);
                 model.ExpireYears.Add(new SelectListItem
                 {
                     Text = year,
@@ -141,9 +141,9 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
             }
 
             //months
-            for (int i = 1; i <= 12; i++)
+            for (var i = 1; i <= 12; i++)
             {
-                string text = (i < 10) ? "0" + i : i.ToString();
+                var text = (i < 10) ? "0" + i : i.ToString();
                 model.ExpireMonths.Add(new SelectListItem
                 {
                     Text = text,

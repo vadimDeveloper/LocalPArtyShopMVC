@@ -88,7 +88,7 @@ namespace Nop.Web.Controllers
                 //now create connection string to 'master' dabatase. It always exists.
                 builder.InitialCatalog = "master";
                 var masterCatalogConnectionString = builder.ToString();
-                string query = string.Format("CREATE DATABASE [{0}]", databaseName);
+                var query = string.Format("CREATE DATABASE [{0}]", databaseName);
                 if (!String.IsNullOrWhiteSpace(collation))
                     query = string.Format("{0} COLLATE {1}", query, collation);
                 using (var conn = new SqlConnection(masterCatalogConnectionString))
@@ -260,12 +260,12 @@ namespace Nop.Web.Controllers
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             //validate permissions
             var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite(webHelper);
-            foreach (string dir in dirsToCheck)
+            foreach (var dir in dirsToCheck)
                 if (!FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
                     ModelState.AddModelError("", string.Format(_locService.GetResource("ConfigureDirectoryPermissions"), WindowsIdentity.GetCurrent().Name, dir));
 
             var filesToCheck = FilePermissionHelper.GetFilesWrite(webHelper);
-            foreach (string file in filesToCheck)
+            foreach (var file in filesToCheck)
                 if (!FilePermissionHelper.CheckPermissions(file, false, true, true, true))
                     ModelState.AddModelError("", string.Format(_locService.GetResource("ConfigureFilePermissions"), WindowsIdentity.GetCurrent().Name, file));
             
@@ -325,12 +325,12 @@ namespace Nop.Web.Controllers
                     else
                     {
                         //SQL CE
-                        string databaseFileName = "Nop.Db.sdf";
-                        string databasePath = @"|DataDirectory|\" + databaseFileName;
+                        var databaseFileName = "Nop.Db.sdf";
+                        var databasePath = @"|DataDirectory|\" + databaseFileName;
                         connectionString = "Data Source=" + databasePath + ";Persist Security Info=False";
 
                         //drop database if exists
-                        string databaseFullPath = HostingEnvironment.MapPath("~/App_Data/") + databaseFileName;
+                        var databaseFullPath = HostingEnvironment.MapPath("~/App_Data/") + databaseFileName;
                         if (System.IO.File.Exists(databaseFullPath))
                         {
                             System.IO.File.Delete(databaseFullPath);

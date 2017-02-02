@@ -35,12 +35,12 @@ namespace Nop.Admin.Controllers
             ILocalizedEntityService localizedEntityService,
             IPermissionService permissionService)
         {
-            this._storeService = storeService;
-            this._settingService = settingService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._permissionService = permissionService;
+            _storeService = storeService;
+            _settingService = settingService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -51,7 +51,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareLanguagesModel(StoreModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             //templates
             model.AvailableLanguages.Add(new SelectListItem

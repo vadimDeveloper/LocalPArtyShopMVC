@@ -11,8 +11,8 @@
         <dl>
             @foreach (var attribute in Model)
             {
-                string controlId = string.Format("product_attribute_{0}", attribute.Id);
-                string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
+                var controlId = string.Format("product_attribute_{0}", attribute.Id);
+                var textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
                 <dt id="@string.Format("product_attribute_label_{0}", attribute.Id)">
                     <label class="text-prompt">
                         @textPrompt
@@ -251,7 +251,7 @@
         //generate change event script
         foreach (var attribute in Model)
         {
-            string controlId = string.Format("product_attribute_{0}", attribute.Id);
+            var controlId = string.Format("product_attribute_{0}", attribute.Id);
             switch (attribute.AttributeControlType)
             {
                 case AttributeControlType.DropdownList:
@@ -333,14 +333,14 @@
     //attribute picture update
     var pictureAdjustmentTableScripts = new StringBuilder();
     var pictureAttributeScripts = new StringBuilder();
-    string pictureAdjustmentTableName = "";
-    string pictureAdjustmentFuncName = "";
-    string pictureDefaultSizePrefix = "defaultsize";
-    string pictureFullSizePrefix = "fullsize";
+    var pictureAdjustmentTableName = "";
+    var pictureAdjustmentFuncName = "";
+    var pictureDefaultSizePrefix = "defaultsize";
+    var pictureFullSizePrefix = "fullsize";
     var pictureSizes = new [] { pictureDefaultSizePrefix, pictureFullSizePrefix };
     foreach (var attribute in Model)
     {
-        string controlId = string.Format("product_attribute_{0}", attribute.Id);
+        var controlId = string.Format("product_attribute_{0}", attribute.Id);
 
         pictureAdjustmentTableName = string.Format("productAttributeValueAdjustmentTable_{0}", attribute.ProductId);
         pictureAdjustmentFuncName = string.Format("adjustProductAttributeValuePicture_{0}", attribute.ProductId);
@@ -354,7 +354,7 @@
                     foreach (var pictureSize in pictureSizes)
                     {
                         pictureAdjustmentTableScripts.AppendFormat("{0}['{1}_{2}'] = new Array(", pictureAdjustmentTableName, controlId, pictureSize);
-                        int numberOfJsArrayItems = 0;
+                        var numberOfJsArrayItems = 0;
                         if (!attribute.IsRequired)
                         {
                             pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", "");

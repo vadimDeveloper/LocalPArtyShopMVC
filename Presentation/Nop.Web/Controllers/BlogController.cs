@@ -72,23 +72,23 @@ namespace Nop.Web.Controllers
             CustomerSettings customerSettings,
             CaptchaSettings captchaSettings)
         {
-            this._blogService = blogService;
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._pictureService = pictureService;
-            this._localizationService = localizationService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._workflowMessageService = workflowMessageService;
-            this._webHelper = webHelper;
-            this._cacheManager = cacheManager;
-            this._customerActivityService = customerActivityService;
-            this._storeMappingService = storeMappingService;
+            _blogService = blogService;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _pictureService = pictureService;
+            _localizationService = localizationService;
+            _dateTimeHelper = dateTimeHelper;
+            _workflowMessageService = workflowMessageService;
+            _webHelper = webHelper;
+            _cacheManager = cacheManager;
+            _customerActivityService = customerActivityService;
+            _storeMappingService = storeMappingService;
 
-            this._mediaSettings = mediaSettings;
-            this._blogSettings = blogSettings;
-            this._localizationSettings = localizationSettings;
-            this._customerSettings = customerSettings;
-            this._captchaSettings = captchaSettings;
+            _mediaSettings = mediaSettings;
+            _blogSettings = blogSettings;
+            _localizationSettings = localizationSettings;
+            _customerSettings = customerSettings;
+            _captchaSettings = captchaSettings;
         }
 
 		#endregion
@@ -99,10 +99,10 @@ namespace Nop.Web.Controllers
         protected virtual void PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool prepareComments)
         {
             if (blogPost == null)
-                throw new ArgumentNullException("blogPost");
+                throw new ArgumentNullException(nameof(blogPost));
 
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.Id = blogPost.Id;
             model.MetaTitle = blogPost.MetaTitle;
@@ -117,30 +117,29 @@ namespace Nop.Web.Controllers
             model.Tags = blogPost.ParseTags().ToList();
             model.NumberOfComments = blogPost.CommentCount;
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage;
-            if (prepareComments)
+            if (!prepareComments) return;
+
+            var blogComments = blogPost.BlogComments.OrderBy(pr => pr.CreatedOnUtc);
+            foreach (var bc in blogComments)
             {
-                var blogComments = blogPost.BlogComments.OrderBy(pr => pr.CreatedOnUtc);
-                foreach (var bc in blogComments)
+                var commentModel = new BlogCommentModel
                 {
-                    var commentModel = new BlogCommentModel
-                    {
-                        Id = bc.Id,
-                        CustomerId = bc.CustomerId,
-                        CustomerName = bc.Customer.FormatUserName(),
-                        CommentText = bc.CommentText,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(bc.CreatedOnUtc, DateTimeKind.Utc),
-                        AllowViewingProfiles = _customerSettings.AllowViewingProfiles && bc.Customer != null && !bc.Customer.IsGuest(),
-                    };
-                    if (_customerSettings.AllowCustomersToUploadAvatars)
-                    {
-                        commentModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                            bc.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId), 
-                            _mediaSettings.AvatarPictureSize, 
-                            _customerSettings.DefaultAvatarEnabled,
-                            defaultPictureType: PictureType.Avatar);
-                    }
-                    model.Comments.Add(commentModel);
+                    Id = bc.Id,
+                    CustomerId = bc.CustomerId,
+                    CustomerName = bc.Customer.FormatUserName(),
+                    CommentText = bc.CommentText,
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(bc.CreatedOnUtc, DateTimeKind.Utc),
+                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && bc.Customer != null && !bc.Customer.IsGuest(),
+                };
+                if (_customerSettings.AllowCustomersToUploadAvatars)
+                {
+                    commentModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
+                        bc.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId), 
+                        _mediaSettings.AvatarPictureSize, 
+                        _customerSettings.DefaultAvatarEnabled,
+                        defaultPictureType: PictureType.Avatar);
                 }
+                model.Comments.Add(commentModel);
             }
         }
 
@@ -148,21 +147,26 @@ namespace Nop.Web.Controllers
         protected virtual BlogPostListModel PrepareBlogPostListModel(BlogPagingFilteringModel command)
         {
             if (command == null)
-                throw new ArgumentNullException("command");
+                throw new ArgumentNullException(nameof(command));
 
-            var model = new BlogPostListModel();
-            model.PagingFilteringContext.Tag = command.Tag;
-            model.PagingFilteringContext.Month = command.Month;
-            model.WorkingLanguageId = _workContext.WorkingLanguage.Id;
+            var model = new BlogPostListModel
+            {
+                PagingFilteringContext =
+                {
+                    Tag = command.Tag,
+                    Month = command.Month
+                },
+                WorkingLanguageId = _workContext.WorkingLanguage.Id
+            };
 
             if (command.PageSize <= 0) command.PageSize = _blogSettings.PostsPageSize;
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
-            DateTime? dateFrom = command.GetFromMonth();
-            DateTime? dateTo = command.GetToMonth();
+            var dateFrom = command.GetFromMonth();
+            var dateTo = command.GetToMonth();
 
             IPagedList<BlogPost> blogPosts;
-            if (String.IsNullOrEmpty(command.Tag))
+            if (string.IsNullOrEmpty(command.Tag))
             {
                 blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
                     _workContext.WorkingLanguage.Id,
@@ -220,7 +224,7 @@ namespace Nop.Web.Controllers
         public ActionResult ListRss(int languageId)
         {
             var feed = new SyndicationFeed(
-                                    string.Format("{0}: Blog", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
+                $"{_storeContext.CurrentStore.GetLocalized(x => x.Name)}: Blog",
                                     "Blog",
                                     new Uri(_webHelper.GetStoreLocation(false)),
                                     "BlogRSS",
@@ -229,13 +233,8 @@ namespace Nop.Web.Controllers
             if (!_blogSettings.Enabled)
                 return new RssActionResult { Feed = feed };
 
-            var items = new List<SyndicationItem>();
             var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id, languageId);
-            foreach (var blogPost in blogPosts)
-            {
-                string blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, "http");
-                items.Add(new SyndicationItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), String.Format("Blog:{0}", blogPost.Id), blogPost.CreatedOnUtc));
-            }
+            var items = (from blogPost in blogPosts let blogPostUrl = Url.RouteUrl("BlogPost", new {SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false)}, "http") select new SyndicationItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), String.Format("Blog:{0}", blogPost.Id), blogPost.CreatedOnUtc)).ToList();
             feed.Items = items;
             return new RssActionResult { Feed = feed };
         }
@@ -361,49 +360,48 @@ namespace Nop.Web.Controllers
 
                 var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id, 
                     _workContext.WorkingLanguage.Id);
-                if (blogPosts.Count > 0)
+                if (blogPosts.Count <= 0) return model;
+
+                var months = new SortedDictionary<DateTime, int>();
+
+                var first = blogPosts[blogPosts.Count - 1].CreatedOnUtc;
+                while (DateTime.SpecifyKind(first, DateTimeKind.Utc) <= DateTime.UtcNow.AddMonths(1))
                 {
-                    var months = new SortedDictionary<DateTime, int>();
-
-                    var first = blogPosts[blogPosts.Count - 1].CreatedOnUtc;
-                    while (DateTime.SpecifyKind(first, DateTimeKind.Utc) <= DateTime.UtcNow.AddMonths(1))
+                    var list = blogPosts.GetPostsByDate(new DateTime(first.Year, first.Month, 1), new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));
+                    if (list.Count > 0)
                     {
-                        var list = blogPosts.GetPostsByDate(new DateTime(first.Year, first.Month, 1), new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));
-                        if (list.Count > 0)
-                        {
-                            var date = new DateTime(first.Year, first.Month, 1);
-                            months.Add(date, list.Count);
-                        }
-
-                        first = first.AddMonths(1);
+                        var date = new DateTime(first.Year, first.Month, 1);
+                        months.Add(date, list.Count);
                     }
 
+                    first = first.AddMonths(1);
+                }
 
-                    int current = 0;
-                    foreach (var kvp in months)
-                    {
-                        var date = kvp.Key;
-                        var blogPostCount = kvp.Value;
-                        if (current == 0)
-                            current = date.Year;
 
-                        if (date.Year > current || model.Count == 0)
-                        {
-                            var yearModel = new BlogPostYearModel
-                            {
-                                Year = date.Year
-                            };
-                            model.Add(yearModel);
-                        }
-
-                        model.Last().Months.Add(new BlogPostMonthModel
-                        {
-                            Month = date.Month,
-                            BlogPostCount = blogPostCount
-                        });
-
+                var current = 0;
+                foreach (var kvp in months)
+                {
+                    var date = kvp.Key;
+                    var blogPostCount = kvp.Value;
+                    if (current == 0)
                         current = date.Year;
+
+                    if (date.Year > current || model.Count == 0)
+                    {
+                        var yearModel = new BlogPostYearModel
+                        {
+                            Year = date.Year
+                        };
+                        model.Add(yearModel);
                     }
+
+                    model.Last().Months.Add(new BlogPostMonthModel
+                    {
+                        Month = date.Month,
+                        BlogPostCount = blogPostCount
+                    });
+
+                    current = date.Year;
                 }
                 return model;
             });
@@ -416,8 +414,8 @@ namespace Nop.Web.Controllers
             if (!_blogSettings.Enabled || !_blogSettings.ShowHeaderRssUrl)
                 return Content("");
 
-            string link = string.Format("<link href=\"{0}\" rel=\"alternate\" type=\"application/rss+xml\" title=\"{1}: Blog\" />",
-                Url.RouteUrl("BlogRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), _storeContext.CurrentStore.GetLocalized(x => x.Name));
+            var link =
+                $"<link href=\"{Url.RouteUrl("BlogRSS", new {languageId = _workContext.WorkingLanguage.Id}, _webHelper.IsCurrentConnectionSecured() ? "https" : "http")}\" rel=\"alternate\" type=\"application/rss+xml\" title=\"{_storeContext.CurrentStore.GetLocalized(x => x.Name)}: Blog\" />";
 
             return Content(link);
         }

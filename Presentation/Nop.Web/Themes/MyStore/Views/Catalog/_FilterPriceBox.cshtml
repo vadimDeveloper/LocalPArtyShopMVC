@@ -5,7 +5,7 @@
 }
 @helper FormatPriceRangeText(CatalogPagingFilteringModel.PriceRangeFilterItem filterItem)
 {
-    string rangeText = "";
+    var rangeText = "";
     if (String.IsNullOrWhiteSpace(filterItem.From))
     {
         rangeText = string.Format(T("Filtering.PriceRangeFilter.Under").Text, string.Format("<span class=\"PriceRange\">{0}</span>", filterItem.To));

@@ -58,20 +58,20 @@ namespace Nop.Admin.Controllers
             IStoreService storeService,
             IStoreMappingService storeMappingService)
         {
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._languageService = languageService;
-            this._localizedEntityService = localizedEntityService;
-            this._localizationService = localizationService;
-            this._taxCategoryService = taxCategoryService;
-            this._workContext = workContext;
-            this._currencyService = currencyService;
-            this._customerActivityService = customerActivityService;
-            this._currencySettings = currencySettings;
-            this._measureService = measureService;
-            this._measureSettings = measureSettings;
-            this._permissionService = permissionService;
-            this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
+            _checkoutAttributeService = checkoutAttributeService;
+            _languageService = languageService;
+            _localizedEntityService = localizedEntityService;
+            _localizationService = localizationService;
+            _taxCategoryService = taxCategoryService;
+            _workContext = workContext;
+            _currencyService = currencyService;
+            _customerActivityService = customerActivityService;
+            _currencySettings = currencySettings;
+            _measureService = measureService;
+            _measureSettings = measureSettings;
+            _permissionService = permissionService;
+            _storeService = storeService;
+            _storeMappingService = storeMappingService;
         }
 
         #endregion
@@ -111,7 +111,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareTaxCategories(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             //tax categories
             var taxCategories = _taxCategoryService.GetAllTaxCategories();
@@ -124,18 +124,17 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableStores = _storeService
                 .GetAllStores()
                 .Select(s => s.ToModel())
                 .ToList();
-            if (!excludeProperties)
+            if (excludeProperties) return;
+
+            if (checkoutAttribute != null)
             {
-                if (checkoutAttribute != null)
-                {
-                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(checkoutAttribute);
-                }
+                model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(checkoutAttribute);
             }
         }
 
@@ -402,7 +401,7 @@ namespace Nop.Admin.Controllers
             if (checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares)
             {
                 //ensure valid color is chosen/entered
-                if (String.IsNullOrEmpty(model.ColorSquaresRgb))
+                if (string.IsNullOrEmpty(model.ColorSquaresRgb))
                     ModelState.AddModelError("", "Color is required");
                 try
                 {
@@ -415,30 +414,28 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(model);
+
+            var cav = new CheckoutAttributeValue
             {
-                var cav = new CheckoutAttributeValue
-                {
-                    CheckoutAttributeId = model.CheckoutAttributeId,
-                    Name = model.Name,
-                    ColorSquaresRgb = model.ColorSquaresRgb,
-                    PriceAdjustment = model.PriceAdjustment,
-                    WeightAdjustment = model.WeightAdjustment,
-                    IsPreSelected = model.IsPreSelected,
-                    DisplayOrder = model.DisplayOrder
-                };
+                CheckoutAttributeId = model.CheckoutAttributeId,
+                Name = model.Name,
+                ColorSquaresRgb = model.ColorSquaresRgb,
+                PriceAdjustment = model.PriceAdjustment,
+                WeightAdjustment = model.WeightAdjustment,
+                IsPreSelected = model.IsPreSelected,
+                DisplayOrder = model.DisplayOrder
+            };
 
-                _checkoutAttributeService.InsertCheckoutAttributeValue(cav);
-                UpdateValueLocales(cav, model);
+            _checkoutAttributeService.InsertCheckoutAttributeValue(cav);
+            UpdateValueLocales(cav, model);
 
-                ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
-                return View(model);
-            }
+            ViewBag.RefreshPage = true;
+            ViewBag.btnId = btnId;
+            ViewBag.formId = formId;
+            return View(model);
 
             //If we got this far, something failed, redisplay form
-            return View(model);
         }
 
         //edit
@@ -492,7 +489,7 @@ namespace Nop.Admin.Controllers
             if (cav.CheckoutAttribute.AttributeControlType == AttributeControlType.ColorSquares)
             {
                 //ensure valid color is chosen/entered
-                if (String.IsNullOrEmpty(model.ColorSquaresRgb))
+                if (string.IsNullOrEmpty(model.ColorSquaresRgb))
                     ModelState.AddModelError("", "Color is required");
                 try
                 {
@@ -505,26 +502,24 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            if (ModelState.IsValid)
-            {
-                cav.Name = model.Name;
-                cav.ColorSquaresRgb = model.ColorSquaresRgb;
-                cav.PriceAdjustment = model.PriceAdjustment;
-                cav.WeightAdjustment = model.WeightAdjustment;
-                cav.IsPreSelected = model.IsPreSelected;
-                cav.DisplayOrder = model.DisplayOrder;
-                _checkoutAttributeService.UpdateCheckoutAttributeValue(cav);
+            if (!ModelState.IsValid) return View(model);
 
-                UpdateValueLocales(cav, model);
+            cav.Name = model.Name;
+            cav.ColorSquaresRgb = model.ColorSquaresRgb;
+            cav.PriceAdjustment = model.PriceAdjustment;
+            cav.WeightAdjustment = model.WeightAdjustment;
+            cav.IsPreSelected = model.IsPreSelected;
+            cav.DisplayOrder = model.DisplayOrder;
+            _checkoutAttributeService.UpdateCheckoutAttributeValue(cav);
 
-                ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
-                return View(model);
-            }
+            UpdateValueLocales(cav, model);
+
+            ViewBag.RefreshPage = true;
+            ViewBag.btnId = btnId;
+            ViewBag.formId = formId;
+            return View(model);
 
             //If we got this far, something failed, redisplay form
-            return View(model);
         }
 
         //delete

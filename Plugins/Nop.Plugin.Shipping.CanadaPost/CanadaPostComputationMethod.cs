@@ -63,10 +63,10 @@ namespace Nop.Plugin.Shipping.CanadaPost
                 var remoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(_canadaPostSettings.Url)[0], _canadaPostSettings.Port);
 
                 socCanadaPost.Connect(remoteEndPoint);
-                byte[] data = System.Text.Encoding.ASCII.GetBytes(eParcelMessage);
+                var data = System.Text.Encoding.ASCII.GetBytes(eParcelMessage);
                 socCanadaPost.Send(data);
 
-                string resp = String.Empty;
+                var resp = String.Empty;
                 var buffer = new byte[8192];
 
                 while (!resp.Contains("<!--END_OF_EPARCEL-->"))
@@ -111,7 +111,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
             var doc = new XmlDocument();
             doc.LoadXml(canadaPostResponse);
 
-            XElement resultRates = XElement.Load(new StringReader(canadaPostResponse));
+            var resultRates = XElement.Load(new StringReader(canadaPostResponse));
             IEnumerable<XElement> query;
             // if we have any errors
             if (doc.GetElementsByTagName("error").Count > 0)
@@ -119,7 +119,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
                 // query using LINQ the "error" node in the XML
                 query = from errors in resultRates.Elements("error")
                         select errors;
-                XElement error = query.FirstOrDefault();
+                var error = query.FirstOrDefault();
                 if (error != null)
                 {
                     // set the status code information of the request
@@ -134,7 +134,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
                 // the actual status code information
                 query = from response in resultRates.Elements("ratesAndServicesResponse")
                         select response;
-                XElement info = query.FirstOrDefault();
+                var info = query.FirstOrDefault();
                 // if we have informations
                 if (info != null)
                 {
@@ -144,7 +144,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
                     // query using LINQ all the returned "product" nodes in the XML
                     query = from prod in resultRates.Elements("ratesAndServicesResponse").Elements("product")
                             select prod;
-                    foreach (XElement product in query)
+                    foreach (var product in query)
                     {
                         // set the information related to this available rate
                         var rate = new DeliveryRate();
@@ -181,7 +181,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
                     }
                     query = from packing in resultRates.Elements("ratesAndServicesResponse").Elements("packing").Elements("box")
                             select packing;
-                    foreach (XElement packing in query)
+                    foreach (var packing in query)
                     {
                         var box = new BoxDetail();
                         box.Name = packing.Element("name").Value;
@@ -210,7 +210,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
         private RequestResult GetShippingOptionsInternal(Profile profile, Destination destination, List<Item> items, CanadaPostLanguageEnum language)
         {
             var parcel = new eParcelBuilder(profile, destination, items, language);
-            string result = SendMessage(parcel.GetMessage(true));
+            var result = SendMessage(parcel.GetMessage(true));
             return HandleResult(result, language);
         }
 
@@ -235,7 +235,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
                 item.Quantity = qty;
                 //Canada Post uses kg(s)
 
-                decimal unitWeight = _shippingService.GetShoppingCartItemWeight(sci);
+                var unitWeight = _shippingService.GetShoppingCartItemWeight(sci);
                 item.Weight = _measureService.ConvertFromPrimaryMeasureWeight(unitWeight, usedMeasureWeight);
                 item.Weight = Math.Round(item.Weight, 2);
                 if (item.Weight == decimal.Zero)

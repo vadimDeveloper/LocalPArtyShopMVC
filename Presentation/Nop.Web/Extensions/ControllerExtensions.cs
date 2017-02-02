@@ -33,7 +33,7 @@ namespace Nop.Web.Extensions
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SPECS_MODEL_KEY, product.Id, workContext.WorkingLanguage.Id);
+            var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SPECS_MODEL_KEY, product.Id, workContext.WorkingLanguage.Id);
             return cacheManager.Get(cacheKey, () =>
                 specificationAttributeService.GetProductSpecificationAttributes(product.Id, 0, null, true)
                 .Select(psa =>
@@ -171,8 +171,8 @@ namespace Nop.Web.Extensions
                                                     {
                                                         //calculate prices
                                                         decimal taxRate;
-                                                        decimal finalPriceBase = taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, out taxRate);
-                                                        decimal finalPrice = currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, workContext.WorkingCurrency);
+                                                        var finalPriceBase = taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, out taxRate);
+                                                        var finalPrice = currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, workContext.WorkingCurrency);
 
                                                         priceModel.OldPrice = null;
                                                         priceModel.Price = String.Format(localizationService.GetResource("Products.PriceRangeFrom"), priceFormatter.FormatPrice(finalPrice));
@@ -243,15 +243,15 @@ namespace Nop.Web.Extensions
                                             //prices
 
                                             //calculate for the maximum quantity (in case if we have tier prices)
-                                            decimal minPossiblePrice = priceCalculationService.GetFinalPrice(product,
+                                            var minPossiblePrice = priceCalculationService.GetFinalPrice(product,
                                                 workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
 
                                             decimal taxRate;
-                                            decimal oldPriceBase = taxService.GetProductPrice(product, product.OldPrice, out taxRate);
-                                            decimal finalPriceBase = taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
+                                            var oldPriceBase = taxService.GetProductPrice(product, product.OldPrice, out taxRate);
+                                            var finalPriceBase = taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
 
-                                            decimal oldPrice = currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, workContext.WorkingCurrency);
-                                            decimal finalPrice = currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, workContext.WorkingCurrency);
+                                            var oldPrice = currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, workContext.WorkingCurrency);
+                                            var finalPrice = currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, workContext.WorkingCurrency);
 
                                             //do we have tier prices configured?
                                             var tierPrices = new List<TierPrice>();
@@ -266,7 +266,7 @@ namespace Nop.Web.Extensions
                                             }
                                             //When there is just one tier (with  qty 1), 
                                             //there are no actual savings in the list.
-                                            bool displayFromMessage = tierPrices.Count > 0 &&
+                                            var displayFromMessage = tierPrices.Count > 0 &&
                                                 !(tierPrices.Count == 1 && tierPrices[0].Quantity <= 1);
                                             if (displayFromMessage)
                                             {
@@ -329,7 +329,7 @@ namespace Nop.Web.Extensions
                     #region Prepare product picture
 
                     //If a size has been set in the view, we use it in priority
-                    int pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : mediaSettings.ProductThumbPictureSize;
+                    var pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : mediaSettings.ProductThumbPictureSize;
                     //prepare picture model
                     var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, workContext.WorkingLanguage.Id, webHelper.IsCurrentConnectionSecured(), storeContext.CurrentStore.Id);
                     model.DefaultPictureModel = cacheManager.Get(defaultProductPictureCacheKey, () =>

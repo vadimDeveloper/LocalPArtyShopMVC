@@ -50,16 +50,16 @@ namespace Nop.Admin.Controllers
             IVendorService vendorService,
             IWorkContext workContext)
 		{
-            this._customerService = customerService;
-            this._localizationService = localizationService;
-            this._customerActivityService = customerActivityService;
-            this._permissionService = permissionService;
-            this._productService = productService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._storeService = storeService;
-            this._vendorService = vendorService;
-            this._workContext = workContext;
+            _customerService = customerService;
+            _localizationService = localizationService;
+            _customerActivityService = customerActivityService;
+            _permissionService = permissionService;
+            _productService = productService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _storeService = storeService;
+            _vendorService = vendorService;
+            _workContext = workContext;
 		}
 
 		#endregion 
@@ -67,7 +67,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected CustomerRoleModel PrepareCustomerRoleModel(CustomerRole customerRole)
+        private CustomerRoleModel PrepareCustomerRoleModel(CustomerRole customerRole)
         {
             var model = customerRole.ToModel();
             var product = _productService.GetProductById(customerRole.PurchasedWithProductId);
@@ -173,30 +173,27 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                if (ModelState.IsValid)
-                {
-                    if (customerRole.IsSystemRole && !model.Active)
-                        throw new NopException(_localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.Active.CantEditSystem"));
+                if (!ModelState.IsValid) return View(model);
 
-                    if (customerRole.IsSystemRole && !customerRole.SystemName.Equals(model.SystemName, StringComparison.InvariantCultureIgnoreCase))
-                        throw new NopException(_localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.SystemName.CantEditSystem"));
+                if (customerRole.IsSystemRole && !model.Active)
+                    throw new NopException(_localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.Active.CantEditSystem"));
 
-                    if (SystemCustomerRoleNames.Registered.Equals(customerRole.SystemName, StringComparison.InvariantCultureIgnoreCase) &&
-                        model.PurchasedWithProductId > 0)
-                        throw new NopException(_localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Registered"));
+                if (customerRole.IsSystemRole && !customerRole.SystemName.Equals(model.SystemName, StringComparison.InvariantCultureIgnoreCase))
+                    throw new NopException(_localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.SystemName.CantEditSystem"));
+
+                if (SystemCustomerRoleNames.Registered.Equals(customerRole.SystemName, StringComparison.InvariantCultureIgnoreCase) &&
+                    model.PurchasedWithProductId > 0)
+                    throw new NopException(_localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Registered"));
                     
-                    customerRole = model.ToEntity(customerRole);
-                    _customerService.UpdateCustomerRole(customerRole);
+                customerRole = model.ToEntity(customerRole);
+                _customerService.UpdateCustomerRole(customerRole);
 
-                    //activity log
-                    _customerActivityService.InsertActivity("EditCustomerRole", _localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name);
+                //activity log
+                _customerActivityService.InsertActivity("EditCustomerRole", _localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name);
 
-                    SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Updated"));
-                    return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id}) : RedirectToAction("List");
-                }
-
-                //If we got this far, something failed, redisplay form
-                return View(model);
+                SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Updated"));
+                return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id}) : RedirectToAction("List");
+        
             }
             catch (Exception exc)
             {
@@ -297,9 +294,11 @@ namespace Nop.Admin.Controllers
                 pageSize: command.PageSize,
                 showHidden: true
                 );
-            var gridModel = new DataSourceResult();
-            gridModel.Data = products.Select(x => x.ToModel());
-            gridModel.Total = products.TotalCount;
+            var gridModel = new DataSourceResult
+            {
+                Data = products.Select(x => x.ToModel()),
+                Total = products.TotalCount
+            };
 
             return Json(gridModel);
         }

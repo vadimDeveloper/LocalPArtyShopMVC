@@ -41,25 +41,25 @@ namespace Nop.Admin.Controllers
             IStoreService storeService,
             IPermissionService permissionService)
 		{
-            this._campaignService = campaignService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._emailAccountService = emailAccountService;
-            this._emailAccountSettings = emailAccountSettings;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._localizationService = localizationService;
-            this._messageTokenProvider = messageTokenProvider;
-            this._storeContext = storeContext;
-            this._storeService = storeService;
-            this._permissionService = permissionService;
+            _campaignService = campaignService;
+            _dateTimeHelper = dateTimeHelper;
+            _emailAccountService = emailAccountService;
+            _emailAccountSettings = emailAccountSettings;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _localizationService = localizationService;
+            _messageTokenProvider = messageTokenProvider;
+            _storeContext = storeContext;
+            _storeService = storeService;
+            _permissionService = permissionService;
 		}
 
         [NonAction]
         protected virtual string FormatTokens(string[] tokens)
         {
             var sb = new StringBuilder();
-            for (int i = 0; i < tokens.Length; i++)
+            for (var i = 0; i < tokens.Length; i++)
             {
-                string token = tokens[i];
+                var token = tokens[i];
                 sb.Append(token);
                 if (i != tokens.Length - 1)
                     sb.Append(", ");
@@ -72,7 +72,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareStoresModel(CampaignModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableStores.Add(new SelectListItem
             {
@@ -96,11 +96,8 @@ namespace Nop.Admin.Controllers
         }
 
 		public ActionResult List()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
-                return AccessDeniedView();
-
-            return View();
+		{
+		    return !_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns) ? AccessDeniedView() : View();
 		}
 
         [HttpPost]
@@ -128,8 +125,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
 
-            var model = new CampaignModel();
-            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            var model = new CampaignModel
+            {
+                AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens())
+            };
             //stores
             PrepareStoresModel(model);
             return View(model);
@@ -232,8 +231,7 @@ namespace Nop.Admin.Controllers
                 if (subscription != null)
                 {
                     //there's a subscription. let's use it
-                    var subscriptions = new List<NewsLetterSubscription>();
-                    subscriptions.Add(subscription);
+                    var subscriptions = new List<NewsLetterSubscription> {subscription};
                     _campaignService.SendCampaign(campaign, emailAccount, subscriptions);
                 }
                 else

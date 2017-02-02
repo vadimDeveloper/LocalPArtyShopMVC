@@ -22,7 +22,7 @@
         <td>
             <div id="comments-grid"></div>
             @{
-                string readUrl = "";
+                var readUrl = "";
                 if (filterByNewsItemId.HasValue)
                 {
                     readUrl = Url.Action("Comments", "News", new { filterByNewsItemId = filterByNewsItemId.Value });

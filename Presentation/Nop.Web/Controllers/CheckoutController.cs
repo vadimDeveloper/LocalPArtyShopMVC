@@ -105,37 +105,37 @@ namespace Nop.Web.Controllers
             ShippingSettings shippingSettings,
             AddressSettings addressSettings)
         {
-            this._workContext = workContext;
-            this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
-            this._shoppingCartService = shoppingCartService;
-            this._localizationService = localizationService;
-            this._taxService = taxService;
-            this._currencyService = currencyService;
-            this._priceFormatter = priceFormatter;
-            this._orderProcessingService = orderProcessingService;
-            this._customerService = customerService;
-            this._genericAttributeService = genericAttributeService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._shippingService = shippingService;
-            this._paymentService = paymentService;
-            this._pluginFinder = pluginFinder;
-            this._orderTotalCalculationService = orderTotalCalculationService;
-            this._rewardPointService = rewardPointService;
-            this._logger = logger;
-            this._orderService = orderService;
-            this._webHelper = webHelper;
-            this._httpContext = httpContext;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
-            this._addressAttributeFormatter = addressAttributeFormatter;
+            _workContext = workContext;
+            _storeContext = storeContext;
+            _storeMappingService = storeMappingService;
+            _shoppingCartService = shoppingCartService;
+            _localizationService = localizationService;
+            _taxService = taxService;
+            _currencyService = currencyService;
+            _priceFormatter = priceFormatter;
+            _orderProcessingService = orderProcessingService;
+            _customerService = customerService;
+            _genericAttributeService = genericAttributeService;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _shippingService = shippingService;
+            _paymentService = paymentService;
+            _pluginFinder = pluginFinder;
+            _orderTotalCalculationService = orderTotalCalculationService;
+            _rewardPointService = rewardPointService;
+            _logger = logger;
+            _orderService = orderService;
+            _webHelper = webHelper;
+            _httpContext = httpContext;
+            _addressAttributeParser = addressAttributeParser;
+            _addressAttributeService = addressAttributeService;
+            _addressAttributeFormatter = addressAttributeFormatter;
 
-            this._orderSettings = orderSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._paymentSettings = paymentSettings;
-            this._shippingSettings = shippingSettings;
-            this._addressSettings = addressSettings;
+            _orderSettings = orderSettings;
+            _rewardPointsSettings = rewardPointsSettings;
+            _paymentSettings = paymentSettings;
+            _shippingSettings = shippingSettings;
+            _addressSettings = addressSettings;
         }
 
         #endregion
@@ -145,10 +145,10 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected virtual bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool ignoreRewardPoints = false)
         {
-            bool result = true;
+            var result = true;
 
             //check whether order total equals zero
-            decimal? shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart, ignoreRewardPoints);
+            var shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart, ignoreRewardPoints);
             if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
                 result = false;
             return result;
@@ -201,14 +201,13 @@ namespace Nop.Web.Controllers
         protected virtual CheckoutShippingAddressModel PrepareShippingAddressModel(int? selectedCountryId = null,
             bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
-            var model = new CheckoutShippingAddressModel();
+            var model = new CheckoutShippingAddressModel {AllowPickUpInStore = _shippingSettings.AllowPickUpInStore};
             //allow pickup in store?
-            model.AllowPickUpInStore = _shippingSettings.AllowPickUpInStore;
             if (model.AllowPickUpInStore && _shippingSettings.PickUpInStoreFee > 0)
             {
-                decimal shippingTotal = _shippingSettings.PickUpInStoreFee;
-                decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
-                decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
+                var shippingTotal = _shippingSettings.PickUpInStoreFee;
+                var rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
+                var rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
                 model.PickUpInStoreFee = _priceFormatter.FormatShippingPrice(rate, true);
             }
             //existing addresses
@@ -281,8 +280,8 @@ namespace Nop.Web.Controllers
                     var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(
                         shippingOption.Rate, cart, out appliedDiscount);
 
-                    decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
-                    decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase,
+                    var rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
+                    var rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase,
                                                                                     _workContext.WorkingCurrency);
                     soModel.Fee = _priceFormatter.FormatShippingPrice(rate, true);
 
@@ -296,9 +295,9 @@ namespace Nop.Web.Controllers
                 {
                     var shippingOptionToSelect = model.ShippingMethods.ToList()
                         .Find( so =>
-                            !String.IsNullOrEmpty(so.Name) &&
+                            !string.IsNullOrEmpty(so.Name) &&
                             so.Name.Equals(selectedShippingOption.Name, StringComparison.InvariantCultureIgnoreCase) &&
-                            !String.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName) &&
+                            !string.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName) &&
                             so.ShippingRateComputationMethodSystemName.Equals(selectedShippingOption.ShippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase));
                     if (shippingOptionToSelect != null)
                     {
@@ -338,9 +337,9 @@ namespace Nop.Web.Controllers
             //reward points
             if (_rewardPointsSettings.Enabled && !cart.IsRecurring())
             {
-                int rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
-                decimal rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
-                decimal rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
+                var rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+                var rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
+                var rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
                 if (rewardPointsAmount > decimal.Zero && 
                     _orderTotalCalculationService.CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
                 {
@@ -368,9 +367,9 @@ namespace Nop.Web.Controllers
                     LogoUrl = pm.PluginDescriptor.GetLogoUrl(_webHelper)
                 };
                 //payment method additional fee
-                decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, pm.PluginDescriptor.SystemName);
-                decimal rateBase = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, _workContext.CurrentCustomer);
-                decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
+                var paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, pm.PluginDescriptor.SystemName);
+                var rateBase = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, _workContext.CurrentCustomer);
+                var rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
                 if (rate > decimal.Zero)
                     pmModel.Fee = _priceFormatter.FormatPaymentMethodAdditionalFee(rate, true);
 
@@ -381,7 +380,7 @@ namespace Nop.Web.Controllers
             var selectedPaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
                 SystemCustomerAttributeNames.SelectedPaymentMethod,
                 _genericAttributeService, _storeContext.CurrentStore.Id);
-            if (!String.IsNullOrEmpty(selectedPaymentMethodSystemName))
+            if (!string.IsNullOrEmpty(selectedPaymentMethodSystemName))
             {
                 var paymentMethodToSelect = model.PaymentMethods.ToList()
                     .Find(pm => pm.PaymentMethodSystemName.Equals(selectedPaymentMethodSystemName, StringComparison.InvariantCultureIgnoreCase));
@@ -421,10 +420,10 @@ namespace Nop.Web.Controllers
             //terms of service
             model.TermsOfServiceOnOrderConfirmPage = _orderSettings.TermsOfServiceOnOrderConfirmPage;
             //min order amount validation
-            bool minOrderTotalAmountOk = _orderProcessingService.ValidateMinOrderTotalAmount(cart);
+            var minOrderTotalAmountOk = _orderProcessingService.ValidateMinOrderTotalAmount(cart);
             if (!minOrderTotalAmountOk)
             {
-                decimal minOrderTotalAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderTotalAmount, _workContext.WorkingCurrency);
+                var minOrderTotalAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderTotalAmount, _workContext.WorkingCurrency);
                 model.MinOrderTotalWarning = string.Format(_localizationService.GetResource("Checkout.MinOrderTotalAmount"), _priceFormatter.FormatPrice(minOrderTotalAmount, true, false));
             }
             return model;
@@ -472,26 +471,16 @@ namespace Nop.Web.Controllers
             if (scWarnings.Count > 0)
                 return RedirectToRoute("ShoppingCart");
             //validation (each shopping cart item)
-            foreach (ShoppingCartItem sci in cart)
-            {
-                var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(_workContext.CurrentCustomer,
-                    sci.ShoppingCartType,
-                    sci.Product,
-                    sci.StoreId,
-                    sci.AttributesXml,
-                    sci.CustomerEnteredPrice,
-                    sci.RentalStartDateUtc,
-                    sci.RentalEndDateUtc,
-                    sci.Quantity,
-                    false);
-                if (sciWarnings.Count > 0)
-                    return RedirectToRoute("ShoppingCart");
-            }
-
-            if (_orderSettings.OnePageCheckoutEnabled)
-                return RedirectToRoute("CheckoutOnePage");
-            
-            return RedirectToRoute("CheckoutBillingAddress");
+            return cart.Select(sci => _shoppingCartService.GetShoppingCartItemWarnings(_workContext.CurrentCustomer,
+                sci.ShoppingCartType,
+                sci.Product,
+                sci.StoreId,
+                sci.AttributesXml,
+                sci.CustomerEnteredPrice,
+                sci.RentalStartDateUtc,
+                sci.RentalEndDateUtc,
+                sci.Quantity,
+                false)).Any(sciWarnings => sciWarnings.Count > 0) ? RedirectToRoute("ShoppingCart") : RedirectToRoute(_orderSettings.OnePageCheckoutEnabled ? "CheckoutOnePage" : "CheckoutBillingAddress");
         }
 
         public ActionResult Completed(int? orderId)
@@ -557,20 +546,16 @@ namespace Nop.Web.Controllers
             var model = PrepareBillingAddressModel(prePopulateNewAddressWithCustomerFields: true);
 
             //check whether "billing address" step is enabled
-            if (_orderSettings.DisableBillingAddressCheckoutStep)
+            if (!_orderSettings.DisableBillingAddressCheckoutStep) return View(model);
+            if (model.ExistingAddresses.Any())
             {
-                if (model.ExistingAddresses.Any())
-                {
-                    //choose the first one
-                    return SelectBillingAddress(model.ExistingAddresses.First().Id);
-                }
-
-                TryValidateModel(model);
-                TryValidateModel(model.NewAddress);
-                return NewBillingAddress(model, form);
+                //choose the first one
+                return SelectBillingAddress(model.ExistingAddresses.First().Id);
             }
 
-            return View(model);
+            TryValidateModel(model);
+            TryValidateModel(model.NewAddress);
+            return NewBillingAddress(model, form);
         }
         public ActionResult SelectBillingAddress(int addressId)
         {
@@ -832,19 +817,15 @@ namespace Nop.Web.Controllers
             //model
             var model = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
 
-            if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
-                model.ShippingMethods.Count == 1)
-            {
-                //if we have only one shipping method, then a customer doesn't have to choose a shipping method
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
-                    SystemCustomerAttributeNames.SelectedShippingOption,
-                    model.ShippingMethods.First().ShippingOption,
-                    _storeContext.CurrentStore.Id);
+            if (!_shippingSettings.BypassShippingMethodSelectionIfOnlyOne || model.ShippingMethods.Count != 1)
+                return View(model);
+            //if we have only one shipping method, then a customer doesn't have to choose a shipping method
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
+                SystemCustomerAttributeNames.SelectedShippingOption,
+                model.ShippingMethods.First().ShippingOption,
+                _storeContext.CurrentStore.Id);
             
-                return RedirectToRoute("CheckoutPaymentMethod");
-            }
-
-            return View(model);
+            return RedirectToRoute("CheckoutPaymentMethod");
         }
         [HttpPost, ActionName("ShippingMethod")]
         [FormValueRequired("nextstep")]
@@ -873,13 +854,13 @@ namespace Nop.Web.Controllers
             }
 
             //parse selected method 
-            if (String.IsNullOrEmpty(shippingoption))
+            if (string.IsNullOrEmpty(shippingoption))
                 return ShippingMethod();
             var splittedOption = shippingoption.Split(new [] { "___" }, StringSplitOptions.RemoveEmptyEntries);
             if (splittedOption.Length != 2)
                 return ShippingMethod();
-            string selectedName = splittedOption[0];
-            string shippingRateComputationMethodSystemName = splittedOption[1];
+            var selectedName = splittedOption[0];
+            var shippingRateComputationMethodSystemName = splittedOption[1];
             
             //find it
             //performance optimization. try cache first
@@ -900,7 +881,7 @@ namespace Nop.Web.Controllers
             }
 
             var shippingOption = shippingOptions
-                .Find(so => !String.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
+                .Find(so => !string.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
             if (shippingOption == null)
                 return ShippingMethod();
 
@@ -929,7 +910,7 @@ namespace Nop.Web.Controllers
 
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);
+            var isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);
             if (!isPaymentWorkflowRequired)
             {
                 _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
@@ -938,7 +919,7 @@ namespace Nop.Web.Controllers
             }
 
             //filter by country
-            int filterByCountryId = 0;
+            var filterByCountryId = 0;
             if (_addressSettings.CountryEnabled &&
                 _workContext.CurrentCustomer.BillingAddress != null &&
                 _workContext.CurrentCustomer.BillingAddress.Country != null)
@@ -949,20 +930,16 @@ namespace Nop.Web.Controllers
             //model
             var paymentMethodModel = PreparePaymentMethodModel(cart, filterByCountryId);
 
-            if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
-                paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
-            {
-                //if we have only one payment method and reward points are disabled or the current customer doesn't have any reward points
-                //so customer doesn't have to choose a payment method
+            if (!_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne || paymentMethodModel.PaymentMethods.Count != 1 ||
+                paymentMethodModel.DisplayRewardPoints) return View(paymentMethodModel);
+            //if we have only one payment method and reward points are disabled or the current customer doesn't have any reward points
+            //so customer doesn't have to choose a payment method
 
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                    SystemCustomerAttributeNames.SelectedPaymentMethod, 
-                    paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName,
-                    _storeContext.CurrentStore.Id);
-                return RedirectToRoute("CheckoutPaymentInfo");
-            }
-
-            return View(paymentMethodModel);
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                SystemCustomerAttributeNames.SelectedPaymentMethod, 
+                paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName,
+                _storeContext.CurrentStore.Id);
+            return RedirectToRoute("CheckoutPaymentInfo");
         }
         [HttpPost, ActionName("PaymentMethod")]
         [FormValueRequired("nextstep")]
@@ -992,7 +969,7 @@ namespace Nop.Web.Controllers
             }
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+            var isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
             if (!isPaymentWorkflowRequired)
             {
                 _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
@@ -1000,7 +977,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutPaymentInfo");
             }
             //payment method 
-            if (String.IsNullOrEmpty(paymentmethod))
+            if (string.IsNullOrEmpty(paymentmethod))
                 return PaymentMethod();
 
             var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod);
@@ -1034,7 +1011,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+            var isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
             if (!isPaymentWorkflowRequired)
             {
                 return RedirectToRoute("CheckoutConfirm");
@@ -1054,7 +1031,7 @@ namespace Nop.Web.Controllers
                 //skip payment info page
                 var paymentInfo = new ProcessPaymentRequest();
                 //session save
-                _httpContext.Session["OrderPaymentInfo"] = paymentInfo;
+                if (_httpContext.Session != null) _httpContext.Session["OrderPaymentInfo"] = paymentInfo;
 
                 return RedirectToRoute("CheckoutConfirm");
             }
@@ -1083,7 +1060,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+            var isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
             if (!isPaymentWorkflowRequired)
             {
                 return RedirectToRoute("CheckoutConfirm");
@@ -1110,7 +1087,7 @@ namespace Nop.Web.Controllers
                 //get payment info
                 var paymentInfo = paymentController.GetPaymentInfo(form);
                 //session save
-                _httpContext.Session["OrderPaymentInfo"] = paymentInfo;
+                if (_httpContext.Session != null) _httpContext.Session["OrderPaymentInfo"] = paymentInfo;
                 return RedirectToRoute("CheckoutConfirm");
             }
 
@@ -1164,47 +1141,50 @@ namespace Nop.Web.Controllers
             var model = PrepareConfirmOrderModel(cart);
             try
             {
-                var processPaymentRequest = _httpContext.Session["OrderPaymentInfo"] as ProcessPaymentRequest;
-                if (processPaymentRequest == null)
+                if (_httpContext.Session != null)
                 {
-                    //Check whether payment workflow is required
-                    if (IsPaymentWorkflowRequired(cart))
-                        return RedirectToRoute("CheckoutPaymentInfo");
+                    var processPaymentRequest = _httpContext.Session["OrderPaymentInfo"] as ProcessPaymentRequest;
+                    if (processPaymentRequest == null)
+                    {
+                        //Check whether payment workflow is required
+                        if (IsPaymentWorkflowRequired(cart))
+                            return RedirectToRoute("CheckoutPaymentInfo");
                     
-                    processPaymentRequest = new ProcessPaymentRequest();
-                }
-                
-                //prevent 2 orders being placed within an X seconds time frame
-                if (!IsMinimumOrderPlacementIntervalValid(_workContext.CurrentCustomer))
-                    throw new Exception(_localizationService.GetResource("Checkout.MinOrderPlacementInterval"));
-
-                //place order
-                processPaymentRequest.StoreId = _storeContext.CurrentStore.Id;
-                processPaymentRequest.CustomerId = _workContext.CurrentCustomer.Id;
-                processPaymentRequest.PaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
-                    SystemCustomerAttributeNames.SelectedPaymentMethod,
-                    _genericAttributeService, _storeContext.CurrentStore.Id);
-                var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
-                if (placeOrderResult.Success)
-                {
-                    _httpContext.Session["OrderPaymentInfo"] = null;
-                    var postProcessPaymentRequest = new PostProcessPaymentRequest
-                    {
-                        Order = placeOrderResult.PlacedOrder
-                    };
-                    _paymentService.PostProcessPayment(postProcessPaymentRequest);
-
-                    if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
-                    {
-                        //redirection or POST has been done in PostProcessPayment
-                        return Content("Redirected");
+                        processPaymentRequest = new ProcessPaymentRequest();
                     }
-                    
-                    return RedirectToRoute("CheckoutCompleted", new { orderId = placeOrderResult.PlacedOrder.Id });
-                }
                 
-                foreach (var error in placeOrderResult.Errors)
-                    model.Warnings.Add(error);
+                    //prevent 2 orders being placed within an X seconds time frame
+                    if (!IsMinimumOrderPlacementIntervalValid(_workContext.CurrentCustomer))
+                        throw new Exception(_localizationService.GetResource("Checkout.MinOrderPlacementInterval"));
+
+                    //place order
+                    processPaymentRequest.StoreId = _storeContext.CurrentStore.Id;
+                    processPaymentRequest.CustomerId = _workContext.CurrentCustomer.Id;
+                    processPaymentRequest.PaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
+                        SystemCustomerAttributeNames.SelectedPaymentMethod,
+                        _genericAttributeService, _storeContext.CurrentStore.Id);
+                    var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
+                    if (placeOrderResult.Success)
+                    {
+                        _httpContext.Session["OrderPaymentInfo"] = null;
+                        var postProcessPaymentRequest = new PostProcessPaymentRequest
+                        {
+                            Order = placeOrderResult.PlacedOrder
+                        };
+                        _paymentService.PostProcessPayment(postProcessPaymentRequest);
+
+                        if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
+                        {
+                            //redirection or POST has been done in PostProcessPayment
+                            return Content("Redirected");
+                        }
+                    
+                        return RedirectToRoute("CheckoutCompleted", new { orderId = placeOrderResult.PlacedOrder.Id });
+                    }
+                
+                    foreach (var error in placeOrderResult.Errors)
+                        model.Warnings.Add(error);
+                }
             }
             catch (Exception exc)
             {
@@ -1233,11 +1213,11 @@ namespace Nop.Web.Controllers
         {
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);
+            var isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);
             if (isPaymentWorkflowRequired)
             {
                 //filter by country
-                int filterByCountryId = 0;
+                var filterByCountryId = 0;
                 if (_addressSettings.CountryEnabled &&
                     _workContext.CurrentCustomer.BillingAddress != null &&
                     _workContext.CurrentCustomer.BillingAddress.Country != null)
@@ -1248,36 +1228,34 @@ namespace Nop.Web.Controllers
                 //payment is required
                 var paymentMethodModel = PreparePaymentMethodModel(cart, filterByCountryId);
 
-                if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
-                    paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
-                {
-                    //if we have only one payment method and reward points are disabled or the current customer doesn't have any reward points
-                    //so customer doesn't have to choose a payment method
-
-                    var selectedPaymentMethodSystemName = paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName;
-                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                        SystemCustomerAttributeNames.SelectedPaymentMethod,
-                        selectedPaymentMethodSystemName, _storeContext.CurrentStore.Id);
-
-                    var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
-                    if (paymentMethodInst == null ||
-                        !paymentMethodInst.IsPaymentMethodActive(_paymentSettings) ||
-                        !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id))
-                        throw new Exception("Selected payment method can't be parsed");
-
-                    return OpcLoadStepAfterPaymentMethod(paymentMethodInst, cart);
-                }
-                
-                //customer have to choose a payment method
-                return Json(new
-                {
-                    update_section = new UpdateSectionJsonModel
+                if (!_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne ||
+                    paymentMethodModel.PaymentMethods.Count != 1 || paymentMethodModel.DisplayRewardPoints)
+                    return Json(new
                     {
-                        name = "payment-method",
-                        html = this.RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
-                    },
-                    goto_section = "payment_method"
-                });
+                        update_section = new UpdateSectionJsonModel
+                        {
+                            name = "payment-method",
+                            html = RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
+                        },
+                        goto_section = "payment_method"
+                    });
+                //if we have only one payment method and reward points are disabled or the current customer doesn't have any reward points
+                //so customer doesn't have to choose a payment method
+
+                var selectedPaymentMethodSystemName = paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName;
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                    SystemCustomerAttributeNames.SelectedPaymentMethod,
+                    selectedPaymentMethodSystemName, _storeContext.CurrentStore.Id);
+
+                var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
+                if (paymentMethodInst == null ||
+                    !paymentMethodInst.IsPaymentMethodActive(_paymentSettings) ||
+                    !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id))
+                    throw new Exception("Selected payment method can't be parsed");
+
+                return OpcLoadStepAfterPaymentMethod(paymentMethodInst, cart);
+
+                //customer have to choose a payment method
             }
 
             //payment is not required
@@ -1290,7 +1268,7 @@ namespace Nop.Web.Controllers
                 update_section = new UpdateSectionJsonModel
                 {
                     name = "confirm-order",
-                    html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                    html = RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                 },
                 goto_section = "confirm_order"
             });
@@ -1304,7 +1282,7 @@ namespace Nop.Web.Controllers
                 //skip payment info page
                 var paymentInfo = new ProcessPaymentRequest();
                 //session save
-                _httpContext.Session["OrderPaymentInfo"] = paymentInfo;
+                if (_httpContext.Session != null) _httpContext.Session["OrderPaymentInfo"] = paymentInfo;
 
                 var confirmOrderModel = PrepareConfirmOrderModel(cart);
                 return Json(new
@@ -1312,7 +1290,7 @@ namespace Nop.Web.Controllers
                     update_section = new UpdateSectionJsonModel
                     {
                         name = "confirm-order",
-                        html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                        html = RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                     },
                     goto_section = "confirm_order"
                 });
@@ -1326,7 +1304,7 @@ namespace Nop.Web.Controllers
                 update_section = new UpdateSectionJsonModel
                 {
                     name = "payment-info",
-                    html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
+                    html = RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
                 },
                 goto_section = "payment_info"
             });
@@ -1423,7 +1401,7 @@ namespace Nop.Web.Controllers
                             update_section = new UpdateSectionJsonModel
                             {
                                 name = "billing",
-                                html = this.RenderPartialViewToString("OpcBillingAddress", billingAddressModel)
+                                html = RenderPartialViewToString("OpcBillingAddress", billingAddressModel)
                             },
                             wrong_billing_address = true,
                         });
@@ -1466,7 +1444,7 @@ namespace Nop.Web.Controllers
                         update_section = new UpdateSectionJsonModel
                         {
                             name = "shipping",
-                            html = this.RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
+                            html = RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
                         },
                         goto_section = "shipping"
                     });
@@ -1586,7 +1564,7 @@ namespace Nop.Web.Controllers
                             update_section = new UpdateSectionJsonModel
                             {
                                 name = "shipping",
-                                html = this.RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
+                                html = RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
                             }
                         });
                     }
@@ -1625,29 +1603,25 @@ namespace Nop.Web.Controllers
 
                 var shippingMethodModel = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
 
-                if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
-                    shippingMethodModel.ShippingMethods.Count == 1)
-                {
-                    //if we have only one shipping method, then a customer doesn't have to choose a shipping method
-                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                        SystemCustomerAttributeNames.SelectedShippingOption,
-                        shippingMethodModel.ShippingMethods.First().ShippingOption,
-                        _storeContext.CurrentStore.Id);
-
-                    //load next step
-                    return OpcLoadStepAfterShippingMethod(cart);
-                }
-
-                
-                return Json(new
-                {
-                    update_section = new UpdateSectionJsonModel
+                if (!_shippingSettings.BypassShippingMethodSelectionIfOnlyOne ||
+                    shippingMethodModel.ShippingMethods.Count != 1)
+                    return Json(new
                     {
-                        name = "shipping-method",
-                        html = this.RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
-                    },
-                    goto_section = "shipping_method"
-                });
+                        update_section = new UpdateSectionJsonModel
+                        {
+                            name = "shipping-method",
+                            html = RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
+                        },
+                        goto_section = "shipping_method"
+                    });
+                //if we have only one shipping method, then a customer doesn't have to choose a shipping method
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                    SystemCustomerAttributeNames.SelectedShippingOption,
+                    shippingMethodModel.ShippingMethods.First().ShippingOption,
+                    _storeContext.CurrentStore.Id);
+
+                //load next step
+                return OpcLoadStepAfterShippingMethod(cart);
             }
             catch (Exception exc)
             {
@@ -1679,14 +1653,14 @@ namespace Nop.Web.Controllers
                     throw new Exception("Shipping is not required");
 
                 //parse selected method 
-                string shippingoption = form["shippingoption"];
-                if (String.IsNullOrEmpty(shippingoption))
+                var shippingoption = form["shippingoption"];
+                if (string.IsNullOrEmpty(shippingoption))
                     throw new Exception("Selected shipping method can't be parsed");
                 var splittedOption = shippingoption.Split(new [] { "___" }, StringSplitOptions.RemoveEmptyEntries);
                 if (splittedOption.Length != 2)
                     throw new Exception("Selected shipping method can't be parsed");
-                string selectedName = splittedOption[0];
-                string shippingRateComputationMethodSystemName = splittedOption[1];
+                var selectedName = splittedOption[0];
+                var shippingRateComputationMethodSystemName = splittedOption[1];
                 
                 //find it
                 //performance optimization. try cache first
@@ -1707,7 +1681,7 @@ namespace Nop.Web.Controllers
                 }
                 
                 var shippingOption = shippingOptions
-                    .Find(so => !String.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
+                    .Find(so => !string.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
                 if (shippingOption == null)
                     throw new Exception("Selected shipping method can't be loaded");
 
@@ -1743,9 +1717,9 @@ namespace Nop.Web.Controllers
                 if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
                     throw new Exception("Anonymous checkout is not allowed");
 
-                string paymentmethod = form["paymentmethod"];
+                var paymentmethod = form["paymentmethod"];
                 //payment method 
-                if (String.IsNullOrEmpty(paymentmethod))
+                if (string.IsNullOrEmpty(paymentmethod))
                     throw new Exception("Selected payment method can't be parsed");
 
 
@@ -1761,7 +1735,7 @@ namespace Nop.Web.Controllers
                 }
 
                 //Check whether payment workflow is required
-                bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+                var isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
                 if (!isPaymentWorkflowRequired)
                 {
                     //payment is not required
@@ -1774,7 +1748,7 @@ namespace Nop.Web.Controllers
                         update_section = new UpdateSectionJsonModel
                         {
                             name = "confirm-order",
-                            html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                            html = RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                         },
                         goto_section = "confirm_order"
                     });
@@ -1838,7 +1812,7 @@ namespace Nop.Web.Controllers
                     //get payment info
                     var paymentInfo = paymentController.GetPaymentInfo(form);
                     //session save
-                    _httpContext.Session["OrderPaymentInfo"] = paymentInfo;
+                    if (_httpContext.Session != null) _httpContext.Session["OrderPaymentInfo"] = paymentInfo;
 
                     var confirmOrderModel = PrepareConfirmOrderModel(cart);
                     return Json(new
@@ -1846,7 +1820,7 @@ namespace Nop.Web.Controllers
                         update_section = new UpdateSectionJsonModel
                         {
                             name = "confirm-order",
-                            html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                            html = RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                         },
                         goto_section = "confirm_order"
                     });
@@ -1859,7 +1833,7 @@ namespace Nop.Web.Controllers
                     update_section = new UpdateSectionJsonModel
                     {
                         name = "payment-info",
-                        html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
+                        html = RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
                     }
                 });
             }
@@ -1902,8 +1876,7 @@ namespace Nop.Web.Controllers
                     {
                         throw new Exception("Payment information is not entered");
                     }
-                    else
-                        processPaymentRequest = new ProcessPaymentRequest();
+                    processPaymentRequest = new ProcessPaymentRequest();
                 }
 
                 processPaymentRequest.StoreId = _storeContext.CurrentStore.Id;
@@ -1935,7 +1908,7 @@ namespace Nop.Web.Controllers
                         //redirect
                         return Json(new
                         {
-                            redirect = string.Format("{0}checkout/OpcCompleteRedirectionPayment", _webHelper.GetStoreLocation())
+                            redirect = $"{_webHelper.GetStoreLocation()}checkout/OpcCompleteRedirectionPayment"
                         });
                     }
 
@@ -1954,7 +1927,7 @@ namespace Nop.Web.Controllers
                     update_section = new UpdateSectionJsonModel
                     {
                         name = "confirm-order",
-                        html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                        html = RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
                     },
                     goto_section = "confirm_order"
                 });

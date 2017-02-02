@@ -47,17 +47,17 @@ namespace Nop.Admin.Controllers
             IWorkflowMessageService workflowMessageService,
             EmailAccountSettings emailAccountSettings)
         {
-            this._messageTemplateService = messageTemplateService;
-            this._emailAccountService = emailAccountService;
-            this._languageService = languageService;
-            this._localizedEntityService = localizedEntityService;
-            this._localizationService = localizationService;
-            this._messageTokenProvider = messageTokenProvider;
-            this._permissionService = permissionService;
-            this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
-            this._workflowMessageService = workflowMessageService;
-            this._emailAccountSettings = emailAccountSettings;
+            _messageTemplateService = messageTemplateService;
+            _emailAccountService = emailAccountService;
+            _languageService = languageService;
+            _localizedEntityService = localizedEntityService;
+            _localizationService = localizationService;
+            _messageTokenProvider = messageTokenProvider;
+            _permissionService = permissionService;
+            _storeService = storeService;
+            _storeMappingService = storeMappingService;
+            _workflowMessageService = workflowMessageService;
+            _emailAccountSettings = emailAccountSettings;
         }
 
         #endregion
@@ -67,9 +67,9 @@ namespace Nop.Admin.Controllers
         private string FormatTokens(string[] tokens)
         {
             var sb = new StringBuilder();
-            for (int i = 0; i < tokens.Length; i++)
+            for (var i = 0; i < tokens.Length; i++)
             {
-                string token = tokens[i];
+                var token = tokens[i];
                 sb.Append(token);
                 if (i != tokens.Length - 1)
                     sb.Append(", ");
@@ -110,7 +110,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(MessageTemplateModel model, MessageTemplate messageTemplate, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableStores = _storeService
                 .GetAllStores()
@@ -188,7 +188,7 @@ namespace Nop.Admin.Controllers
                             .GetAllStores()
                             .Where(s => !x.LimitedToStores || templateModel.SelectedStoreIds.Contains(s.Id))
                             .ToList();
-                    for (int i = 0; i < stores.Count; i++)
+                    for (var i = 0; i < stores.Count; i++)
                     {
                         templateModel.ListOfStores += stores[i].Name;
                         if (i != stores.Count - 1)

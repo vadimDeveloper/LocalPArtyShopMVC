@@ -36,12 +36,12 @@ namespace Nop.Admin.Controllers
             ICustomerActivityService customerActivityService,
             IPermissionService permissionService)
         {
-            this._specificationAttributeService = specificationAttributeService;
-            this._languageService = languageService;
-            this._localizedEntityService = localizedEntityService;
-            this._localizationService = localizationService;
-            this._customerActivityService = customerActivityService;
-            this._permissionService = permissionService;
+            _specificationAttributeService = specificationAttributeService;
+            _languageService = languageService;
+            _localizedEntityService = localizedEntityService;
+            _localizationService = localizationService;
+            _customerActivityService = customerActivityService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -371,8 +371,8 @@ namespace Nop.Admin.Controllers
             //    return AccessDeniedView();
 
             // This action method gets called via an ajax request
-            if (String.IsNullOrEmpty(attributeId))
-                throw new ArgumentNullException("attributeId");
+            if (string.IsNullOrEmpty(attributeId))
+                throw new ArgumentNullException(nameof(attributeId));
 
             var options = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(Convert.ToInt32(attributeId));
             var result = (from o in options

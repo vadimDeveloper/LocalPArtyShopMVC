@@ -50,7 +50,7 @@ namespace Nop.Plugin.Tax.CountryStateZip
             }
             
             //first, load all tax rate records (cached) - loaded only once
-            string cacheKey = ModelCacheEventConsumer.ALL_TAX_RATES_MODEL_KEY;
+            var cacheKey = ModelCacheEventConsumer.ALL_TAX_RATES_MODEL_KEY;
             var allTaxRates = _cacheManager.Get(cacheKey, () =>
                 _taxRateService
                 .GetAllTaxRates()
@@ -68,11 +68,11 @@ namespace Nop.Plugin.Tax.CountryStateZip
                 .ToList()
                 );
 
-            int storeId = _storeContext.CurrentStore.Id;
-            int taxCategoryId = calculateTaxRequest.TaxCategoryId;
-            int countryId = calculateTaxRequest.Address.Country != null ? calculateTaxRequest.Address.Country.Id : 0;
-            int stateProvinceId = calculateTaxRequest.Address.StateProvince != null ? calculateTaxRequest.Address.StateProvince.Id : 0;
-            string zip = calculateTaxRequest.Address.ZipPostalCode;
+            var storeId = _storeContext.CurrentStore.Id;
+            var taxCategoryId = calculateTaxRequest.TaxCategoryId;
+            var countryId = calculateTaxRequest.Address.Country != null ? calculateTaxRequest.Address.Country.Id : 0;
+            var stateProvinceId = calculateTaxRequest.Address.StateProvince != null ? calculateTaxRequest.Address.StateProvince.Id : 0;
+            var zip = calculateTaxRequest.Address.ZipPostalCode;
 
 
             if (zip == null)

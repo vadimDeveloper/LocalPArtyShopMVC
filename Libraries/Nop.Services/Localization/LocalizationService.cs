@@ -224,7 +224,7 @@ namespace Nop.Services.Localization
         /// <returns>Locale string resources</returns>
         public virtual Dictionary<string, KeyValuePair<int,string>> GetAllResourceValues(int languageId)
         {
-            string key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
+            var key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
             return _cacheManager.Get(key, () =>
             {
                 //we use no tracking here for performance optimization
@@ -271,7 +271,7 @@ namespace Nop.Services.Localization
         public virtual string GetResource(string resourceKey, int languageId,
             bool logIfNotFound = true, string defaultValue = "", bool returnEmptyIfNotFound = false)
         {
-            string result = string.Empty;
+            var result = string.Empty;
             if (resourceKey == null)
                 resourceKey = string.Empty;
             resourceKey = resourceKey.Trim().ToLowerInvariant();
@@ -287,8 +287,8 @@ namespace Nop.Services.Localization
             else
             {
                 //gradual loading
-                string key = string.Format(LOCALSTRINGRESOURCES_BY_RESOURCENAME_KEY, languageId, resourceKey);
-                string lsr = _cacheManager.Get(key, () =>
+                var key = string.Format(LOCALSTRINGRESOURCES_BY_RESOURCENAME_KEY, languageId, resourceKey);
+                var lsr = _cacheManager.Get(key, () =>
                 {
                     var query = from l in _lsrRepository.Table
                                 where l.ResourceName == resourceKey
@@ -402,8 +402,8 @@ namespace Nop.Services.Localization
                 var nodes = xmlDoc.SelectNodes(@"//Language/LocaleResource");
                 foreach (XmlNode node in nodes)
                 {
-                    string name = node.Attributes["Name"].InnerText.Trim();
-                    string value = "";
+                    var name = node.Attributes["Name"].InnerText.Trim();
+                    var value = "";
                     var valueNode = node.SelectSingleNode("Value");
                     if (valueNode != null)
                         value = valueNode.InnerText;

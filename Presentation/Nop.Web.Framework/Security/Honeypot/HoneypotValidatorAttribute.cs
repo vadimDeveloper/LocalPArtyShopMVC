@@ -18,7 +18,7 @@ namespace Nop.Web.Framework.Security.Honeypot
             var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
             if (securitySettings.HoneypotEnabled)
             {
-                string inputValue = filterContext.HttpContext.Request.Form[securitySettings.HoneypotInputName];
+                var inputValue = filterContext.HttpContext.Request.Form[securitySettings.HoneypotInputName];
 
                 var isBot = !String.IsNullOrWhiteSpace(inputValue);
                 if (isBot)
@@ -28,7 +28,7 @@ namespace Nop.Web.Framework.Security.Honeypot
 
                     //filterContext.Result = new HttpUnauthorizedResult();
                     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                    string url = webHelper.GetThisPageUrl(true);
+                    var url = webHelper.GetThisPageUrl(true);
                     filterContext.Result = new RedirectResult(url);
                 }
             }

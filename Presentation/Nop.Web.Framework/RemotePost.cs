@@ -39,13 +39,7 @@ namespace Nop.Web.Framework
         /// </summary>
         public bool NewInputForEachValue { get; set; }
 
-        public NameValueCollection Params
-        {
-            get
-            {
-                return _inputValues;
-            }
-        }
+        public NameValueCollection Params => _inputValues;
 
         /// <summary>
         /// Creates a new instance of the RemotePost class
@@ -88,35 +82,28 @@ namespace Nop.Web.Framework
         {
             _httpContext.Response.Clear();
             _httpContext.Response.Write("<html><head>");
-            _httpContext.Response.Write(string.Format("</head><body onload=\"document.{0}.submit()\">", FormName));
-            if (!string.IsNullOrEmpty(AcceptCharset))
-            {
-                //AcceptCharset specified
-                _httpContext.Response.Write(string.Format("<form name=\"{0}\" method=\"{1}\" action=\"{2}\" accept-charset=\"{3}\">", FormName, Method, Url, AcceptCharset));
-            }
-            else
-            {
-                //no AcceptCharset specified
-                _httpContext.Response.Write(string.Format("<form name=\"{0}\" method=\"{1}\" action=\"{2}\" >", FormName, Method, Url));
-            }
+            _httpContext.Response.Write($"</head><body onload=\"document.{FormName}.submit()\">");
+            _httpContext.Response.Write(!string.IsNullOrEmpty(AcceptCharset)
+                ? $"<form name=\"{FormName}\" method=\"{Method}\" action=\"{Url}\" accept-charset=\"{AcceptCharset}\">"
+                : $"<form name=\"{FormName}\" method=\"{Method}\" action=\"{Url}\" >");
             if (NewInputForEachValue)
             {
                 foreach (string key in _inputValues.Keys)
                 {
-                    string[] values = _inputValues.GetValues(key);
-                    if (values != null)
+                    var values = _inputValues.GetValues(key);
+                    if (values == null) continue;
+                    foreach (var value in values)
                     {
-                        foreach (string value in values)
-                        {
-                            _httpContext.Response.Write(string.Format("<input name=\"{0}\" type=\"hidden\" value=\"{1}\">", HttpUtility.HtmlEncode(key), HttpUtility.HtmlEncode(value)));
-                        }
+                        _httpContext.Response.Write(
+                            $"<input name=\"{HttpUtility.HtmlEncode(key)}\" type=\"hidden\" value=\"{HttpUtility.HtmlEncode(value)}\">");
                     }
                 }
             }
             else
             {
-                for (int i = 0; i < _inputValues.Keys.Count; i++)
-                    _httpContext.Response.Write(string.Format("<input name=\"{0}\" type=\"hidden\" value=\"{1}\">", HttpUtility.HtmlEncode(_inputValues.Keys[i]), HttpUtility.HtmlEncode(_inputValues[_inputValues.Keys[i]])));
+                for (var i = 0; i < _inputValues.Keys.Count; i++)
+                    _httpContext.Response.Write(
+                        $"<input name=\"{HttpUtility.HtmlEncode(_inputValues.Keys[i])}\" type=\"hidden\" value=\"{HttpUtility.HtmlEncode(_inputValues[_inputValues.Keys[i]])}\">");
             }
             _httpContext.Response.Write("</form>");
             _httpContext.Response.Write("</body></html>");

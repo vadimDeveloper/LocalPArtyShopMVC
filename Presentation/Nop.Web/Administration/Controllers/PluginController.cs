@@ -63,19 +63,19 @@ namespace Nop.Admin.Controllers
             ExternalAuthenticationSettings externalAuthenticationSettings, 
             WidgetSettings widgetSettings)
 		{
-            this._pluginFinder = pluginFinder;
-            this._officialFeedManager = officialFeedManager;
-            this._localizationService = localizationService;
-            this._webHelper = webHelper;
-            this._permissionService = permissionService;
-            this._languageService = languageService;
-            this._settingService = settingService;
-            this._storeService = storeService;
-            this._paymentSettings = paymentSettings;
-            this._shippingSettings = shippingSettings;
-            this._taxSettings = taxSettings;
-            this._externalAuthenticationSettings = externalAuthenticationSettings;
-            this._widgetSettings = widgetSettings;
+            _pluginFinder = pluginFinder;
+            _officialFeedManager = officialFeedManager;
+            _localizationService = localizationService;
+            _webHelper = webHelper;
+            _permissionService = permissionService;
+            _languageService = languageService;
+            _settingService = settingService;
+            _storeService = storeService;
+            _paymentSettings = paymentSettings;
+            _shippingSettings = shippingSettings;
+            _taxSettings = taxSettings;
+            _externalAuthenticationSettings = externalAuthenticationSettings;
+            _widgetSettings = widgetSettings;
 		}
 
 		#endregion 
@@ -197,7 +197,7 @@ namespace Nop.Admin.Controllers
             IList<OfficialFeedCategory> allCategories)
         {
             if (category == null)
-                throw new ArgumentNullException("category");
+                throw new ArgumentNullException(nameof(category));
 
             var breadCrumb = new List<OfficialFeedCategory>();
             while (category != null)
@@ -208,7 +208,7 @@ namespace Nop.Admin.Controllers
             breadCrumb.Reverse();
 
             var result = "";
-            for (int i = 0; i <= breadCrumb.Count - 1; i++)
+            for (var i = 0; i <= breadCrumb.Count - 1; i++)
             {
                 result += breadCrumb[i].Name;
                 if (i != breadCrumb.Count - 1)

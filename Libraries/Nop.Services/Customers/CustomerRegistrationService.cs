@@ -100,7 +100,7 @@ namespace Nop.Services.Customers
                     break;
             }
 
-            bool isValid = pwd == customer.Password;
+            var isValid = pwd == customer.Password;
             if (!isValid)
                 return CustomerLoginResults.WrongPassword;
 
@@ -197,7 +197,7 @@ namespace Nop.Services.Customers
                     break;
                 case PasswordFormat.Hashed:
                     {
-                        string saltKey = _encryptionService.CreateSaltKey(5);
+                        var saltKey = _encryptionService.CreateSaltKey(5);
                         request.Customer.PasswordSalt = saltKey;
                         request.Customer.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _customerSettings.HashedPasswordFormat);
                     }
@@ -280,7 +280,7 @@ namespace Nop.Services.Customers
                         break;
                 }
 
-                bool oldPasswordIsValid = oldPwd == customer.Password;
+                var oldPasswordIsValid = oldPwd == customer.Password;
                 if (!oldPasswordIsValid)
                     result.AddError(_localizationService.GetResource("Account.ChangePassword.Errors.OldPasswordDoesntMatch"));
 
@@ -308,7 +308,7 @@ namespace Nop.Services.Customers
                         break;
                     case PasswordFormat.Hashed:
                         {
-                            string saltKey = _encryptionService.CreateSaltKey(5);
+                            var saltKey = _encryptionService.CreateSaltKey(5);
                             customer.PasswordSalt = saltKey;
                             customer.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey, _customerSettings.HashedPasswordFormat);
                         }
@@ -337,7 +337,7 @@ namespace Nop.Services.Customers
                 throw new NopException("Email cannot be null");
 
             newEmail = newEmail.Trim();
-            string oldEmail = customer.Email;
+            var oldEmail = customer.Email;
 
             if (!CommonHelper.IsValidEmail(newEmail))
                 throw new NopException(_localizationService.GetResource("Account.EmailUsernameErrors.NewEmailIsNotValid"));

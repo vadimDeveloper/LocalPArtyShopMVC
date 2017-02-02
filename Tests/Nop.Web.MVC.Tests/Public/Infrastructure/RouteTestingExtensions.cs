@@ -222,24 +222,24 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
 
             //check action
             var methodCall = (MethodCallExpression)action.Body;
-            string actualAction = routeData.Values.GetValue("action").ToString();
+            var actualAction = routeData.Values.GetValue("action").ToString();
 
-            string expectedAction = methodCall.Method.ActionName();
+            var expectedAction = methodCall.Method.ActionName();
             actualAction.AssertSameStringAs(expectedAction);
 
             //check parameters
-            for (int i = 0; i < methodCall.Arguments.Count; i++)
+            for (var i = 0; i < methodCall.Arguments.Count; i++)
             {
-                ParameterInfo param = methodCall.Method.GetParameters()[i];
-                bool isReferenceType = !param.ParameterType.IsValueType;
-                bool isNullable = isReferenceType ||
+                var param = methodCall.Method.GetParameters()[i];
+                var isReferenceType = !param.ParameterType.IsValueType;
+                var isNullable = isReferenceType ||
                     (param.ParameterType.UnderlyingSystemType.IsGenericType && param.ParameterType.UnderlyingSystemType.GetGenericTypeDefinition() == typeof(Nullable<>));
 
-                string controllerParameterName = param.Name;
-                bool routeDataContainsValueForParameterName = routeData.Values.ContainsKey(controllerParameterName);
+                var controllerParameterName = param.Name;
+                var routeDataContainsValueForParameterName = routeData.Values.ContainsKey(controllerParameterName);
                 object actualValue = routeData.Values.GetValue(controllerParameterName);
                 object expectedValue = null;
-                Expression expressionToEvaluate = methodCall.Arguments[i];
+                var expressionToEvaluate = methodCall.Arguments[i];
 
                 // If the parameter is nullable and the expression is a Convert UnaryExpression, 
                 // we actually want to test against the value of the expression's operand.
@@ -283,7 +283,7 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
                     expectedValue = (expectedValue == null ? expectedValue : expectedValue.ToString());
                 }
 
-                string errorMsgFmt = "Value for parameter '{0}' did not match: expected '{1}' but was '{2}'";
+                var errorMsgFmt = "Value for parameter '{0}' did not match: expected '{1}' but was '{2}'";
                 if (routeDataContainsValueForParameterName)
                 {
                     errorMsgFmt += ".";
@@ -319,7 +319,7 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
         public static RouteData ShouldMapTo<TController>(this RouteData routeData) where TController : Controller
         {
             //strip out the word 'Controller' from the type
-            string expected = typeof(TController).Name.Replace("Controller", "");
+            var expected = typeof(TController).Name.Replace("Controller", "");
 
             //get the key (case insensitive)
             string actual = routeData.Values.GetValue("controller").ToString();
@@ -335,7 +335,7 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
         /// <returns></returns>
         public static RouteData ShouldBeIgnored(this string relativeUrl)
         {
-            RouteData routeData = relativeUrl.Route();
+            var routeData = relativeUrl.Route();
 
             routeData.RouteHandler.ShouldBe<StopRoutingHandler>();
             return routeData;

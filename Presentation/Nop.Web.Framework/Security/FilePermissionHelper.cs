@@ -22,15 +22,15 @@ namespace Nop.Web.Framework.Security
         /// <returns>Result</returns>
         public static bool CheckPermissions(string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
         {
-            bool flag = false;
-            bool flag2 = false;
-            bool flag3 = false;
-            bool flag4 = false;
-            bool flag5 = false;
-            bool flag6 = false;
-            bool flag7 = false;
-            bool flag8 = false;
-            WindowsIdentity current = WindowsIdentity.GetCurrent();
+            var flag = false;
+            var flag2 = false;
+            var flag3 = false;
+            var flag4 = false;
+            var flag5 = false;
+            var flag6 = false;
+            var flag7 = false;
+            var flag8 = false;
+            var current = WindowsIdentity.GetCurrent();
             AuthorizationRuleCollection rules;
             try
             {
@@ -83,7 +83,7 @@ namespace Nop.Web.Framework.Security
                         }
                     }
                 }
-                foreach (IdentityReference reference in current.Groups)
+                foreach (var reference in current.Groups)
                 {
                     foreach (FileSystemAccessRule rule2 in rules)
                     {
@@ -116,11 +116,11 @@ namespace Nop.Web.Framework.Security
                         }
                     }
                 }
-                bool flag9 = !flag4 && flag8;
-                bool flag10 = !flag3 && flag7;
-                bool flag11 = !flag && flag5;
-                bool flag12 = !flag2 && flag6;
-                bool flag13 = true;
+                var flag9 = !flag4 && flag8;
+                var flag10 = !flag3 && flag7;
+                var flag11 = !flag && flag5;
+                var flag12 = !flag2 && flag6;
+                var flag13 = true;
                 if (checkRead)
                 {
                     flag13 = flag13 && flag11;
@@ -152,7 +152,7 @@ namespace Nop.Web.Framework.Security
         /// <returns>Result</returns>
         public static IEnumerable<string> GetDirectoriesWrite(IWebHelper webHelper)
         {
-            string rootDir = webHelper.MapPath("~/");
+            var rootDir = webHelper.MapPath("~/");
             var dirsToCheck = new List<string>();
             //dirsToCheck.Add(rootDir);
             dirsToCheck.Add(Path.Combine(rootDir, "App_Data"));
@@ -174,7 +174,7 @@ namespace Nop.Web.Framework.Security
         /// <returns>Result</returns>
         public static IEnumerable<string> GetFilesWrite(IWebHelper webHelper)
         {
-            string rootDir = webHelper.MapPath("~/");
+            var rootDir = webHelper.MapPath("~/");
             var filesToCheck = new List<string>();
             filesToCheck.Add(Path.Combine(rootDir, "Global.asax"));
             filesToCheck.Add(Path.Combine(rootDir, "web.config"));

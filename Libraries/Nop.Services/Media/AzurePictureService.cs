@@ -1,11 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Web.Configuration;
-using ImageResizer;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Nop.Core;
@@ -17,7 +11,6 @@ using Nop.Data;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Logging;
-using Nop.Services.Seo;
 
 namespace Nop.Services.Media
 {
@@ -70,7 +63,7 @@ namespace Nop.Services.Media
 
             //should we do it for each HTTP request?
             blobClient = _storageAccount.CreateCloudBlobClient();
-            BlobContainerPermissions containerPermissions = new BlobContainerPermissions();
+            var containerPermissions = new BlobContainerPermissions();
             containerPermissions.PublicAccess = BlobContainerPublicAccessType.Blob;
             //container.SetPermissions(containerPermissions);
             container_thumb = blobClient.GetContainerReference(_config.AzureBlobStorageContainerName);
@@ -88,11 +81,11 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture</param>
         protected override void DeletePictureThumbs(Picture picture)
         {
-            string filter = string.Format("{0}", picture.Id.ToString("0000000"));
+            var filter = string.Format("{0}", picture.Id.ToString("0000000"));
             var files = container_thumb.ListBlobs(prefix: filter, useFlatBlobListing: false);
             foreach (var ff in files)
             {
-                CloudBlockBlob blockBlob = (CloudBlockBlob)ff;
+                var blockBlob = (CloudBlockBlob)ff;
                 blockBlob.Delete();
             }
         }
@@ -132,7 +125,7 @@ namespace Nop.Services.Media
         {
             try
             {
-                CloudBlockBlob blockBlob = container_thumb.GetBlockBlobReference(thumbFileName);
+                var blockBlob = container_thumb.GetBlockBlobReference(thumbFileName);
                 return blockBlob.Exists();
             }
             catch (Exception ex)
@@ -150,7 +143,7 @@ namespace Nop.Services.Media
         /// <param name="binary">Picture binary</param>
         protected override void SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
         {
-            CloudBlockBlob blockBlob = container_thumb.GetBlockBlobReference(thumbFileName);
+            var blockBlob = container_thumb.GetBlockBlobReference(thumbFileName);
             blockBlob.UploadFromByteArray(binary, 0, binary.Length);
 
         }

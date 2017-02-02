@@ -360,7 +360,7 @@ namespace Nop.Services.Shipping
             if (warehouseId == 0)
                 return null;
 
-            string key = string.Format(WAREHOUSES_BY_ID_KEY, warehouseId);
+            var key = string.Format(WAREHOUSES_BY_ID_KEY, warehouseId);
             return _cacheManager.Get(key, () => _warehouseRepository.GetById(warehouseId));
         }
 
@@ -431,7 +431,7 @@ namespace Nop.Services.Shipping
                 return decimal.Zero;
 
             //attribute weight
-            decimal attributesTotalWeight = decimal.Zero;
+            var attributesTotalWeight = decimal.Zero;
             if (!String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
             {
                 var attributeValues = _productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml);
@@ -474,9 +474,9 @@ namespace Nop.Services.Shipping
             if (request == null)
                 throw new ArgumentNullException("request");
 
-            Customer customer = request.Customer;
+            var customer = request.Customer;
 
-            decimal totalWeight = decimal.Zero;
+            var totalWeight = decimal.Zero;
             //shopping cart items
             foreach (var packageItem in request.Items)
                 totalWeight += GetShoppingCartItemWeight(packageItem.ShoppingCartItem) * packageItem.GetQuantity();
@@ -585,7 +585,7 @@ namespace Nop.Services.Shipping
                     if (productHeight > maxProductHeight)
                         maxProductHeight = productHeight;
                 }
-                decimal dimension = Convert.ToDecimal(Math.Pow(Convert.ToDouble(totalVolume), (double)(1.0 / 3.0)));
+                var dimension = Convert.ToDecimal(Math.Pow(Convert.ToDouble(totalVolume), (double)(1.0 / 3.0)));
                 length = width = height = dimension;
 
                 //sometimes we have products with sizes like 1x1x20
@@ -727,7 +727,7 @@ namespace Nop.Services.Shipping
                         warehouse = GetWarehouseById(product.WarehouseId);
                     }
                 }
-                int warehouseId = warehouse != null ? warehouse.Id : 0;
+                var warehouseId = warehouse != null ? warehouse.Id : 0;
 
                 if (requests.ContainsKey(warehouseId) && !product.ShipSeparately)
                 {
@@ -865,7 +865,7 @@ namespace Nop.Services.Shipping
                     else
                     {
                         //errors
-                        foreach (string error in getShippingOptionResponse.Errors)
+                        foreach (var error in getShippingOptionResponse.Errors)
                         {
                             result.AddError(error);
                             _logger.Warning(string.Format("Shipping ({0}). {1}", srcm.PluginDescriptor.FriendlyName, error));

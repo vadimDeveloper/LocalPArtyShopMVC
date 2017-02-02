@@ -147,7 +147,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
 
         private Uri GenerateLocalCallbackUri()
         {
-            string url = string.Format("{0}plugins/externalauthFacebook/logincallback/", _webHelper.GetStoreLocation());
+            var url = string.Format("{0}plugins/externalauthFacebook/logincallback/", _webHelper.GetStoreLocation());
             return new Uri(url);
             //var builder = new UriBuilder(_httpContext.Request.Url.GetLeftPart(UriPartial.Authority));
             //var path = _httpContext.Request.ApplicationPath + "/Plugins/ExternalAuthFacebook/LoginCallback/";
@@ -193,7 +193,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
                 return string.Empty;
             }
             var builder = new StringBuilder();
-            foreach (KeyValuePair<string, string> pair in args)
+            foreach (var pair in args)
             {
                 builder.Append(EscapeUriDataStringRfc3986(pair.Key));
                 builder.Append('=');
@@ -207,7 +207,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
         private string EscapeUriDataStringRfc3986(string value)
         {
             var builder = new StringBuilder(Uri.EscapeDataString(value));
-            for (int i = 0; i < UriRfc3986CharsToEscape.Length; i++)
+            for (var i = 0; i < UriRfc3986CharsToEscape.Length; i++)
             {
                 builder.Replace(UriRfc3986CharsToEscape[i], Uri.HexEscape(UriRfc3986CharsToEscape[i][0]));
             }

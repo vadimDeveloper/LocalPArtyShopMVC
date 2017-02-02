@@ -117,7 +117,7 @@ namespace Nop.Core.Caching
                 }
             }
 
-            foreach (string key in keysToRemove)
+            foreach (var key in keysToRemove)
             {
                 items.Remove(key);
             }
@@ -139,7 +139,7 @@ namespace Nop.Core.Caching
                 keysToRemove.Add(enumerator.Key.ToString());
             }
 
-            foreach (string key in keysToRemove)
+            foreach (var key in keysToRemove)
             {
                 items.Remove(key);
             }

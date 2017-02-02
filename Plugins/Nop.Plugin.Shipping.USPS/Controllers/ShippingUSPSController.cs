@@ -37,14 +37,14 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
 
 
             // Load Domestic service names
-            string carrierServicesOfferedDomestic = _uspsSettings.CarrierServicesOfferedDomestic;
-            foreach (string service in USPSServices.DomesticServices)
+            var carrierServicesOfferedDomestic = _uspsSettings.CarrierServicesOfferedDomestic;
+            foreach (var service in USPSServices.DomesticServices)
                 model.AvailableCarrierServicesDomestic.Add(service);
 
             if (!String.IsNullOrEmpty(carrierServicesOfferedDomestic))
-                foreach (string service in USPSServices.DomesticServices)
+                foreach (var service in USPSServices.DomesticServices)
                 {
-                    string serviceId = USPSServices.GetServiceIdDomestic(service);
+                    var serviceId = USPSServices.GetServiceIdDomestic(service);
                     if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOfferedDomestic))
                     {
                         // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs
@@ -54,14 +54,14 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
                 }
 
             // Load Internation service names
-            string carrierServicesOfferedInternational = _uspsSettings.CarrierServicesOfferedInternational;
-            foreach (string service in USPSServices.InternationalServices)
+            var carrierServicesOfferedInternational = _uspsSettings.CarrierServicesOfferedInternational;
+            foreach (var service in USPSServices.InternationalServices)
                 model.AvailableCarrierServicesInternational.Add(service);
 
             if (!String.IsNullOrEmpty(carrierServicesOfferedInternational))
-                foreach (string service in USPSServices.InternationalServices)
+                foreach (var service in USPSServices.InternationalServices)
                 {
-                    string serviceId = USPSServices.GetServiceIdInternational(service);
+                    var serviceId = USPSServices.GetServiceIdInternational(service);
                     if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOfferedInternational))
                     {
                         // Add delimiters [] so that single digit IDs aren't found in multi-digit IDs
@@ -91,14 +91,14 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
 
             // Save selected Domestic services
             var carrierServicesOfferedDomestic = new StringBuilder();
-            int carrierServicesDomesticSelectedCount = 0;
+            var carrierServicesDomesticSelectedCount = 0;
             if (model.CheckedCarrierServicesDomestic != null)
             {
                 foreach (var cs in model.CheckedCarrierServicesDomestic)
                 {
                     carrierServicesDomesticSelectedCount++;
 
-                    string serviceId = USPSServices.GetServiceIdDomestic(cs);
+                    var serviceId = USPSServices.GetServiceIdDomestic(cs);
                     //unselect any other services if NONE is selected
                     if (serviceId.Equals("NONE"))
                     {
@@ -124,13 +124,13 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
 
             // Save selected International services
             var carrierServicesOfferedInternational = new StringBuilder();
-            int carrierServicesInternationalSelectedCount = 0;
+            var carrierServicesInternationalSelectedCount = 0;
             if (model.CheckedCarrierServicesInternational != null)
             {
                 foreach (var cs in model.CheckedCarrierServicesInternational)
                 {
                     carrierServicesInternationalSelectedCount++;
-                    string serviceId = USPSServices.GetServiceIdInternational(cs);
+                    var serviceId = USPSServices.GetServiceIdInternational(cs);
                     // unselect other services if NONE is selected
                     if (serviceId.Equals("NONE"))
                     {

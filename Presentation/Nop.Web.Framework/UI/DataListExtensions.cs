@@ -19,9 +19,9 @@ namespace Nop.Web.Framework.UI
             var sb = new StringBuilder();
             sb.Append("<table>");
 
-            int cellIndex = 0;
+            var cellIndex = 0;
 
-            foreach (T item in items)
+            foreach (var item in items)
             {
                 if (cellIndex == 0)
                     sb.Append("<tr>");

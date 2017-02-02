@@ -29,11 +29,11 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService,
             IWorkContext workContext)
 		{
-            this._queuedEmailService = queuedEmailService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._workContext = workContext;
+            _queuedEmailService = queuedEmailService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _workContext = workContext;
 		}
 
         public ActionResult Index()
@@ -60,10 +60,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
 
-            DateTime? startDateValue = (model.SearchStartDate == null) ? null
+            var startDateValue = (model.SearchStartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SearchStartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.SearchEndDate == null) ? null 
+            var endDateValue = (model.SearchEndDate == null) ? null 
                             :(DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SearchEndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             var queuedEmails = _queuedEmailService.SearchEmails(model.SearchFromEmail, model.SearchToEmail, 

@@ -71,8 +71,8 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
 
-            int taxCategoryId = model.TaxCategoryId;
-            decimal rate = model.Rate;
+            var taxCategoryId = model.TaxCategoryId;
+            var rate = model.Rate;
 
             _settingService.SetSetting(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId), rate);
 

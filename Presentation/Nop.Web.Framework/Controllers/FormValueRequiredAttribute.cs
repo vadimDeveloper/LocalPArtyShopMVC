@@ -24,11 +24,11 @@ namespace Nop.Web.Framework.Controllers
 
         public override bool IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
         {
-            foreach (string buttonName in _submitButtonNames)
+            foreach (var buttonName in _submitButtonNames)
             {
                 try
                 {
-                    string value = "";
+                    var value = "";
                     switch (this._requirement)
                     {
                         case FormValueRequirement.Equal:

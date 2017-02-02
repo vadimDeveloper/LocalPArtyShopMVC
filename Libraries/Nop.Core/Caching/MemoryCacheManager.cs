@@ -80,7 +80,7 @@ namespace Nop.Core.Caching
                 if (regex.IsMatch(item.Key))
                     keysToRemove.Add(item.Key);
 
-            foreach (string key in keysToRemove)
+            foreach (var key in keysToRemove)
             {
                 Remove(key);
             }

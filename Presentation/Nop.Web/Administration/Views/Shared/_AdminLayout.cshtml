@@ -36,7 +36,7 @@
     Html.AppendScriptParts("~/Scripts/jquery-1.10.2.min.js");
 
     //page title
-    string adminPageTitle = "";
+    var adminPageTitle = "";
     if (!String.IsNullOrWhiteSpace(ViewBag.Title))
     {
         adminPageTitle = ViewBag.Title + " / ";

@@ -69,7 +69,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// <returns>True - response OK; otherwise, false</returns>
         public static bool CheckSuccess(AbstractResponseType abstractResponse, out string errorMsg)
         {
-            bool success = false;
+            var success = false;
             var sb = new StringBuilder();
             switch (abstractResponse.Ack)
             {
@@ -82,7 +82,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             }
             if (null != abstractResponse.Errors)
             {
-                foreach (ErrorType errorType in abstractResponse.Errors)
+                foreach (var errorType in abstractResponse.Errors)
                 {
                     if (sb.Length <= 0)
                     {

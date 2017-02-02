@@ -30,11 +30,11 @@ namespace Nop.Web.Controllers
             IWorkContext workContext,
             ICacheManager cacheManager)
 		{
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._cacheManager = cacheManager;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _cacheManager = cacheManager;
 		}
 
         #endregion
@@ -47,10 +47,10 @@ namespace Nop.Web.Controllers
         public ActionResult GetStatesByCountryId(string countryId, bool addSelectStateItem)
         {
             //this action method gets called via an ajax request
-            if (String.IsNullOrEmpty(countryId))
-                throw new ArgumentNullException("countryId");
+            if (string.IsNullOrEmpty(countryId))
+                throw new ArgumentNullException(nameof(countryId));
 
-            string cacheKey = string.Format(ModelCacheEventConsumer.STATEPROVINCES_BY_COUNTRY_MODEL_KEY, countryId, addSelectStateItem, _workContext.WorkingLanguage.Id);
+            var cacheKey = string.Format(ModelCacheEventConsumer.STATEPROVINCES_BY_COUNTRY_MODEL_KEY, countryId, addSelectStateItem, _workContext.WorkingLanguage.Id);
             var cacheModel = _cacheManager.Get(cacheKey, () =>
             {
                 var country = _countryService.GetCountryById(Convert.ToInt32(countryId));
@@ -63,14 +63,10 @@ namespace Nop.Web.Controllers
                 if (country == null)
                 {
                     //country is not selected ("choose country" item)
-                    if (addSelectStateItem)
-                    {
-                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Address.SelectState") });
-                    }
-                    else
-                    {
-                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Address.OtherNonUS") });
-                    }
+                    result.Insert(0,
+                        addSelectStateItem
+                            ? new {id = 0, name = _localizationService.GetResource("Address.SelectState")}
+                            : new {id = 0, name = _localizationService.GetResource("Address.OtherNonUS")});
                 }
                 else
                 {

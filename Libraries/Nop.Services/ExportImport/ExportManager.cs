@@ -607,7 +607,7 @@ namespace Nop.Services.ExportImport
                     "Picture2",
                     "Picture3"
                 };
-                for (int i = 0; i < properties.Length; i++)
+                for (var i = 0; i < properties.Length; i++)
                 {
                     worksheet.Cells[1, i + 1].Value = properties[i];
                     worksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -616,10 +616,10 @@ namespace Nop.Services.ExportImport
                 }
 
 
-                int row = 2;
+                var row = 2;
                 foreach (var p in products)
                 {
-                    int col = 1;
+                    var col = 1;
 
                     worksheet.Cells[row, col].Value = p.ProductTypeId;
                     col++;
@@ -916,9 +916,9 @@ namespace Nop.Services.ExportImport
                     string picture2 = null;
                     string picture3 = null;
                     var pictures = _pictureService.GetPicturesByProductId(p.Id, 3);
-                    for (int i = 0; i < pictures.Count; i++)
+                    for (var i = 0; i < pictures.Count; i++)
                     {
-                        string pictureLocalPath = _pictureService.GetThumbLocalPath(pictures[i]);
+                        var pictureLocalPath = _pictureService.GetThumbLocalPath(pictures[i]);
                         switch (i)
                         {
                             case 0:
@@ -1183,7 +1183,7 @@ namespace Nop.Services.ExportImport
                         "ShippingPhoneNumber",
                         "ShippingFaxNumber"
                     };
-                for (int i = 0; i < properties.Length; i++)
+                for (var i = 0; i < properties.Length; i++)
                 {
                     worksheet.Cells[1, i + 1].Value = properties[i];
                     worksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -1192,10 +1192,10 @@ namespace Nop.Services.ExportImport
                 }
 
 
-                int row = 2;
+                var row = 2;
                     foreach (var order in orders)
                     {
-                        int col = 1;
+                        var col = 1;
 
                         //order properties
                         worksheet.Cells[row, col].Value = order.Id;
@@ -1450,7 +1450,7 @@ namespace Nop.Services.ExportImport
                         "ForumPostCount",
                         "Signature"
                     };
-                for (int i = 0; i < properties.Length; i++)
+                for (var i = 0; i < properties.Length; i++)
                 {
                     worksheet.Cells[1, i + 1].Value = properties[i];
                     worksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -1459,10 +1459,10 @@ namespace Nop.Services.ExportImport
                 }
 
 
-                int row = 2;
+                var row = 2;
                 foreach (var customer in customers)
                 {
-                    int col = 1;
+                    var col = 1;
 
                     worksheet.Cells[row, col].Value = customer.Id;
                     col++;
@@ -1666,7 +1666,7 @@ namespace Nop.Services.ExportImport
                 foreach (var store in _storeService.GetAllStores())
                 {
                     var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id);
-                    bool subscribedToNewsletters = newsletter != null && newsletter.Active;
+                    var subscribedToNewsletters = newsletter != null && newsletter.Active;
                     xmlWriter.WriteElementString(string.Format("Newsletter-in-store-{0}", store.Id), null, subscribedToNewsletters.ToString());
                 }
 

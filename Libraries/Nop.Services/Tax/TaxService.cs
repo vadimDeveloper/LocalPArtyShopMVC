@@ -336,7 +336,7 @@ namespace Nop.Services.Tax
         public virtual decimal GetProductPrice(Product product, decimal price,
             Customer customer, out decimal taxRate)
         {
-            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            var includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return GetProductPrice(product, price, includingTax, customer, out taxRate);
         }
 
@@ -352,8 +352,8 @@ namespace Nop.Services.Tax
         public virtual decimal GetProductPrice(Product product, decimal price,
             bool includingTax, Customer customer, out decimal taxRate)
         {
-            bool priceIncludesTax = _taxSettings.PricesIncludeTax;
-            int taxCategoryId = 0;
+            var priceIncludesTax = _taxSettings.PricesIncludeTax;
+            var taxCategoryId = 0;
             return GetProductPrice(product, taxCategoryId, price, includingTax, 
                 customer, priceIncludesTax, out taxRate);
         }
@@ -442,7 +442,7 @@ namespace Nop.Services.Tax
         /// <returns>Price</returns>
         public virtual decimal GetShippingPrice(decimal price, Customer customer)
         {
-            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            var includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return GetShippingPrice(price, includingTax, customer);
         }
 
@@ -475,8 +475,8 @@ namespace Nop.Services.Tax
             {
                 return price;
             }
-            int taxClassId = _taxSettings.ShippingTaxClassId;
-            bool priceIncludesTax = _taxSettings.ShippingPriceIncludesTax;
+            var taxClassId = _taxSettings.ShippingTaxClassId;
+            var priceIncludesTax = _taxSettings.ShippingPriceIncludesTax;
             return GetProductPrice(null, taxClassId, price, includingTax, customer,
                 priceIncludesTax, out taxRate);
         }
@@ -493,7 +493,7 @@ namespace Nop.Services.Tax
         /// <returns>Price</returns>
         public virtual decimal GetPaymentMethodAdditionalFee(decimal price, Customer customer)
         {
-            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            var includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return GetPaymentMethodAdditionalFee(price, includingTax, customer);
         }
 
@@ -527,8 +527,8 @@ namespace Nop.Services.Tax
             {
                 return price;
             }
-            int taxClassId = _taxSettings.PaymentMethodAdditionalFeeTaxClassId;
-            bool priceIncludesTax = _taxSettings.PaymentMethodAdditionalFeeIncludesTax;
+            var taxClassId = _taxSettings.PaymentMethodAdditionalFeeTaxClassId;
+            var priceIncludesTax = _taxSettings.PaymentMethodAdditionalFeeIncludesTax;
             return GetProductPrice(null, taxClassId, price, includingTax, customer,
                 priceIncludesTax, out taxRate);
         }
@@ -556,7 +556,7 @@ namespace Nop.Services.Tax
         /// <returns>Price</returns>
         public virtual decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav, Customer customer)
         {
-            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            var includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return GetCheckoutAttributePrice(cav, includingTax, customer);
         }
 
@@ -590,14 +590,14 @@ namespace Nop.Services.Tax
 
             taxRate = decimal.Zero;
 
-            decimal price = cav.PriceAdjustment;
+            var price = cav.PriceAdjustment;
             if (cav.CheckoutAttribute.IsTaxExempt)
             {
                 return price;
             }
 
-            bool priceIncludesTax = _taxSettings.PricesIncludeTax;
-            int taxClassId = cav.CheckoutAttribute.TaxCategoryId;
+            var priceIncludesTax = _taxSettings.PricesIncludeTax;
+            var taxClassId = cav.CheckoutAttribute.TaxCategoryId;
             return GetProductPrice(null, taxClassId, price, includingTax, customer,
                 priceIncludesTax, out taxRate);
         }

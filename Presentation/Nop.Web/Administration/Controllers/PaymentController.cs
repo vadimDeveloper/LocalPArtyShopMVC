@@ -44,14 +44,14 @@ namespace Nop.Admin.Controllers
             IWebHelper webHelper,
             ILocalizationService localizationService)
 		{
-            this._paymentService = paymentService;
-            this._paymentSettings = paymentSettings;
-            this._settingService = settingService;
-            this._permissionService = permissionService;
-            this._countryService = countryService;
-            this._pluginFinder = pluginFinder;
-            this._webHelper = webHelper;
-            this._localizationService = localizationService;
+            _paymentService = paymentService;
+            _paymentSettings = paymentSettings;
+            _settingService = settingService;
+            _permissionService = permissionService;
+            _countryService = countryService;
+            _pluginFinder = pluginFinder;
+            _webHelper = webHelper;
+            _localizationService = localizationService;
 		}
 
 		#endregion 
@@ -168,7 +168,7 @@ namespace Nop.Admin.Controllers
                 var restictedCountries = _paymentService.GetRestictedCountryIds(pm);
                 foreach (var c in countries)
                 {
-                    bool resticted = restictedCountries.Contains(c.Id);
+                    var resticted = restictedCountries.Contains(c.Id);
                     if (!model.Resticted.ContainsKey(pm.PluginDescriptor.SystemName))
                         model.Resticted[pm.PluginDescriptor.SystemName] = new Dictionary<int, bool>();
                     model.Resticted[pm.PluginDescriptor.SystemName][c.Id] = resticted;
@@ -189,7 +189,7 @@ namespace Nop.Admin.Controllers
 
             foreach (var pm in paymentMethods)
             {
-                string formKey = "restrict_" + pm.PluginDescriptor.SystemName;
+                var formKey = "restrict_" + pm.PluginDescriptor.SystemName;
                 var countryIdsToRestrict = (form[formKey] != null ? form[formKey].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>())
                     .Select(x => Convert.ToInt32(x)).ToList();
 

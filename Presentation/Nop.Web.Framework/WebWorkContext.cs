@@ -72,19 +72,19 @@ namespace Nop.Web.Framework
             IUserAgentHelper userAgentHelper,
             IStoreMappingService storeMappingService)
         {
-            this._httpContext = httpContext;
-            this._customerService = customerService;
-            this._vendorService = vendorService;
-            this._storeContext = storeContext;
-            this._authenticationService = authenticationService;
-            this._languageService = languageService;
-            this._currencyService = currencyService;
-            this._genericAttributeService = genericAttributeService;
-            this._taxSettings = taxSettings;
-            this._currencySettings = currencySettings;
-            this._localizationSettings = localizationSettings;
-            this._userAgentHelper = userAgentHelper;
-            this._storeMappingService = storeMappingService;
+            _httpContext = httpContext;
+            _customerService = customerService;
+            _vendorService = vendorService;
+            _storeContext = storeContext;
+            _authenticationService = authenticationService;
+            _languageService = languageService;
+            _currencyService = currencyService;
+            _genericAttributeService = genericAttributeService;
+            _taxSettings = taxSettings;
+            _currencySettings = currencySettings;
+            _localizationSettings = localizationSettings;
+            _userAgentHelper = userAgentHelper;
+            _storeMappingService = storeMappingService;
         }
 
         #endregion
@@ -93,46 +93,44 @@ namespace Nop.Web.Framework
 
         protected virtual HttpCookie GetCustomerCookie()
         {
-            if (_httpContext == null || _httpContext.Request == null)
-                return null;
-
-            return _httpContext.Request.Cookies[CustomerCookieName];
+            return _httpContext?.Request?.Cookies[CustomerCookieName];
         }
 
         protected virtual void SetCustomerCookie(Guid customerGuid)
         {
-            if (_httpContext != null && _httpContext.Response != null)
-            {
-                var cookie = new HttpCookie(CustomerCookieName);
-                cookie.HttpOnly = true;
-                cookie.Value = customerGuid.ToString();
-                if (customerGuid == Guid.Empty)
-                {
-                    cookie.Expires = DateTime.Now.AddMonths(-1);
-                }
-                else
-                {
-                    int cookieExpires = 24*365; //TODO make configurable
-                    cookie.Expires = DateTime.Now.AddHours(cookieExpires);
-                }
+            if (_httpContext?.Response == null) return;
 
-                _httpContext.Response.Cookies.Remove(CustomerCookieName);
-                _httpContext.Response.Cookies.Add(cookie);
+            var cookie = new HttpCookie(CustomerCookieName)
+            {
+                HttpOnly = true,
+                Value = customerGuid.ToString()
+            };
+            if (customerGuid == Guid.Empty)
+            {
+                cookie.Expires = DateTime.Now.AddMonths(-1);
             }
+            else
+            {
+                const int cookieExpires = 24*365; //TODO make configurable
+                cookie.Expires = DateTime.Now.AddHours(cookieExpires);
+            }
+
+            _httpContext.Response.Cookies.Remove(CustomerCookieName);
+            _httpContext.Response.Cookies.Add(cookie);
         }
 
         protected virtual Language GetLanguageFromUrl()
         {
-            if (_httpContext == null || _httpContext.Request == null)
+            if (_httpContext?.Request == null)
                 return null;
 
-            string virtualPath = _httpContext.Request.AppRelativeCurrentExecutionFilePath;
-            string applicationPath = _httpContext.Request.ApplicationPath;
+            var virtualPath = _httpContext.Request.AppRelativeCurrentExecutionFilePath;
+            var applicationPath = _httpContext.Request.ApplicationPath;
             if (!virtualPath.IsLocalizedUrl(applicationPath, false))
                 return null;
 
             var seoCode = virtualPath.GetLanguageSeoCodeFromUrl(applicationPath, false);
-            if (String.IsNullOrEmpty(seoCode))
+            if (string.IsNullOrEmpty(seoCode))
                 return null;
 
             var language = _languageService
@@ -148,13 +146,8 @@ namespace Nop.Web.Framework
 
         protected virtual Language GetLanguageFromBrowserSettings()
         {
-            if (_httpContext == null ||
-                _httpContext.Request == null ||
-                _httpContext.Request.UserLanguages == null)
-                return null;
-
-            var userLanguage = _httpContext.Request.UserLanguages.FirstOrDefault();
-            if (String.IsNullOrEmpty(userLanguage))
+            var userLanguage = _httpContext?.Request?.UserLanguages?.FirstOrDefault();
+            if (string.IsNullOrEmpty(userLanguage))
                 return null;
 
             var language = _languageService
@@ -225,7 +218,7 @@ namespace Nop.Web.Framework
                 if (customer == null || customer.Deleted || !customer.Active)
                 {
                     var customerCookie = GetCustomerCookie();
-                    if (customerCookie != null && !String.IsNullOrEmpty(customerCookie.Value))
+                    if (!string.IsNullOrEmpty(customerCookie?.Value))
                     {
                         Guid customerGuid;
                         if (Guid.TryParse(customerCookie.Value, out customerGuid))
@@ -247,11 +240,9 @@ namespace Nop.Web.Framework
 
 
                 //validation
-                if (!customer.Deleted && customer.Active)
-                {
-                    SetCustomerCookie(customer.CustomerGuid);
-                    _cachedCustomer = customer;
-                }
+                if (customer.Deleted || !customer.Active) return _cachedCustomer;
+                SetCustomerCookie(customer.CustomerGuid);
+                _cachedCustomer = customer;
 
                 return _cachedCustomer;
             }
@@ -265,13 +256,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Gets or sets the original customer (in case the current one is impersonated)
         /// </summary>
-        public virtual Customer OriginalCustomerIfImpersonated
-        {
-            get
-            {
-                return _originalCustomerIfImpersonated;
-            }
-        }
+        public virtual Customer OriginalCustomerIfImpersonated => _originalCustomerIfImpersonated;
 
         /// <summary>
         /// Gets or sets the current vendor (logged-in manager)
@@ -283,7 +268,7 @@ namespace Nop.Web.Framework
                 if (_cachedVendor != null)
                     return _cachedVendor;
 
-                var currentCustomer = this.CurrentCustomer;
+                var currentCustomer = CurrentCustomer;
                 if (currentCustomer == null)
                     return null;
 
@@ -317,13 +302,13 @@ namespace Nop.Web.Framework
                 {
                     //get language from browser settings
                     //but we do it only once
-                    if (!this.CurrentCustomer.GetAttribute<bool>(SystemCustomerAttributeNames.LanguageAutomaticallyDetected, 
+                    if (!CurrentCustomer.GetAttribute<bool>(SystemCustomerAttributeNames.LanguageAutomaticallyDetected, 
                         _genericAttributeService, _storeContext.CurrentStore.Id))
                     {
                         detectedLanguage = GetLanguageFromBrowserSettings();
                         if (detectedLanguage != null)
                         {
-                            _genericAttributeService.SaveAttribute(this.CurrentCustomer, SystemCustomerAttributeNames.LanguageAutomaticallyDetected,
+                            _genericAttributeService.SaveAttribute(CurrentCustomer, SystemCustomerAttributeNames.LanguageAutomaticallyDetected,
                                  true, _storeContext.CurrentStore.Id);
                         }
                     }
@@ -331,17 +316,17 @@ namespace Nop.Web.Framework
                 if (detectedLanguage != null)
                 {
                     //the language is detected. now we need to save it
-                    if (this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId,
+                    if (CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId,
                         _genericAttributeService, _storeContext.CurrentStore.Id) != detectedLanguage.Id)
                     {
-                        _genericAttributeService.SaveAttribute(this.CurrentCustomer, SystemCustomerAttributeNames.LanguageId,
+                        _genericAttributeService.SaveAttribute(CurrentCustomer, SystemCustomerAttributeNames.LanguageId,
                             detectedLanguage.Id, _storeContext.CurrentStore.Id);
                     }
                 }
 
                 var allLanguages = _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id);
                 //find current customer language
-                var languageId = this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId,
+                var languageId = CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId,
                     _genericAttributeService, _storeContext.CurrentStore.Id);
                 var language = allLanguages.FirstOrDefault(x => x.Id == languageId);
                 if (language == null)
@@ -368,7 +353,7 @@ namespace Nop.Web.Framework
             set
             {
                 var languageId = value != null ? value.Id : 0;
-                _genericAttributeService.SaveAttribute(this.CurrentCustomer,
+                _genericAttributeService.SaveAttribute(CurrentCustomer,
                     SystemCustomerAttributeNames.LanguageId,
                     languageId, _storeContext.CurrentStore.Id);
 
@@ -388,7 +373,7 @@ namespace Nop.Web.Framework
                     return _cachedCurrency;
                 
                 //return primary store currency when we're in admin area/mode
-                if (this.IsAdmin)
+                if (IsAdmin)
                 {
                     var primaryStoreCurrency =  _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
                     if (primaryStoreCurrency != null)
@@ -401,13 +386,13 @@ namespace Nop.Web.Framework
 
                 var allCurrencies = _currencyService.GetAllCurrencies(storeId: _storeContext.CurrentStore.Id);
                 //find a currency previously selected by a customer
-                var currencyId = this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.CurrencyId,
+                var currencyId = CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.CurrencyId,
                     _genericAttributeService, _storeContext.CurrentStore.Id);
                 var currency = allCurrencies.FirstOrDefault(x => x.Id == currencyId);
                 if (currency == null)
                 {
                     //it not found, then let's load the default currency for the current language (if specified)
-                    currencyId = this.WorkingLanguage.DefaultCurrencyId;
+                    currencyId = WorkingLanguage.DefaultCurrencyId;
                     currency = allCurrencies.FirstOrDefault(x => x.Id == currencyId);
                 }
                 if (currency == null)
@@ -428,7 +413,7 @@ namespace Nop.Web.Framework
             set
             {
                 var currencyId = value != null ? value.Id : 0;
-                _genericAttributeService.SaveAttribute(this.CurrentCustomer,
+                _genericAttributeService.SaveAttribute(CurrentCustomer,
                     SystemCustomerAttributeNames.CurrencyId,
                     currencyId, _storeContext.CurrentStore.Id);
 
@@ -449,9 +434,9 @@ namespace Nop.Web.Framework
                     return _cachedTaxDisplayType.Value;
 
                 TaxDisplayType taxDisplayType;
-                if (_taxSettings.AllowCustomersToSelectTaxDisplayType && this.CurrentCustomer != null)
+                if (_taxSettings.AllowCustomersToSelectTaxDisplayType && CurrentCustomer != null)
                 {
-                    taxDisplayType = (TaxDisplayType) this.CurrentCustomer.GetAttribute<int>(
+                    taxDisplayType = (TaxDisplayType) CurrentCustomer.GetAttribute<int>(
                         SystemCustomerAttributeNames.TaxDisplayTypeId,
                         _genericAttributeService,
                         _storeContext.CurrentStore.Id);
@@ -471,7 +456,7 @@ namespace Nop.Web.Framework
                 if (!_taxSettings.AllowCustomersToSelectTaxDisplayType)
                     return;
 
-                _genericAttributeService.SaveAttribute(this.CurrentCustomer, 
+                _genericAttributeService.SaveAttribute(CurrentCustomer, 
                     SystemCustomerAttributeNames.TaxDisplayTypeId,
                     (int)value, _storeContext.CurrentStore.Id);
 

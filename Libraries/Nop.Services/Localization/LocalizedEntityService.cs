@@ -94,7 +94,7 @@ namespace Nop.Services.Localization
         protected virtual IList<LocalizedPropertyForCaching> GetAllLocalizedPropertiesCached()
         {
             //cache
-            string key = string.Format(LOCALIZEDPROPERTY_ALL_KEY);
+            var key = string.Format(LOCALIZEDPROPERTY_ALL_KEY);
             return _cacheManager.Get(key, () =>
             {
                 var query = from lp in _localizedPropertyRepository.Table
@@ -177,7 +177,7 @@ namespace Nop.Services.Localization
         {
             if (_localizationSettings.LoadAllLocalizedPropertiesOnStartup)
             {
-                string key = string.Format(LOCALIZEDPROPERTY_KEY, languageId, entityId, localeKeyGroup, localeKey);
+                var key = string.Format(LOCALIZEDPROPERTY_KEY, languageId, entityId, localeKeyGroup, localeKey);
                 return _cacheManager.Get(key, () =>
                 {
                     //load all records (we know they are cached)
@@ -199,7 +199,7 @@ namespace Nop.Services.Localization
             else
             {
                 //gradual loading
-                string key = string.Format(LOCALIZEDPROPERTY_KEY, languageId, entityId, localeKeyGroup, localeKey);
+                var key = string.Format(LOCALIZEDPROPERTY_KEY, languageId, entityId, localeKeyGroup, localeKey);
                 return _cacheManager.Get(key, () =>
                 {
                     var source = _localizedPropertyRepository.Table;
@@ -291,8 +291,8 @@ namespace Nop.Services.Localization
                        keySelector));
             }
 
-            string localeKeyGroup = typeof(T).Name;
-            string localeKey = propInfo.Name;
+            var localeKeyGroup = typeof(T).Name;
+            var localeKey = propInfo.Name;
 
             var props = GetLocalizedProperties(entity.Id, localeKeyGroup);
             var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&

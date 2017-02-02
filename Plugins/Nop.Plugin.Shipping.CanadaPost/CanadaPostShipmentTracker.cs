@@ -26,7 +26,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
         /// <returns>A url to a tracking page.</returns>
         public virtual string GetUrl(string trackingNumber)
         {
-            string url = "http://www.canadapost.ca/cpotools/apps/track/personal/findByTrackNumber?trackingNumber={0}&LOCALE=en";
+            var url = "http://www.canadapost.ca/cpotools/apps/track/personal/findByTrackNumber?trackingNumber={0}&LOCALE=en";
             url = string.Format(url, trackingNumber);
             return url;
         }

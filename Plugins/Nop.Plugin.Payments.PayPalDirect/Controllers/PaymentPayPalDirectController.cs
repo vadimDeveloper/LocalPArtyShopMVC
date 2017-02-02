@@ -181,9 +181,9 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             });
 
             //years
-            for (int i = 0; i < 15; i++)
+            for (var i = 0; i < 15; i++)
             {
-                string year = Convert.ToString(DateTime.Now.Year + i);
+                var year = Convert.ToString(DateTime.Now.Year + i);
                 model.ExpireYears.Add(new SelectListItem
                 {
                     Text = year,
@@ -192,9 +192,9 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             }
 
             //months
-            for (int i = 1; i <= 12; i++)
+            for (var i = 1; i <= 12; i++)
             {
-                string text = (i < 10) ? "0" + i : i.ToString();
+                var text = (i < 10) ? "0" + i : i.ToString();
                 model.ExpireMonths.Add(new SelectListItem
                 {
                     Text = text,
@@ -258,8 +258,8 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
         [ValidateInput(false)]
         public ActionResult IPNHandler()
         {
-            byte[] param = Request.BinaryRead(Request.ContentLength);
-            string strRequest = Encoding.ASCII.GetString(param);
+            var param = Request.BinaryRead(Request.ContentLength);
+            var strRequest = Encoding.ASCII.GetString(param);
             Dictionary<string, string> values;
 
             var processor = _paymentService.LoadPaymentMethodBySystemName("Payments.PayPalDirect") as PayPalDirectPaymentProcessor;
@@ -270,43 +270,43 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             if (processor.VerifyIpn(strRequest, out values))
             {
                 #region values
-                decimal mc_gross = decimal.Zero;
+                var mc_gross = decimal.Zero;
                 try
                 {
                     mc_gross = decimal.Parse(values["mc_gross"], new CultureInfo("en-US"));
                 }
                 catch { }
 
-                string payer_status = string.Empty;
+                var payer_status = string.Empty;
                 values.TryGetValue("payer_status", out payer_status);
-                string payment_status = string.Empty;
+                var payment_status = string.Empty;
                 values.TryGetValue("payment_status", out payment_status);
-                string pending_reason = string.Empty;
+                var pending_reason = string.Empty;
                 values.TryGetValue("pending_reason", out pending_reason);
-                string mc_currency = string.Empty;
+                var mc_currency = string.Empty;
                 values.TryGetValue("mc_currency", out mc_currency);
-                string txn_id = string.Empty;
+                var txn_id = string.Empty;
                 values.TryGetValue("txn_id", out txn_id);
-                string txn_type = string.Empty;
+                var txn_type = string.Empty;
                 values.TryGetValue("txn_type", out txn_type);
-                string rp_invoice_id = string.Empty;
+                var rp_invoice_id = string.Empty;
                 values.TryGetValue("rp_invoice_id", out rp_invoice_id);
-                string payment_type = string.Empty;
+                var payment_type = string.Empty;
                 values.TryGetValue("payment_type", out payment_type);
-                string payer_id = string.Empty;
+                var payer_id = string.Empty;
                 values.TryGetValue("payer_id", out payer_id);
-                string receiver_id = string.Empty;
+                var receiver_id = string.Empty;
                 values.TryGetValue("receiver_id", out receiver_id);
-                string invoice = string.Empty;
+                var invoice = string.Empty;
                 values.TryGetValue("invoice", out invoice);
-                string payment_fee = string.Empty;
+                var payment_fee = string.Empty;
                 values.TryGetValue("payment_fee", out payment_fee);
 
                 #endregion
 
                 var sb = new StringBuilder();
                 sb.AppendLine("Paypal IPN:");
-                foreach (KeyValuePair<string, string> kvp in values)
+                foreach (var kvp in values)
                 {
                     sb.AppendLine(kvp.Key + ": " + kvp.Value);
                 }
@@ -322,7 +322,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                     case "recurring_payment":
                         #region Recurring payment
                         {
-                            Guid orderNumberGuid = Guid.Empty;
+                            var orderNumberGuid = Guid.Empty;
                             try
                             {
                                 orderNumberGuid = new Guid(rp_invoice_id);
@@ -378,9 +378,9 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                     default:
                         #region Standard payment
                         {
-                            string orderNumber = string.Empty;
+                            var orderNumber = string.Empty;
                             values.TryGetValue("custom", out orderNumber);
-                            Guid orderNumberGuid = Guid.Empty;
+                            var orderNumberGuid = Guid.Empty;
                             try
                             {
                                 orderNumberGuid = new Guid(orderNumber);

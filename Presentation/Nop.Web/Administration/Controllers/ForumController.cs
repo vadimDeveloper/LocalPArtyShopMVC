@@ -23,10 +23,10 @@ namespace Nop.Admin.Controllers
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
             IPermissionService permissionService)
         {
-            this._forumService = forumService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
+            _forumService = forumService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
         }
 
         #region List
@@ -38,10 +38,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedView();
-
-            return View();
+            return !_permissionService.Authorize(StandardPermissionProvider.ManageForums) ? AccessDeniedView() : View();
         }
 
         [HttpPost]
@@ -96,10 +93,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult CreateForumGroup()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
-                return AccessDeniedView();
-
-            return View(new ForumGroupModel { DisplayOrder = 1 });
+            return !_permissionService.Authorize(StandardPermissionProvider.ManageForums) ? AccessDeniedView() : View(new ForumGroupModel { DisplayOrder = 1 });
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]

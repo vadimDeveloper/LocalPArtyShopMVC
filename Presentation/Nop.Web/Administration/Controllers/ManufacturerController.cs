@@ -72,25 +72,25 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService,
             CatalogSettings catalogSettings)
         {
-            this._categoryService = categoryService;
-            this._manufacturerTemplateService = manufacturerTemplateService;
-            this._manufacturerService = manufacturerService;
-            this._productService = productService;
-            this._customerService = customerService;
-            this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
-            this._urlRecordService = urlRecordService;
-            this._pictureService = pictureService;
-            this._languageService = languageService;
-            this._localizationService = localizationService;
-            this._localizedEntityService = localizedEntityService;
-            this._exportManager = exportManager;
-            this._discountService = discountService;
-            this._customerActivityService = customerActivityService;
-            this._vendorService = vendorService;
-            this._aclService = aclService;
-            this._permissionService = permissionService;
-            this._catalogSettings = catalogSettings;
+            _categoryService = categoryService;
+            _manufacturerTemplateService = manufacturerTemplateService;
+            _manufacturerService = manufacturerService;
+            _productService = productService;
+            _customerService = customerService;
+            _storeService = storeService;
+            _storeMappingService = storeMappingService;
+            _urlRecordService = urlRecordService;
+            _pictureService = pictureService;
+            _languageService = languageService;
+            _localizationService = localizationService;
+            _localizedEntityService = localizedEntityService;
+            _exportManager = exportManager;
+            _discountService = discountService;
+            _customerActivityService = customerActivityService;
+            _vendorService = vendorService;
+            _aclService = aclService;
+            _permissionService = permissionService;
+            _catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -145,7 +145,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareTemplatesModel(ManufacturerModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             var templates = _manufacturerTemplateService.GetAllManufacturerTemplates();
             foreach (var template in templates)
@@ -162,7 +162,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareDiscountModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableDiscounts = _discountService
                 .GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true)
@@ -179,7 +179,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareAclModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableCustomerRoles = _customerService
                 .GetAllCustomerRoles(true)
@@ -221,7 +221,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableStores = _storeService
                 .GetAllStores()
@@ -421,7 +421,7 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                int prevPictureId = manufacturer.PictureId;
+                var prevPictureId = manufacturer.PictureId;
                 manufacturer = model.ToEntity(manufacturer);
                 manufacturer.UpdatedOnUtc = DateTime.UtcNow;
                 _manufacturerService.UpdateManufacturer(manufacturer);
@@ -665,7 +665,7 @@ namespace Nop.Admin.Controllers
 
             if (model.SelectedProductIds != null)
             {
-                foreach (int id in model.SelectedProductIds)
+                foreach (var id in model.SelectedProductIds)
                 {
                     var product = _productService.GetProductById(id);
                     if (product != null)

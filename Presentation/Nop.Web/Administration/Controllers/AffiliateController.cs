@@ -51,17 +51,17 @@ namespace Nop.Admin.Controllers
             ICustomerService customerService, IOrderService orderService,
             IPermissionService permissionService)
         {
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._dateTimeHelper = dateTimeHelper;
-            this._webHelper = webHelper;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._priceFormatter = priceFormatter;
-            this._affiliateService = affiliateService;
-            this._customerService = customerService;
-            this._orderService = orderService;
-            this._permissionService = permissionService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _dateTimeHelper = dateTimeHelper;
+            _webHelper = webHelper;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _priceFormatter = priceFormatter;
+            _affiliateService = affiliateService;
+            _customerService = customerService;
+            _orderService = orderService;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -73,7 +73,7 @@ namespace Nop.Admin.Controllers
             bool prepareEntireAddressModel = true)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             if (affiliate != null)
             {
@@ -88,42 +88,41 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            if (prepareEntireAddressModel)
+            if (!prepareEntireAddressModel) return;
+
+            model.Address.FirstNameEnabled = true;
+            model.Address.FirstNameRequired = true;
+            model.Address.LastNameEnabled = true;
+            model.Address.LastNameRequired = true;
+            model.Address.EmailEnabled = true;
+            model.Address.EmailRequired = true;
+            model.Address.CompanyEnabled = true;
+            model.Address.CountryEnabled = true;
+            model.Address.StateProvinceEnabled = true;
+            model.Address.CityEnabled = true;
+            model.Address.CityRequired = true;
+            model.Address.StreetAddressEnabled = true;
+            model.Address.StreetAddressRequired = true;
+            model.Address.StreetAddress2Enabled = true;
+            model.Address.ZipPostalCodeEnabled = true;
+            model.Address.ZipPostalCodeRequired = true;
+            model.Address.PhoneEnabled = true;
+            model.Address.PhoneRequired = true;
+            model.Address.FaxEnabled = true;
+
+            //address
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            foreach (var c in _countryService.GetAllCountries(showHidden: true))
+                model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (affiliate != null && c.Id == affiliate.Address.CountryId) });
+
+            var states = model.Address.CountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId.Value, showHidden: true).ToList() : new List<StateProvince>();
+            if (states.Count > 0)
             {
-                model.Address.FirstNameEnabled = true;
-                model.Address.FirstNameRequired = true;
-                model.Address.LastNameEnabled = true;
-                model.Address.LastNameRequired = true;
-                model.Address.EmailEnabled = true;
-                model.Address.EmailRequired = true;
-                model.Address.CompanyEnabled = true;
-                model.Address.CountryEnabled = true;
-                model.Address.StateProvinceEnabled = true;
-                model.Address.CityEnabled = true;
-                model.Address.CityRequired = true;
-                model.Address.StreetAddressEnabled = true;
-                model.Address.StreetAddressRequired = true;
-                model.Address.StreetAddress2Enabled = true;
-                model.Address.ZipPostalCodeEnabled = true;
-                model.Address.ZipPostalCodeRequired = true;
-                model.Address.PhoneEnabled = true;
-                model.Address.PhoneRequired = true;
-                model.Address.FaxEnabled = true;
-
-                //address
-                model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
-                foreach (var c in _countryService.GetAllCountries(showHidden: true))
-                    model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (affiliate != null && c.Id == affiliate.Address.CountryId) });
-
-                var states = model.Address.CountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId.Value, showHidden: true).ToList() : new List<StateProvince>();
-                if (states.Count > 0)
-                {
-                    foreach (var s in states)
-                        model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (affiliate != null && s.Id == affiliate.Address.StateProvinceId) });
-                }
-                else
-                    model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                foreach (var s in states)
+                    model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (affiliate != null && s.Id == affiliate.Address.StateProvinceId) });
             }
+            else
+                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
         }
         
         #endregion
@@ -189,10 +188,12 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var affiliate = new Affiliate();
+                var affiliate = new Affiliate
+                {
+                    Active = model.Active,
+                    AdminComment = model.AdminComment
+                };
 
-                affiliate.Active = model.Active;
-                affiliate.AdminComment = model.AdminComment;
                 //validate friendly URL name
                 var friendlyUrlName = affiliate.ValidateFriendlyUrlName(model.FriendlyUrlName);
                 affiliate.FriendlyUrlName = friendlyUrlName;
@@ -259,14 +260,12 @@ namespace Nop.Admin.Controllers
                 _affiliateService.UpdateAffiliate(affiliate);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Affiliates.Updated"));
-                if (continueEditing)
-                {
-                    //selected tab
-                    SaveSelectedTabIndex();
+                if (!continueEditing) return RedirectToAction("List");
 
-                    return RedirectToAction("Edit", new {id = affiliate.Id});
-                }
-                return RedirectToAction("List");
+                //selected tab
+                SaveSelectedTabIndex();
+
+                return RedirectToAction("Edit", new {id = affiliate.Id});
             }
 
             //If we got this far, something failed, redisplay form
@@ -300,11 +299,13 @@ namespace Nop.Admin.Controllers
             if (affiliateId == 0)
                 throw new Exception("Affliate ID cannot be 0");
 
-            var model = new AffiliatedOrderListModel();
-            model.AffliateId = affiliateId;
+            var model = new AffiliatedOrderListModel
+            {
+                AffliateId = affiliateId,
+                AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList()
+            };
 
             //order statuses
-            model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
             model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             
             //payment statuses
@@ -327,15 +328,15 @@ namespace Nop.Admin.Controllers
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");
 
-            DateTime? startDateValue = (model.StartDate == null) ? null
+            var startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.EndDate == null) ? null
+            var endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
-            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+            var orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
+            var paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
+            var shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
             var orders = _orderService.SearchOrders(
                 createdFromUtc: startDateValue,
@@ -350,13 +351,15 @@ namespace Nop.Admin.Controllers
             {
                 Data = orders.Select(order =>
                     {
-                        var orderModel = new AffiliateModel.AffiliatedOrderModel();
-                        orderModel.Id = order.Id;
-                        orderModel.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
-                        orderModel.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
-                        orderModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
-                        orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
-                        orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
+                        var orderModel = new AffiliateModel.AffiliatedOrderModel
+                        {
+                            Id = order.Id,
+                            OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                            PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
+                            ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
+                            OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
+                            CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc)
+                        };
                         return orderModel;
                     }),
                 Total = orders.TotalCount
@@ -384,9 +387,11 @@ namespace Nop.Admin.Controllers
             {
                 Data = customers.Select(customer =>
                     {
-                        var customerModel = new AffiliateModel.AffiliatedCustomerModel();
-                        customerModel.Id = customer.Id;
-                        customerModel.Name = customer.Email;
+                        var customerModel = new AffiliateModel.AffiliatedCustomerModel
+                        {
+                            Id = customer.Id,
+                            Name = customer.Email
+                        };
                         return customerModel;
                     }),
                 Total = customers.TotalCount

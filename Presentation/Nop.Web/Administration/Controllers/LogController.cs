@@ -27,11 +27,11 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
             IPermissionService permissionService)
         {
-            this._logger = logger;
-            this._workContext = workContext;
-            this._localizationService = localizationService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._permissionService = permissionService;
+            _logger = logger;
+            _workContext = workContext;
+            _localizationService = localizationService;
+            _dateTimeHelper = dateTimeHelper;
+            _permissionService = permissionService;
         }
 
         public ActionResult Index()
@@ -58,13 +58,13 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
                 return AccessDeniedView();
 
-            DateTime? createdOnFromValue = (model.CreatedOnFrom == null) ? null
+            var createdOnFromValue = (model.CreatedOnFrom == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? createdToFromValue = (model.CreatedOnTo == null) ? null
+            var createdToFromValue = (model.CreatedOnTo == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            LogLevel? logLevel = model.LogLevelId > 0 ? (LogLevel?)(model.LogLevelId) : null;
+            var logLevel = model.LogLevelId > 0 ? (LogLevel?)(model.LogLevelId) : null;
 
 
             var logItems = _logger.GetAllLogs(createdOnFromValue, createdToFromValue, model.Message,

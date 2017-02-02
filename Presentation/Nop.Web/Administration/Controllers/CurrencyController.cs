@@ -44,16 +44,16 @@ namespace Nop.Admin.Controllers
             IStoreService storeService, 
             IStoreMappingService storeMappingService)
         {
-            this._currencyService = currencyService;
-            this._currencySettings = currencySettings;
-            this._settingService = settingService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._localizedEntityService = localizedEntityService;
-            this._languageService = languageService;
-            this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
+            _currencyService = currencyService;
+            _currencySettings = currencySettings;
+            _settingService = settingService;
+            _dateTimeHelper = dateTimeHelper;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _localizedEntityService = localizedEntityService;
+            _languageService = languageService;
+            _storeService = storeService;
+            _storeMappingService = storeMappingService;
         }
         
         #endregion
@@ -76,7 +76,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(CurrencyModel model, Currency currency, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableStores = _storeService
                 .GetAllStores()

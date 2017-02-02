@@ -31,11 +31,11 @@ namespace Nop.Admin.Controllers
             ITaxCategoryService taxCategoryService, TaxSettings taxSettings,
             ISettingService settingService, IPermissionService permissionService)
 		{
-            this._taxService = taxService;
-            this._taxCategoryService = taxCategoryService;
-            this._taxSettings = taxSettings;
-            this._settingService = settingService;
-            this._permissionService = permissionService;
+            _taxService = taxService;
+            _taxCategoryService = taxCategoryService;
+            _taxSettings = taxSettings;
+            _settingService = settingService;
+            _permissionService = permissionService;
 		}
 
 		#endregion 
@@ -92,7 +92,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult MarkAsPrimaryProvider(string systemName)
         {
-            if (String.IsNullOrEmpty(systemName))
+            if (string.IsNullOrEmpty(systemName))
             {
                 return RedirectToAction("Providers");
             }

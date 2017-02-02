@@ -141,52 +141,52 @@ namespace Nop.Admin.Controllers
             AddressSettings addressSettings,
             ShippingSettings shippingSettings)
 		{
-            this._orderService = orderService;
-            this._orderReportService = orderReportService;
-            this._orderProcessingService = orderProcessingService;
-            this._returnRequestService = returnRequestService;
-            this._priceCalculationService = priceCalculationService;
-            this._taxService = taxService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._priceFormatter = priceFormatter;
-            this._discountService = discountService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._currencyService = currencyService;
-            this._encryptionService = encryptionService;
-            this._paymentService = paymentService;
-            this._measureService = measureService;
-            this._pdfService = pdfService;
-            this._addressService = addressService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._productService = productService;
-            this._exportManager = exportManager;
-            this._permissionService = permissionService;
-            this._workflowMessageService = workflowMessageService;
-            this._categoryService = categoryService;
-            this._manufacturerService = manufacturerService;
-            this._productAttributeService = productAttributeService;
-            this._productAttributeParser = productAttributeParser;
-            this._productAttributeFormatter = productAttributeFormatter;
-            this._shoppingCartService = shoppingCartService;
-            this._giftCardService = giftCardService;
-            this._downloadService = downloadService;
-            this._shipmentService = shipmentService;
-            this._shippingService = shippingService;
-            this._storeService = storeService;
-            this._vendorService = vendorService;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
-            this._addressAttributeFormatter = addressAttributeFormatter;
-            this._affiliateService = affiliateService;
-            this._pictureService = pictureService;
+            _orderService = orderService;
+            _orderReportService = orderReportService;
+            _orderProcessingService = orderProcessingService;
+            _returnRequestService = returnRequestService;
+            _priceCalculationService = priceCalculationService;
+            _taxService = taxService;
+            _dateTimeHelper = dateTimeHelper;
+            _priceFormatter = priceFormatter;
+            _discountService = discountService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _currencyService = currencyService;
+            _encryptionService = encryptionService;
+            _paymentService = paymentService;
+            _measureService = measureService;
+            _pdfService = pdfService;
+            _addressService = addressService;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _productService = productService;
+            _exportManager = exportManager;
+            _permissionService = permissionService;
+            _workflowMessageService = workflowMessageService;
+            _categoryService = categoryService;
+            _manufacturerService = manufacturerService;
+            _productAttributeService = productAttributeService;
+            _productAttributeParser = productAttributeParser;
+            _productAttributeFormatter = productAttributeFormatter;
+            _shoppingCartService = shoppingCartService;
+            _giftCardService = giftCardService;
+            _downloadService = downloadService;
+            _shipmentService = shipmentService;
+            _shippingService = shippingService;
+            _storeService = storeService;
+            _vendorService = vendorService;
+            _addressAttributeParser = addressAttributeParser;
+            _addressAttributeService = addressAttributeService;
+            _addressAttributeFormatter = addressAttributeFormatter;
+            _affiliateService = affiliateService;
+            _pictureService = pictureService;
 
-            this._currencySettings = currencySettings;
-            this._taxSettings = taxSettings;
-            this._measureSettings = measureSettings;
-            this._addressSettings = addressSettings;
-            this._shippingSettings = shippingSettings;
+            _currencySettings = currencySettings;
+            _taxSettings = taxSettings;
+            _measureSettings = measureSettings;
+            _addressSettings = addressSettings;
+            _shippingSettings = shippingSettings;
 		}
         
         #endregion
@@ -197,7 +197,7 @@ namespace Nop.Admin.Controllers
         protected virtual bool HasAccessToOrder(Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             if (_workContext.CurrentVendor == null)
                 //not a vendor; has access
@@ -212,7 +212,7 @@ namespace Nop.Admin.Controllers
         protected virtual bool HasAccessToOrderItem(OrderItem orderItem)
         {
             if (orderItem == null)
-                throw new ArgumentNullException("orderItem");
+                throw new ArgumentNullException(nameof(orderItem));
 
             if (_workContext.CurrentVendor == null)
                 //not a vendor; has access
@@ -226,7 +226,7 @@ namespace Nop.Admin.Controllers
         protected virtual bool HasAccessToProduct(Product product)
         {
             if (product == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException(nameof(product));
 
             if (_workContext.CurrentVendor == null)
                 //not a vendor; has access
@@ -240,7 +240,7 @@ namespace Nop.Admin.Controllers
         protected virtual bool HasAccessToShipment(Shipment shipment)
         {
             if (shipment == null)
-                throw new ArgumentNullException("shipment");
+                throw new ArgumentNullException(nameof(shipment));
 
             if (_workContext.CurrentVendor == null)
                 //not a vendor; has access
@@ -267,10 +267,10 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareOrderDetailsModel(OrderModel model, Order order)
         {
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new ArgumentNullException(nameof(order));
 
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.Id = order.Id;
             model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
@@ -311,8 +311,8 @@ namespace Nop.Admin.Controllers
             model.OrderSubtotalInclTaxValue = order.OrderSubtotalInclTax;
             model.OrderSubtotalExclTaxValue = order.OrderSubtotalExclTax;
             //discount (applied to order subtotal)
-            string orderSubtotalDiscountInclTaxStr = _priceFormatter.FormatPrice(order.OrderSubTotalDiscountInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true);
-            string orderSubtotalDiscountExclTaxStr = _priceFormatter.FormatPrice(order.OrderSubTotalDiscountExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false);
+            var orderSubtotalDiscountInclTaxStr = _priceFormatter.FormatPrice(order.OrderSubTotalDiscountInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true);
+            var orderSubtotalDiscountExclTaxStr = _priceFormatter.FormatPrice(order.OrderSubTotalDiscountExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false);
             if (order.OrderSubTotalDiscountInclTax > decimal.Zero)
                 model.OrderSubTotalDiscountInclTax = orderSubtotalDiscountInclTaxStr;
             if (order.OrderSubTotalDiscountExclTax > decimal.Zero)
@@ -338,9 +338,9 @@ namespace Nop.Admin.Controllers
 
             //tax
             model.Tax = _priceFormatter.FormatPrice(order.OrderTax, true, false);
-            SortedDictionary<decimal, decimal> taxRates = order.TaxRatesDictionary;
-            bool displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count > 0;
-            bool displayTax = !displayTaxRates;
+            var taxRates = order.TaxRatesDictionary;
+            var displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count > 0;
+            var displayTax = !displayTaxRates;
             foreach (var tr in order.TaxRatesDictionary)
             {
                 model.TaxRates.Add(new OrderModel.TaxRate
@@ -417,19 +417,19 @@ namespace Nop.Admin.Controllers
                 //cvv
                 model.CardCvv2 = _encryptionService.DecryptText(order.CardCvv2);
                 //expiry date
-                string cardExpirationMonthDecrypted = _encryptionService.DecryptText(order.CardExpirationMonth);
-                if (!String.IsNullOrEmpty(cardExpirationMonthDecrypted) && cardExpirationMonthDecrypted != "0")
+                var cardExpirationMonthDecrypted = _encryptionService.DecryptText(order.CardExpirationMonth);
+                if (!string.IsNullOrEmpty(cardExpirationMonthDecrypted) && cardExpirationMonthDecrypted != "0")
                     model.CardExpirationMonth = cardExpirationMonthDecrypted;
-                string cardExpirationYearDecrypted = _encryptionService.DecryptText(order.CardExpirationYear);
-                if (!String.IsNullOrEmpty(cardExpirationYearDecrypted) && cardExpirationYearDecrypted != "0")
+                var cardExpirationYearDecrypted = _encryptionService.DecryptText(order.CardExpirationYear);
+                if (!string.IsNullOrEmpty(cardExpirationYearDecrypted) && cardExpirationYearDecrypted != "0")
                     model.CardExpirationYear = cardExpirationYearDecrypted;
 
                 model.AllowStoringCreditCardNumber = true;
             }
             else
             {
-                string maskedCreditCardNumberDecrypted = _encryptionService.DecryptText(order.MaskedCreditCardNumber);
-                if (!String.IsNullOrEmpty(maskedCreditCardNumberDecrypted))
+                var maskedCreditCardNumberDecrypted = _encryptionService.DecryptText(order.MaskedCreditCardNumber);
+                if (!string.IsNullOrEmpty(maskedCreditCardNumberDecrypted))
                     model.CardNumber = maskedCreditCardNumberDecrypted;
             }
 
@@ -538,7 +538,7 @@ namespace Nop.Admin.Controllers
             #region Products
 
             model.CheckoutAttributeInfo = order.CheckoutAttributeDescription;
-            bool hasDownloadableItems = false;
+            var hasDownloadableItems = false;
             var products = order.OrderItems;
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -636,8 +636,8 @@ namespace Nop.Admin.Controllers
             var presetQty = 1;
             var presetPrice = _priceCalculationService.GetFinalPrice(product, order.Customer, decimal.Zero, true, presetQty);
             decimal taxRate;
-            decimal presetPriceInclTax = _taxService.GetProductPrice(product, presetPrice, true, order.Customer, out taxRate);
-            decimal presetPriceExclTax = _taxService.GetProductPrice(product, presetPrice, false, order.Customer, out taxRate);
+            var presetPriceInclTax = _taxService.GetProductPrice(product, presetPrice, true, order.Customer, out taxRate);
+            var presetPriceExclTax = _taxService.GetProductPrice(product, presetPrice, false, order.Customer, out taxRate);
 
             var model = new OrderModel.AddOrderProductModel.ProductDetailsModel
             {
@@ -764,7 +764,7 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            if (prepareShipmentEvent && !String.IsNullOrEmpty(shipment.TrackingNumber))
+            if (prepareShipmentEvent && !string.IsNullOrEmpty(shipment.TrackingNumber))
             {
                 var order = shipment.Order;
                 var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(order.ShippingRateComputationMethodSystemName);
@@ -896,15 +896,15 @@ namespace Nop.Admin.Controllers
                 model.VendorId = _workContext.CurrentVendor.Id;
             }
 
-            DateTime? startDateValue = (model.StartDate == null) ? null
+            var startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.EndDate == null) ? null 
+            var endDateValue = (model.EndDate == null) ? null 
                             :(DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
-            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+            var orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
+            var paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
+            var shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
 		    var filterByProductId = 0;
 		    var product = _productService.GetProductById(model.ProductId);
@@ -1010,7 +1010,7 @@ namespace Nop.Admin.Controllers
         public ActionResult ProductSearchAutoComplete(string term)
         {
             const int searchTermMinimumLength = 3;
-            if (String.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
+            if (string.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
                 return Content("");
 
             //a vendor should have access only to his products
@@ -1053,15 +1053,15 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 return AccessDeniedView();
 
-            DateTime? startDateValue = (model.StartDate == null) ? null
+            var startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.EndDate == null) ? null
+            var endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
-            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+            var orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
+            var paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
+            var shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
             var filterByProductId = 0;
             var product = _productService.GetProductById(model.ProductId);
@@ -1132,15 +1132,15 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 return AccessDeniedView();
 
-            DateTime? startDateValue = (model.StartDate == null) ? null
+            var startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.EndDate == null) ? null
+            var endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
-            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+            var orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
+            var paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
+            var shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
             var filterByProductId = 0;
             var product = _productService.GetProductById(model.ProductId);
@@ -1492,11 +1492,11 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                decimal amountToRefund = model.AmountToRefund;
+                var amountToRefund = model.AmountToRefund;
                 if (amountToRefund <= decimal.Zero)
                     throw new NopException("Enter amount to refund");
 
-                decimal maxAmountToRefund = order.OrderTotal - order.RefundedAmount;
+                var maxAmountToRefund = order.OrderTotal - order.RefundedAmount;
                 if (amountToRefund > maxAmountToRefund)
                     amountToRefund = maxAmountToRefund;
 
@@ -1653,15 +1653,15 @@ namespace Nop.Admin.Controllers
                 model.VendorId = _workContext.CurrentVendor.Id;
             }
 
-            DateTime? startDateValue = (model.StartDate == null) ? null
+            var startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.EndDate == null) ? null
+            var endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
-            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+            var orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
+            var paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
+            var shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
             var filterByProductId = 0;
             var product = _productService.GetProductById(model.ProductId);
@@ -1750,12 +1750,12 @@ namespace Nop.Admin.Controllers
 
             if (order.AllowStoringCreditCardNumber)
             {
-                string cardType = model.CardType;
-                string cardName = model.CardName;
-                string cardNumber = model.CardNumber;
-                string cardCvv2 = model.CardCvv2;
-                string cardExpirationMonth = model.CardExpirationMonth;
-                string cardExpirationYear = model.CardExpirationYear;
+                var cardType = model.CardType;
+                var cardName = model.CardName;
+                var cardNumber = model.CardNumber;
+                var cardCvv2 = model.CardCvv2;
+                var cardExpirationMonth = model.CardExpirationMonth;
+                var cardExpirationYear = model.CardExpirationYear;
 
                 order.CardType = _encryptionService.EncryptText(cardType);
                 order.CardName = _encryptionService.EncryptText(cardName);
@@ -1877,7 +1877,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", "Order", new { id = id });
 
             //get order item identifier
-            int orderItemId = 0;
+            var orderItemId = 0;
             foreach (var formValue in form.AllKeys)
                 if (formValue.StartsWith("btnSaveOrderItem", StringComparison.InvariantCultureIgnoreCase))
                     orderItemId = Convert.ToInt32(formValue.Substring("btnSaveOrderItem".Length));
@@ -1906,7 +1906,7 @@ namespace Nop.Admin.Controllers
 
             if (quantity > 0)
             {
-                int qtyDifference = orderItem.Quantity - quantity;
+                var qtyDifference = orderItem.Quantity - quantity;
 
                 orderItem.UnitPriceInclTax = unitPriceInclTax;
                 orderItem.UnitPriceExclTax = unitPriceExclTax;
@@ -1966,7 +1966,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", "Order", new { id = id });
 
             //get order item identifier
-            int orderItemId = 0;
+            var orderItemId = 0;
             foreach (var formValue in form.AllKeys)
                 if (formValue.StartsWith("btnDeleteOrderItem", StringComparison.InvariantCultureIgnoreCase))
                     orderItemId = Convert.ToInt32(formValue.Substring("btnDeleteOrderItem".Length));
@@ -2033,7 +2033,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             //get order item identifier
-            int orderItemId = 0;
+            var orderItemId = 0;
             foreach (var formValue in form.AllKeys)
                 if (formValue.StartsWith("btnResetDownloadCount", StringComparison.InvariantCultureIgnoreCase))
                     orderItemId = Convert.ToInt32(formValue.Substring("btnResetDownloadCount".Length));
@@ -2072,7 +2072,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             //get order item identifier
-            int orderItemId = 0;
+            var orderItemId = 0;
             foreach (var formValue in form.AllKeys)
                 if (formValue.StartsWith("btnPvActivateDownload", StringComparison.InvariantCultureIgnoreCase))
                     orderItemId = Convert.ToInt32(formValue.Substring("btnPvActivateDownload".Length));
@@ -2300,14 +2300,14 @@ namespace Nop.Admin.Controllers
             //attributes
             //warnings
             var warnings = new List<string>();
-            string attributesXml = "";
+            var attributesXml = "";
 
             #region Product attributes
 
             var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             foreach (var attribute in attributes)
             {
-                string controlId = string.Format("product_attribute_{0}", attribute.Id);
+                var controlId = string.Format("product_attribute_{0}", attribute.Id);
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -2315,9 +2315,9 @@ namespace Nop.Admin.Controllers
                     case AttributeControlType.ColorSquares:
                         {
                             var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
-                                int selectedAttributeId = int.Parse(ctrlAttributes);
+                                var selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
                                     attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
@@ -2327,11 +2327,11 @@ namespace Nop.Admin.Controllers
                     case AttributeControlType.Checkboxes:
                         {
                             var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
                                 foreach (var item in ctrlAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    int selectedAttributeId = int.Parse(item);
+                                    var selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
                                         attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                             attribute, selectedAttributeId.ToString());
@@ -2357,9 +2357,9 @@ namespace Nop.Admin.Controllers
                     case AttributeControlType.MultilineTextbox:
                         {
                             var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            if (!string.IsNullOrEmpty(ctrlAttributes))
                             {
-                                string enteredText = ctrlAttributes.Trim();
+                                var enteredText = ctrlAttributes.Trim();
                                 attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, enteredText);
                             }
@@ -2373,7 +2373,7 @@ namespace Nop.Admin.Controllers
                             DateTime? selectedDate = null;
                             try
                             {
-                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(day));
+                                selectedDate = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day));
                             }
                             catch { }
                             if (selectedDate.HasValue)
@@ -2385,8 +2385,8 @@ namespace Nop.Admin.Controllers
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                            var httpPostedFile = this.Request.Files[controlId];
-                            if ((httpPostedFile != null) && (!String.IsNullOrEmpty(httpPostedFile.FileName)))
+                            var httpPostedFile = Request.Files[controlId];
+                            if ((httpPostedFile != null) && (!string.IsNullOrEmpty(httpPostedFile.FileName)))
                             {
                                 var fileSizeOk = true;
                                 if (attribute.ValidationFileMaximumSize.HasValue)
@@ -2439,14 +2439,14 @@ namespace Nop.Admin.Controllers
 
             #region Gift cards
 
-            string recipientName = "";
-            string recipientEmail = "";
-            string senderName = "";
-            string senderEmail = "";
-            string giftCardMessage = "";
+            var recipientName = "";
+            var recipientEmail = "";
+            var senderName = "";
+            var senderEmail = "";
+            var giftCardMessage = "";
             if (product.IsGiftCard)
             {
-                foreach (string formKey in form.AllKeys)
+                foreach (var formKey in form.AllKeys)
                 {
                     if (formKey.Equals("giftcard.RecipientName", StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -2512,7 +2512,7 @@ namespace Nop.Admin.Controllers
                 //no errors
 
                 //attributes
-                string attributeDescription = _productAttributeFormatter.FormatAttributes(product, attributesXml, order.Customer);
+                var attributeDescription = _productAttributeFormatter.FormatAttributes(product, attributesXml, order.Customer);
 
                 //save item
                 var orderItem = new OrderItem
@@ -2554,7 +2554,7 @@ namespace Nop.Admin.Controllers
                 //gift cards
                 if (product.IsGiftCard)
                 {
-                    for (int i = 0; i < orderItem.Quantity; i++)
+                    for (var i = 0; i < orderItem.Quantity; i++)
                     {
                         var gc = new GiftCard
                         {
@@ -2607,7 +2607,7 @@ namespace Nop.Admin.Controllers
 
             var address = _addressService.GetAddressById(addressId);
             if (address == null)
-                throw new ArgumentException("No address found with the specified id", "addressId");
+                throw new ArgumentException("No address found with the specified id", nameof(addressId));
 
             var model = new OrderAddressModel();
             model.OrderId = orderId;
@@ -2775,14 +2775,14 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            DateTime? startDateValue = (model.StartDate == null) ? null
+            var startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.EndDate == null) ? null 
+            var endDateValue = (model.EndDate == null) ? null 
                             :(DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             //a vendor should have access only to his products
-            int vendorId = 0;
+            var vendorId = 0;
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
@@ -3027,21 +3027,21 @@ namespace Nop.Admin.Controllers
                 if (maxQtyToAdd <= 0)
                     continue;
 
-                int qtyToAdd = 0; //parse quantity
-                foreach (string formKey in form.AllKeys)
+                var qtyToAdd = 0; //parse quantity
+                foreach (var formKey in form.AllKeys)
                     if (formKey.Equals(string.Format("qtyToAdd{0}", orderItem.Id), StringComparison.InvariantCultureIgnoreCase))
                     {
                         int.TryParse(form[formKey], out qtyToAdd);
                         break;
                     }
 
-                int warehouseId = 0;
+                var warehouseId = 0;
                 if (orderItem.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                     orderItem.Product.UseMultipleWarehouses)
                 {
                     //multiple warehouses supported
                     //warehouse is chosen by a store owner
-                    foreach (string formKey in form.AllKeys)
+                    foreach (var formKey in form.AllKeys)
                         if (formKey.Equals(string.Format("warehouse_{0}", orderItem.Id), StringComparison.InvariantCultureIgnoreCase))
                         {
                             int.TryParse(form[formKey], out warehouseId);
@@ -3054,7 +3054,7 @@ namespace Nop.Admin.Controllers
                     warehouseId = orderItem.Product.WarehouseId;
                 }
 
-                foreach (string formKey in form.AllKeys)
+                foreach (var formKey in form.AllKeys)
                     if (formKey.Equals(string.Format("qtyToAdd{0}", orderItem.Id), StringComparison.InvariantCultureIgnoreCase))
                     {
                         int.TryParse(form[formKey], out qtyToAdd);
@@ -3389,14 +3389,14 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            DateTime? startDateValue = (model.StartDate == null) ? null
+            var startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.EndDate == null) ? null
+            var endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             //a vendor should have access only to his products
-            int vendorId = 0;
+            var vendorId = 0;
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
@@ -3640,7 +3640,7 @@ namespace Nop.Admin.Controllers
             int pageSize, int orderBy)
         {
             //a vendor should have access only to his products
-            int vendorId = 0;
+            var vendorId = 0;
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
@@ -3766,14 +3766,14 @@ namespace Nop.Admin.Controllers
                 model.VendorId = _workContext.CurrentVendor.Id;
             }
 
-            DateTime? startDateValue = (model.StartDate == null) ? null
+            var startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.EndDate == null) ? null
+            var endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
+            var orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
+            var paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
 
             var items = _orderReportService.BestSellersReport(
                 createdFromUtc: startDateValue,
@@ -3827,14 +3827,14 @@ namespace Nop.Admin.Controllers
                 return Content("");
 
             //a vendor should have access only to his products
-            int vendorId = 0;
+            var vendorId = 0;
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
-            DateTime? startDateValue = (model.StartDate == null) ? null
+            var startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.EndDate == null) ? null
+            var endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
             
             var items = _orderReportService.ProductsNeverSold(vendorId,
@@ -3979,14 +3979,14 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
                 return Content("");
 
-            DateTime? startDateValue = (model.StartDate == null) ? null
+            var startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
-            DateTime? endDateValue = (model.EndDate == null) ? null
+            var endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
+            var orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
+            var paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
 
             var items = _orderReportService.GetCountryReport(
                 os: orderStatus,

@@ -74,8 +74,8 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
 
-            int shippingMethodId = model.ShippingMethodId;
-            decimal rate = model.Rate;
+            var shippingMethodId = model.ShippingMethodId;
+            var rate = model.Rate;
 
             _settingService.SetSetting(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId), rate);
 

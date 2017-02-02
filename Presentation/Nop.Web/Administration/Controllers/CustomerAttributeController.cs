@@ -36,12 +36,12 @@ namespace Nop.Admin.Controllers
             IWorkContext workContext,
             IPermissionService permissionService)
         {
-            this._customerAttributeService = customerAttributeService;
-            this._languageService = languageService;
-            this._localizedEntityService = localizedEntityService;
-            this._localizationService = localizationService;
-            this._workContext = workContext;
-            this._permissionService = permissionService;
+            _customerAttributeService = customerAttributeService;
+            _languageService = languageService;
+            _localizedEntityService = localizedEntityService;
+            _localizationService = localizationService;
+            _workContext = workContext;
+            _permissionService = permissionService;
         }
 
         #endregion

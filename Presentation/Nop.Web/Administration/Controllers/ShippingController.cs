@@ -56,18 +56,18 @@ namespace Nop.Admin.Controllers
             IPluginFinder pluginFinder,
             IWebHelper webHelper)
 		{
-            this._shippingService = shippingService;
-            this._shippingSettings = shippingSettings;
-            this._settingService = settingService;
-            this._addressService = addressService;
-            this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._localizedEntityService = localizedEntityService;
-            this._languageService = languageService;
-            this._pluginFinder = pluginFinder;
-            this._webHelper = webHelper;
+            _shippingService = shippingService;
+            _shippingSettings = shippingSettings;
+            _settingService = settingService;
+            _addressService = addressService;
+            _countryService = countryService;
+            _stateProvinceService = stateProvinceService;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _localizedEntityService = localizedEntityService;
+            _languageService = languageService;
+            _pluginFinder = pluginFinder;
+            _webHelper = webHelper;
 		}
 
 		#endregion 
@@ -698,7 +698,7 @@ namespace Nop.Admin.Controllers
             foreach (var country in countries)
                 foreach (var shippingMethod in shippingMethods)
                 {
-                    bool restricted = shippingMethod.CountryRestrictionExists(country.Id);
+                    var restricted = shippingMethod.CountryRestrictionExists(country.Id);
                     if (!model.Restricted.ContainsKey(country.Id))
                         model.Restricted[country.Id] = new Dictionary<int, bool>();
                     model.Restricted[country.Id][shippingMethod.Id] = restricted;
@@ -719,7 +719,7 @@ namespace Nop.Admin.Controllers
 
             foreach (var shippingMethod in shippingMethods)
             {
-                string formKey = "restrict_" + shippingMethod.Id;
+                var formKey = "restrict_" + shippingMethod.Id;
                 var countryIdsToRestrict = form[formKey] != null 
                     ? form[formKey].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(int.Parse)
@@ -729,7 +729,7 @@ namespace Nop.Admin.Controllers
                 foreach (var country in countries)
                 {
 
-                    bool restrict = countryIdsToRestrict.Contains(country.Id);
+                    var restrict = countryIdsToRestrict.Contains(country.Id);
                     if (restrict)
                     {
                         if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.Id == country.Id) == null)

@@ -119,7 +119,7 @@ namespace Nop.Core.Html.CodeFormatter
 		public string FormatCode(Stream source)
 		{
             var reader = new StreamReader(source);
-			string s = reader.ReadToEnd();
+			var s = reader.ReadToEnd();
 			reader.Close();
 			return FormatCode(s, _lineNumbers, _alternate, _embedStyleSheet, false);
 		}
@@ -214,7 +214,7 @@ namespace Nop.Core.Html.CodeFormatter
 				if(!subCode)
 					sb.Append("<div class=\"csharpcode\">\n");
                 var reader = new StringReader(source);
-				int i = 0;
+				var i = 0;
 				const string spaces = "    ";
 				string line;
 				while ((line = reader.ReadLine()) != null)

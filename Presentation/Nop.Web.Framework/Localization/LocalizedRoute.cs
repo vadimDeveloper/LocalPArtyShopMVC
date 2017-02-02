@@ -81,8 +81,8 @@ namespace Nop.Web.Framework.Localization
         {
             if (DataSettingsHelper.DatabaseIsInstalled() && this.SeoFriendlyUrlsForLanguagesEnabled)
             {
-                string virtualPath = httpContext.Request.AppRelativeCurrentExecutionFilePath;
-                string applicationPath = httpContext.Request.ApplicationPath;
+                var virtualPath = httpContext.Request.AppRelativeCurrentExecutionFilePath;
+                var applicationPath = httpContext.Request.ApplicationPath;
                 if (virtualPath.IsLocalizedUrl(applicationPath, false))
                 {
                     //In ASP.NET Development Server, an URL like "http://localhost/Blog.aspx/Categories/BabyFrog" will return 
@@ -92,7 +92,7 @@ namespace Nop.Web.Framework.Localization
                     //So, I'll use RawUrl to re-create an AppRelativeCurrentExecutionFilePath like ASP.NET Development Server.
 
                     //Question: should we do path rewriting right here?
-                    string rawUrl = httpContext.Request.RawUrl;
+                    var rawUrl = httpContext.Request.RawUrl;
                     var newVirtualPath = rawUrl.RemoveLanguageSeoCodeFromRawUrl(applicationPath);
                     if (string.IsNullOrEmpty(newVirtualPath))
                         newVirtualPath = "/";
@@ -101,7 +101,7 @@ namespace Nop.Web.Framework.Localization
                     httpContext.RewritePath(newVirtualPath, true);
                 }
             }
-            RouteData data = base.GetRouteData(httpContext);
+            var data = base.GetRouteData(httpContext);
             return data;
         }
 
@@ -115,12 +115,12 @@ namespace Nop.Web.Framework.Localization
         /// </returns>
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
-            VirtualPathData data = base.GetVirtualPath(requestContext, values);
+            var data = base.GetVirtualPath(requestContext, values);
 
             if (data != null && DataSettingsHelper.DatabaseIsInstalled() && this.SeoFriendlyUrlsForLanguagesEnabled)
             {
-                string rawUrl = requestContext.HttpContext.Request.RawUrl;
-                string applicationPath = requestContext.HttpContext.Request.ApplicationPath;
+                var rawUrl = requestContext.HttpContext.Request.RawUrl;
+                var applicationPath = requestContext.HttpContext.Request.ApplicationPath;
                 if (rawUrl.IsLocalizedUrl(applicationPath, true))
                 {
                     data.VirtualPath = string.Concat(rawUrl.GetLanguageSeoCodeFromUrl(applicationPath, true), "/",

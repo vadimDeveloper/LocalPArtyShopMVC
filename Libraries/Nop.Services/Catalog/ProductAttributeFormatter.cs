@@ -91,14 +91,14 @@ namespace Nop.Services.Catalog
             if (renderProductAttributes)
             {
                 var attributes = _productAttributeParser.ParseProductAttributeMappings(attributesXml);
-                for (int i = 0; i < attributes.Count; i++)
+                for (var i = 0; i < attributes.Count; i++)
                 {
                     var attribute = attributes[i];
                     var valuesStr = _productAttributeParser.ParseValues(attributesXml, attribute.Id);
-                    for (int j = 0; j < valuesStr.Count; j++)
+                    for (var j = 0; j < valuesStr.Count; j++)
                     {
-                        string valueStr = valuesStr[j];
-                        string formattedAttribute = string.Empty;
+                        var valueStr = valuesStr[j];
+                        var formattedAttribute = string.Empty;
                         if (!attribute.ShouldHaveValues())
                         {
                             //no values
@@ -169,17 +169,17 @@ namespace Nop.Services.Catalog
                                     if (renderPrices)
                                     {
                                         decimal taxRate;
-                                        decimal attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
-                                        decimal priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer, out taxRate);
-                                        decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
+                                        var attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
+                                        var priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer, out taxRate);
+                                        var priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                                         if (priceAdjustmentBase > 0)
                                         {
-                                            string priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment, false, false);
+                                            var priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment, false, false);
                                             formattedAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
                                         }
                                         else if (priceAdjustmentBase < decimal.Zero)
                                         {
-                                            string priceAdjustmentStr = _priceFormatter.FormatPrice(-priceAdjustment, false, false);
+                                            var priceAdjustmentStr = _priceFormatter.FormatPrice(-priceAdjustment, false, false);
                                             formattedAttribute += string.Format(" [-{0}]", priceAdjustmentStr);
                                         }
                                     }

@@ -68,7 +68,7 @@ namespace Nop.Plugin.Shipping.CanadaPost.Domain
                 msg.AppendLine("<!--**********************************-->");
             }
             msg.AppendLine("<lineItems>");
-            foreach (Item item in _items)
+            foreach (var item in _items)
             {
                 // build the item information
                 msg.AppendLine(item.ToXml(includeComments));

@@ -138,7 +138,7 @@ namespace Nop.Services.Discounts
             if (discountId == 0)
                 return null;
 
-            string key = string.Format(DISCOUNTS_BY_ID_KEY, discountId);
+            var key = string.Format(DISCOUNTS_BY_ID_KEY, discountId);
             return _cacheManager.Get(key, () => _discountRepository.GetById(discountId));
         }
 
@@ -156,7 +156,7 @@ namespace Nop.Services.Discounts
             //we load all discounts, and filter them by passed "discountType" parameter later
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
-            string key = string.Format(DISCOUNTS_ALL_KEY, showHidden, couponCode, discountName);
+            var key = string.Format(DISCOUNTS_ALL_KEY, showHidden, couponCode, discountName);
             var result = _cacheManager.Get(key, () =>
             {
                 var query = _discountRepository.Table;
@@ -346,10 +346,10 @@ namespace Nop.Services.Discounts
             }
 
             //check date range
-            DateTime now = DateTime.UtcNow;
+            var now = DateTime.UtcNow;
             if (discount.StartDateUtc.HasValue)
             {
-                DateTime startDate = DateTime.SpecifyKind(discount.StartDateUtc.Value, DateTimeKind.Utc);
+                var startDate = DateTime.SpecifyKind(discount.StartDateUtc.Value, DateTimeKind.Utc);
                 if (startDate.CompareTo(now) > 0)
                 {
                     result.UserError = _localizationService.GetResource("ShoppingCart.Discount.NotStartedYet");
@@ -358,7 +358,7 @@ namespace Nop.Services.Discounts
             }
             if (discount.EndDateUtc.HasValue)
             {
-                DateTime endDate = DateTime.SpecifyKind(discount.EndDateUtc.Value, DateTimeKind.Utc);
+                var endDate = DateTime.SpecifyKind(discount.EndDateUtc.Value, DateTimeKind.Utc);
                 if (endDate.CompareTo(now) < 0)
                 {
                     result.UserError = _localizationService.GetResource("ShoppingCart.Discount.Expired");
@@ -398,7 +398,7 @@ namespace Nop.Services.Discounts
             //UNDONE we should inject static cache manager into constructor. we we already have "per request" cache manager injected. better way to do it?
             //we cache meta info of rdiscount requirements. this way we should not load them for each HTTP request
             var staticCacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
-            string key = string.Format(DiscountRequirementEventConsumer.DISCOUNT_REQUIREMENT_MODEL_KEY, discount.Id);
+            var key = string.Format(DiscountRequirementEventConsumer.DISCOUNT_REQUIREMENT_MODEL_KEY, discount.Id);
             //var requirements = discount.DiscountRequirements;
             var requirements = staticCacheManager.Get(key, () =>
             {

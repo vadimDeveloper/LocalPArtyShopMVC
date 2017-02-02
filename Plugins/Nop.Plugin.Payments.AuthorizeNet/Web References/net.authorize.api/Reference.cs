@@ -226,7 +226,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/IsAlive", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public ANetApiResponseType IsAlive() {
-            object[] results = this.Invoke("IsAlive", new object[0]);
+            var results = this.Invoke("IsAlive", new object[0]);
             return ((ANetApiResponseType)(results[0]));
         }
         
@@ -245,7 +245,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnIsAliveOperationCompleted(object arg) {
             if ((this.IsAliveCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.IsAliveCompleted(this, new IsAliveCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -253,7 +253,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/AuthenticateTest", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public ANetApiResponseType AuthenticateTest(MerchantAuthenticationType merchantAuthentication) {
-            object[] results = this.Invoke("AuthenticateTest", new object[] {
+            var results = this.Invoke("AuthenticateTest", new object[] {
                         merchantAuthentication});
             return ((ANetApiResponseType)(results[0]));
         }
@@ -274,7 +274,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnAuthenticateTestOperationCompleted(object arg) {
             if ((this.AuthenticateTestCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.AuthenticateTestCompleted(this, new AuthenticateTestCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -282,7 +282,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/ARBCreateSubscription", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public ARBCreateSubscriptionResponseType ARBCreateSubscription(MerchantAuthenticationType merchantAuthentication, ARBSubscriptionType subscription) {
-            object[] results = this.Invoke("ARBCreateSubscription", new object[] {
+            var results = this.Invoke("ARBCreateSubscription", new object[] {
                         merchantAuthentication,
                         subscription});
             return ((ARBCreateSubscriptionResponseType)(results[0]));
@@ -305,7 +305,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnARBCreateSubscriptionOperationCompleted(object arg) {
             if ((this.ARBCreateSubscriptionCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ARBCreateSubscriptionCompleted(this, new ARBCreateSubscriptionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -313,7 +313,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/ARBUpdateSubscription", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public ARBUpdateSubscriptionResponseType ARBUpdateSubscription(MerchantAuthenticationType merchantAuthentication, long subscriptionId, ARBSubscriptionType subscription) {
-            object[] results = this.Invoke("ARBUpdateSubscription", new object[] {
+            var results = this.Invoke("ARBUpdateSubscription", new object[] {
                         merchantAuthentication,
                         subscriptionId,
                         subscription});
@@ -338,7 +338,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnARBUpdateSubscriptionOperationCompleted(object arg) {
             if ((this.ARBUpdateSubscriptionCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ARBUpdateSubscriptionCompleted(this, new ARBUpdateSubscriptionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -346,7 +346,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/ARBCancelSubscription", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public ARBCancelSubscriptionResponseType ARBCancelSubscription(MerchantAuthenticationType merchantAuthentication, long subscriptionId) {
-            object[] results = this.Invoke("ARBCancelSubscription", new object[] {
+            var results = this.Invoke("ARBCancelSubscription", new object[] {
                         merchantAuthentication,
                         subscriptionId});
             return ((ARBCancelSubscriptionResponseType)(results[0]));
@@ -369,7 +369,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnARBCancelSubscriptionOperationCompleted(object arg) {
             if ((this.ARBCancelSubscriptionCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ARBCancelSubscriptionCompleted(this, new ARBCancelSubscriptionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -377,7 +377,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/ARBGetSubscriptionStatus", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public ARBGetSubscriptionStatusResponseType ARBGetSubscriptionStatus(MerchantAuthenticationType merchantAuthentication, long subscriptionId) {
-            object[] results = this.Invoke("ARBGetSubscriptionStatus", new object[] {
+            var results = this.Invoke("ARBGetSubscriptionStatus", new object[] {
                         merchantAuthentication,
                         subscriptionId});
             return ((ARBGetSubscriptionStatusResponseType)(results[0]));
@@ -400,7 +400,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnARBGetSubscriptionStatusOperationCompleted(object arg) {
             if ((this.ARBGetSubscriptionStatusCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ARBGetSubscriptionStatusCompleted(this, new ARBGetSubscriptionStatusCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -408,7 +408,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/ARBGetSubscriptionList", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public ARBGetSubscriptionListResponseType ARBGetSubscriptionList(MerchantAuthenticationType merchantAuthentication, ARBGetSubscriptionListRequestType request) {
-            object[] results = this.Invoke("ARBGetSubscriptionList", new object[] {
+            var results = this.Invoke("ARBGetSubscriptionList", new object[] {
                         merchantAuthentication,
                         request});
             return ((ARBGetSubscriptionListResponseType)(results[0]));
@@ -431,7 +431,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnARBGetSubscriptionListOperationCompleted(object arg) {
             if ((this.ARBGetSubscriptionListCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ARBGetSubscriptionListCompleted(this, new ARBGetSubscriptionListCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -439,7 +439,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/CreateCustomerProfile", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public CreateCustomerProfileResponseType CreateCustomerProfile(MerchantAuthenticationType merchantAuthentication, CustomerProfileType profile, ValidationModeEnum validationMode) {
-            object[] results = this.Invoke("CreateCustomerProfile", new object[] {
+            var results = this.Invoke("CreateCustomerProfile", new object[] {
                         merchantAuthentication,
                         profile,
                         validationMode});
@@ -464,7 +464,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnCreateCustomerProfileOperationCompleted(object arg) {
             if ((this.CreateCustomerProfileCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.CreateCustomerProfileCompleted(this, new CreateCustomerProfileCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -472,7 +472,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/CreateCustomerProfileFromTransaction", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public CreateCustomerProfileResponseType CreateCustomerProfileFromTransaction(MerchantAuthenticationType merchantAuthentication, string transId) {
-            object[] results = this.Invoke("CreateCustomerProfileFromTransaction", new object[] {
+            var results = this.Invoke("CreateCustomerProfileFromTransaction", new object[] {
                         merchantAuthentication,
                         transId});
             return ((CreateCustomerProfileResponseType)(results[0]));
@@ -495,7 +495,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnCreateCustomerProfileFromTransactionOperationCompleted(object arg) {
             if ((this.CreateCustomerProfileFromTransactionCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.CreateCustomerProfileFromTransactionCompleted(this, new CreateCustomerProfileFromTransactionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -503,7 +503,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/CreateCustomerPaymentProfile", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public CreateCustomerPaymentProfileResponseType CreateCustomerPaymentProfile(MerchantAuthenticationType merchantAuthentication, long customerProfileId, CustomerPaymentProfileType paymentProfile, ValidationModeEnum validationMode) {
-            object[] results = this.Invoke("CreateCustomerPaymentProfile", new object[] {
+            var results = this.Invoke("CreateCustomerPaymentProfile", new object[] {
                         merchantAuthentication,
                         customerProfileId,
                         paymentProfile,
@@ -530,7 +530,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnCreateCustomerPaymentProfileOperationCompleted(object arg) {
             if ((this.CreateCustomerPaymentProfileCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.CreateCustomerPaymentProfileCompleted(this, new CreateCustomerPaymentProfileCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -538,7 +538,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/CreateCustomerShippingAddress", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public CreateCustomerShippingAddressResponseType CreateCustomerShippingAddress(MerchantAuthenticationType merchantAuthentication, long customerProfileId, CustomerAddressType address) {
-            object[] results = this.Invoke("CreateCustomerShippingAddress", new object[] {
+            var results = this.Invoke("CreateCustomerShippingAddress", new object[] {
                         merchantAuthentication,
                         customerProfileId,
                         address});
@@ -563,7 +563,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnCreateCustomerShippingAddressOperationCompleted(object arg) {
             if ((this.CreateCustomerShippingAddressCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.CreateCustomerShippingAddressCompleted(this, new CreateCustomerShippingAddressCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -571,7 +571,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/GetCustomerProfile", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public GetCustomerProfileResponseType GetCustomerProfile(MerchantAuthenticationType merchantAuthentication, long customerProfileId) {
-            object[] results = this.Invoke("GetCustomerProfile", new object[] {
+            var results = this.Invoke("GetCustomerProfile", new object[] {
                         merchantAuthentication,
                         customerProfileId});
             return ((GetCustomerProfileResponseType)(results[0]));
@@ -594,7 +594,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnGetCustomerProfileOperationCompleted(object arg) {
             if ((this.GetCustomerProfileCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetCustomerProfileCompleted(this, new GetCustomerProfileCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -602,7 +602,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/GetCustomerPaymentProfile", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public GetCustomerPaymentProfileResponseType GetCustomerPaymentProfile(MerchantAuthenticationType merchantAuthentication, long customerProfileId, long customerPaymentProfileId) {
-            object[] results = this.Invoke("GetCustomerPaymentProfile", new object[] {
+            var results = this.Invoke("GetCustomerPaymentProfile", new object[] {
                         merchantAuthentication,
                         customerProfileId,
                         customerPaymentProfileId});
@@ -627,7 +627,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnGetCustomerPaymentProfileOperationCompleted(object arg) {
             if ((this.GetCustomerPaymentProfileCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetCustomerPaymentProfileCompleted(this, new GetCustomerPaymentProfileCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -635,7 +635,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/GetCustomerShippingAddress", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public GetCustomerShippingAddressResponseType GetCustomerShippingAddress(MerchantAuthenticationType merchantAuthentication, long customerProfileId, long customerAddressId) {
-            object[] results = this.Invoke("GetCustomerShippingAddress", new object[] {
+            var results = this.Invoke("GetCustomerShippingAddress", new object[] {
                         merchantAuthentication,
                         customerProfileId,
                         customerAddressId});
@@ -660,7 +660,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnGetCustomerShippingAddressOperationCompleted(object arg) {
             if ((this.GetCustomerShippingAddressCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetCustomerShippingAddressCompleted(this, new GetCustomerShippingAddressCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -668,7 +668,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/UpdateCustomerProfile", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public UpdateCustomerProfileResponseType UpdateCustomerProfile(MerchantAuthenticationType merchantAuthentication, CustomerProfileExType profile) {
-            object[] results = this.Invoke("UpdateCustomerProfile", new object[] {
+            var results = this.Invoke("UpdateCustomerProfile", new object[] {
                         merchantAuthentication,
                         profile});
             return ((UpdateCustomerProfileResponseType)(results[0]));
@@ -691,7 +691,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnUpdateCustomerProfileOperationCompleted(object arg) {
             if ((this.UpdateCustomerProfileCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.UpdateCustomerProfileCompleted(this, new UpdateCustomerProfileCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -699,7 +699,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/UpdateCustomerPaymentProfile", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public UpdateCustomerPaymentProfileResponseType UpdateCustomerPaymentProfile(MerchantAuthenticationType merchantAuthentication, long customerProfileId, CustomerPaymentProfileExType paymentProfile, ValidationModeEnum validationMode) {
-            object[] results = this.Invoke("UpdateCustomerPaymentProfile", new object[] {
+            var results = this.Invoke("UpdateCustomerPaymentProfile", new object[] {
                         merchantAuthentication,
                         customerProfileId,
                         paymentProfile,
@@ -726,7 +726,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnUpdateCustomerPaymentProfileOperationCompleted(object arg) {
             if ((this.UpdateCustomerPaymentProfileCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.UpdateCustomerPaymentProfileCompleted(this, new UpdateCustomerPaymentProfileCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -734,7 +734,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/UpdateCustomerShippingAddress", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public UpdateCustomerShippingAddressResponseType UpdateCustomerShippingAddress(MerchantAuthenticationType merchantAuthentication, long customerProfileId, CustomerAddressExType address) {
-            object[] results = this.Invoke("UpdateCustomerShippingAddress", new object[] {
+            var results = this.Invoke("UpdateCustomerShippingAddress", new object[] {
                         merchantAuthentication,
                         customerProfileId,
                         address});
@@ -759,7 +759,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnUpdateCustomerShippingAddressOperationCompleted(object arg) {
             if ((this.UpdateCustomerShippingAddressCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.UpdateCustomerShippingAddressCompleted(this, new UpdateCustomerShippingAddressCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -767,7 +767,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/DeleteCustomerProfile", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public DeleteCustomerProfileResponseType DeleteCustomerProfile(MerchantAuthenticationType merchantAuthentication, long customerProfileId) {
-            object[] results = this.Invoke("DeleteCustomerProfile", new object[] {
+            var results = this.Invoke("DeleteCustomerProfile", new object[] {
                         merchantAuthentication,
                         customerProfileId});
             return ((DeleteCustomerProfileResponseType)(results[0]));
@@ -790,7 +790,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnDeleteCustomerProfileOperationCompleted(object arg) {
             if ((this.DeleteCustomerProfileCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.DeleteCustomerProfileCompleted(this, new DeleteCustomerProfileCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -798,7 +798,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/DeleteCustomerPaymentProfile", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public DeleteCustomerPaymentProfileResponseType DeleteCustomerPaymentProfile(MerchantAuthenticationType merchantAuthentication, long customerProfileId, long customerPaymentProfileId) {
-            object[] results = this.Invoke("DeleteCustomerPaymentProfile", new object[] {
+            var results = this.Invoke("DeleteCustomerPaymentProfile", new object[] {
                         merchantAuthentication,
                         customerProfileId,
                         customerPaymentProfileId});
@@ -823,7 +823,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnDeleteCustomerPaymentProfileOperationCompleted(object arg) {
             if ((this.DeleteCustomerPaymentProfileCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.DeleteCustomerPaymentProfileCompleted(this, new DeleteCustomerPaymentProfileCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -831,7 +831,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/DeleteCustomerShippingAddress", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public DeleteCustomerShippingAddressResponseType DeleteCustomerShippingAddress(MerchantAuthenticationType merchantAuthentication, long customerProfileId, long customerAddressId) {
-            object[] results = this.Invoke("DeleteCustomerShippingAddress", new object[] {
+            var results = this.Invoke("DeleteCustomerShippingAddress", new object[] {
                         merchantAuthentication,
                         customerProfileId,
                         customerAddressId});
@@ -856,7 +856,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnDeleteCustomerShippingAddressOperationCompleted(object arg) {
             if ((this.DeleteCustomerShippingAddressCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.DeleteCustomerShippingAddressCompleted(this, new DeleteCustomerShippingAddressCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -864,7 +864,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/CreateCustomerProfileTransaction", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public CreateCustomerProfileTransactionResponseType CreateCustomerProfileTransaction(MerchantAuthenticationType merchantAuthentication, ProfileTransactionType transaction, string extraOptions) {
-            object[] results = this.Invoke("CreateCustomerProfileTransaction", new object[] {
+            var results = this.Invoke("CreateCustomerProfileTransaction", new object[] {
                         merchantAuthentication,
                         transaction,
                         extraOptions});
@@ -889,7 +889,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnCreateCustomerProfileTransactionOperationCompleted(object arg) {
             if ((this.CreateCustomerProfileTransactionCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.CreateCustomerProfileTransactionCompleted(this, new CreateCustomerProfileTransactionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -897,7 +897,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/ValidateCustomerPaymentProfile", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public ValidateCustomerPaymentProfileResponseType ValidateCustomerPaymentProfile(MerchantAuthenticationType merchantAuthentication, long customerProfileId, long customerPaymentProfileId, long customerShippingAddressId, string cardCode, ValidationModeEnum validationMode) {
-            object[] results = this.Invoke("ValidateCustomerPaymentProfile", new object[] {
+            var results = this.Invoke("ValidateCustomerPaymentProfile", new object[] {
                         merchantAuthentication,
                         customerProfileId,
                         customerPaymentProfileId,
@@ -928,7 +928,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnValidateCustomerPaymentProfileOperationCompleted(object arg) {
             if ((this.ValidateCustomerPaymentProfileCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.ValidateCustomerPaymentProfileCompleted(this, new ValidateCustomerPaymentProfileCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -936,7 +936,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/GetCustomerProfileIds", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public GetCustomerProfileIdsResponseType GetCustomerProfileIds(MerchantAuthenticationType merchantAuthentication) {
-            object[] results = this.Invoke("GetCustomerProfileIds", new object[] {
+            var results = this.Invoke("GetCustomerProfileIds", new object[] {
                         merchantAuthentication});
             return ((GetCustomerProfileIdsResponseType)(results[0]));
         }
@@ -957,7 +957,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnGetCustomerProfileIdsOperationCompleted(object arg) {
             if ((this.GetCustomerProfileIdsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetCustomerProfileIdsCompleted(this, new GetCustomerProfileIdsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -965,7 +965,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/GetHostedProfilePage", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public GetHostedProfilePageResponseType GetHostedProfilePage(MerchantAuthenticationType merchantAuthentication, long customerProfileId, [System.Xml.Serialization.XmlArrayItemAttribute("setting", IsNullable=false)] SettingType[] hostedProfileSettings) {
-            object[] results = this.Invoke("GetHostedProfilePage", new object[] {
+            var results = this.Invoke("GetHostedProfilePage", new object[] {
                         merchantAuthentication,
                         customerProfileId,
                         hostedProfileSettings});
@@ -990,7 +990,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnGetHostedProfilePageOperationCompleted(object arg) {
             if ((this.GetHostedProfilePageCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetHostedProfilePageCompleted(this, new GetHostedProfilePageCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -998,7 +998,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/UpdateSplitTenderGroup", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public UpdateSplitTenderGroupResponseType UpdateSplitTenderGroup(MerchantAuthenticationType merchantAuthentication, long splitTenderId, SplitTenderStatusEnum splitTenderStatus) {
-            object[] results = this.Invoke("UpdateSplitTenderGroup", new object[] {
+            var results = this.Invoke("UpdateSplitTenderGroup", new object[] {
                         merchantAuthentication,
                         splitTenderId,
                         splitTenderStatus});
@@ -1023,7 +1023,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnUpdateSplitTenderGroupOperationCompleted(object arg) {
             if ((this.UpdateSplitTenderGroupCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.UpdateSplitTenderGroupCompleted(this, new UpdateSplitTenderGroupCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1031,7 +1031,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/GetTransactionDetails", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public GetTransactionDetailsResponseType GetTransactionDetails(MerchantAuthenticationType merchantAuthentication, string transId) {
-            object[] results = this.Invoke("GetTransactionDetails", new object[] {
+            var results = this.Invoke("GetTransactionDetails", new object[] {
                         merchantAuthentication,
                         transId});
             return ((GetTransactionDetailsResponseType)(results[0]));
@@ -1054,7 +1054,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnGetTransactionDetailsOperationCompleted(object arg) {
             if ((this.GetTransactionDetailsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetTransactionDetailsCompleted(this, new GetTransactionDetailsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1062,7 +1062,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/GetSettledBatchList", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public GetSettledBatchListResponseType GetSettledBatchList(MerchantAuthenticationType merchantAuthentication, GetSettledBatchListRequestType request) {
-            object[] results = this.Invoke("GetSettledBatchList", new object[] {
+            var results = this.Invoke("GetSettledBatchList", new object[] {
                         merchantAuthentication,
                         request});
             return ((GetSettledBatchListResponseType)(results[0]));
@@ -1085,7 +1085,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnGetSettledBatchListOperationCompleted(object arg) {
             if ((this.GetSettledBatchListCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetSettledBatchListCompleted(this, new GetSettledBatchListCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1093,7 +1093,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/GetBatchStatistics", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public GetBatchStatisticsResponseType GetBatchStatistics(MerchantAuthenticationType merchantAuthentication, GetBatchStatisticsRequestType request) {
-            object[] results = this.Invoke("GetBatchStatistics", new object[] {
+            var results = this.Invoke("GetBatchStatistics", new object[] {
                         merchantAuthentication,
                         request});
             return ((GetBatchStatisticsResponseType)(results[0]));
@@ -1116,7 +1116,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnGetBatchStatisticsOperationCompleted(object arg) {
             if ((this.GetBatchStatisticsCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetBatchStatisticsCompleted(this, new GetBatchStatisticsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1124,7 +1124,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/GetTransactionList", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public GetTransactionListResponseType GetTransactionList(MerchantAuthenticationType merchantAuthentication, GetTransactionListRequestType request) {
-            object[] results = this.Invoke("GetTransactionList", new object[] {
+            var results = this.Invoke("GetTransactionList", new object[] {
                         merchantAuthentication,
                         request});
             return ((GetTransactionListResponseType)(results[0]));
@@ -1147,7 +1147,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnGetTransactionListOperationCompleted(object arg) {
             if ((this.GetTransactionListCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetTransactionListCompleted(this, new GetTransactionListCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1155,7 +1155,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("https://api.authorize.net/soap/v1/GetUnsettledTransactionList", RequestNamespace="https://api.authorize.net/soap/v1/", ResponseNamespace="https://api.authorize.net/soap/v1/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public GetUnsettledTransactionListResponseType GetUnsettledTransactionList(MerchantAuthenticationType merchantAuthentication, GetUnsettledTransactionListRequestType request) {
-            object[] results = this.Invoke("GetUnsettledTransactionList", new object[] {
+            var results = this.Invoke("GetUnsettledTransactionList", new object[] {
                         merchantAuthentication,
                         request});
             return ((GetUnsettledTransactionListResponseType)(results[0]));
@@ -1178,7 +1178,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
         
         private void OnGetUnsettledTransactionListOperationCompleted(object arg) {
             if ((this.GetUnsettledTransactionListCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                var invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetUnsettledTransactionListCompleted(this, new GetUnsettledTransactionListCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
@@ -1193,7 +1193,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.net.authorize.api {
                         || (url == string.Empty))) {
                 return false;
             }
-            System.Uri wsUri = new System.Uri(url);
+            var wsUri = new System.Uri(url);
             if (((wsUri.Port >= 1024) 
                         && (string.Compare(wsUri.Host, "localHost", System.StringComparison.OrdinalIgnoreCase) == 0))) {
                 return true;

@@ -24,7 +24,7 @@ namespace Nop.Services.Tests.Security
         [Test]
         public void Can_hash() 
         {
-            string password = "MyLittleSecret";
+            var password = "MyLittleSecret";
             var saltKey = "salt1";
             var hashedPassword = _encryptionService.CreatePasswordHash(password, saltKey);
             //hashedPassword.ShouldBeNotBeTheSameAs(password);
@@ -35,7 +35,7 @@ namespace Nop.Services.Tests.Security
         public void Can_encrypt_and_decrypt() 
         {
             var password = "MyLittleSecret";
-            string encryptedPassword = _encryptionService.EncryptText(password);
+            var encryptedPassword = _encryptionService.EncryptText(password);
             var decryptedPassword = _encryptionService.DecryptText(encryptedPassword);
             decryptedPassword.ShouldEqual(password);
         }

@@ -137,7 +137,7 @@ namespace Nop.Services.Messages
             if (emailAccount == null)
                 throw new ArgumentNullException("emailAccount");
 
-            int totalEmailsSent = 0;
+            var totalEmailsSent = 0;
 
             foreach (var subscription in subscriptions)
             {
@@ -152,8 +152,8 @@ namespace Nop.Services.Messages
                 if (customer != null)
                     _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
-                string subject = _tokenizer.Replace(campaign.Subject, tokens, false);
-                string body = _tokenizer.Replace(campaign.Body, tokens, true);
+                var subject = _tokenizer.Replace(campaign.Subject, tokens, false);
+                var body = _tokenizer.Replace(campaign.Body, tokens, true);
 
                 var email = new QueuedEmail
                 {
@@ -192,8 +192,8 @@ namespace Nop.Services.Messages
             if (customer != null)
                 _messageTokenProvider.AddCustomerTokens(tokens, customer);
             
-            string subject = _tokenizer.Replace(campaign.Subject, tokens, false);
-            string body = _tokenizer.Replace(campaign.Body, tokens, true);
+            var subject = _tokenizer.Replace(campaign.Subject, tokens, false);
+            var body = _tokenizer.Replace(campaign.Body, tokens, true);
 
             _emailSender.SendEmail(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, email, null);
         }

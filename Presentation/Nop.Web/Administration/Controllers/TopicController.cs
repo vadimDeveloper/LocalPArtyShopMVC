@@ -47,17 +47,17 @@ namespace Nop.Admin.Controllers
             ICustomerService customerService,
             IAclService aclService)
         {
-            this._topicService = topicService;
-            this._languageService = languageService;
-            this._localizedEntityService = localizedEntityService;
-            this._localizationService = localizationService;
-            this._permissionService = permissionService;
-            this._storeService = storeService;
-            this._storeMappingService = storeMappingService;
-            this._urlRecordService = urlRecordService;
-            this._topicTemplateService = topicTemplateService;
-            this._customerService = customerService;
-            this._aclService = aclService;
+            _topicService = topicService;
+            _languageService = languageService;
+            _localizedEntityService = localizedEntityService;
+            _localizationService = localizationService;
+            _permissionService = permissionService;
+            _storeService = storeService;
+            _storeMappingService = storeMappingService;
+            _urlRecordService = urlRecordService;
+            _topicTemplateService = topicTemplateService;
+            _customerService = customerService;
+            _aclService = aclService;
         }
 
         #endregion
@@ -68,7 +68,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareTemplatesModel(TopicModel model)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             var templates = _topicTemplateService.GetAllTopicTemplates();
             foreach (var template in templates)
@@ -121,7 +121,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareAclModel(TopicModel model, Topic topic, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableCustomerRoles = _customerService
                 .GetAllCustomerRoles(true)
@@ -163,7 +163,7 @@ namespace Nop.Admin.Controllers
         protected virtual void PrepareStoresMappingModel(TopicModel model, Topic topic, bool excludeProperties)
         {
             if (model == null)
-                throw new ArgumentNullException("model");
+                throw new ArgumentNullException(nameof(model));
 
             model.AvailableStores = _storeService
                 .GetAllStores()

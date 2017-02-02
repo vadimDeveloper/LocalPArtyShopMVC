@@ -163,7 +163,7 @@ namespace Nop.Services.Orders
             if (customer == null)
                 return result;
 
-            string[] couponCodes = customer.ParseAppliedGiftCardCouponCodes();
+            var couponCodes = customer.ParseAppliedGiftCardCouponCodes();
             foreach (var couponCode in couponCodes)
             {
                 var giftCards = GetAllGiftCards(isGiftCardActivated: true, giftCardCouponCode: couponCode);
@@ -183,8 +183,8 @@ namespace Nop.Services.Orders
         /// <returns>Result</returns>
         public virtual string GenerateGiftCardCode()
         {
-            int length = 13;
-            string result = Guid.NewGuid().ToString();
+            var length = 13;
+            var result = Guid.NewGuid().ToString();
             if (result.Length > length)
                 result = result.Substring(0, length);
             return result;

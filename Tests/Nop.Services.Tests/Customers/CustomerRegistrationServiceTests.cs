@@ -66,8 +66,8 @@ namespace Nop.Services.Tests.Customers
                 Active = true
             };
 
-            string saltKey = _encryptionService.CreateSaltKey(5);
-            string password = _encryptionService.CreatePasswordHash("password", saltKey);
+            var saltKey = _encryptionService.CreateSaltKey(5);
+            var password = _encryptionService.CreatePasswordHash("password", saltKey);
             customer1.PasswordSalt = saltKey;
             customer1.Password = password;
             AddCustomerToRegisteredRole(customer1);

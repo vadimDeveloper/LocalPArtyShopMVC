@@ -79,17 +79,17 @@ namespace Nop.Services.Localization
                        keySelector));
             }
 
-            TPropType result = default(TPropType);
-            string resultStr = string.Empty;
+            var result = default(TPropType);
+            var resultStr = string.Empty;
 
             //load localized value
-            string localeKeyGroup = typeof(T).Name;
-            string localeKey = propInfo.Name;
+            var localeKeyGroup = typeof(T).Name;
+            var localeKey = propInfo.Name;
 
             if (languageId > 0)
             {
                 //ensure that we have at least two published languages
-                bool loadLocalizedValue = true;
+                var loadLocalizedValue = true;
                 if (ensureTwoPublishedLanguages)
                 {
                     var lService = EngineContext.Current.Resolve<ILanguageService>();
@@ -136,7 +136,7 @@ namespace Nop.Services.Localization
         {
             var settingService = EngineContext.Current.Resolve<ISettingService>();
 
-            string key = settings.GetSettingKey(keySelector);
+            var key = settings.GetSettingKey(keySelector);
 
             //we do not support localized settings per store (overridden store settings)
             var setting = settingService.GetSetting(key, storeId: 0, loadSharedValueIfNotFound: false);
@@ -162,7 +162,7 @@ namespace Nop.Services.Localization
             var settingService = EngineContext.Current.Resolve<ISettingService>();
             var localizedEntityService = EngineContext.Current.Resolve<ILocalizedEntityService>();
 
-            string key = settings.GetSettingKey(keySelector);
+            var key = settings.GetSettingKey(keySelector);
 
             //we do not support localized settings per store (overridden store settings)
             var setting = settingService.GetSetting(key, storeId: 0, loadSharedValueIfNotFound: false);
@@ -206,11 +206,11 @@ namespace Nop.Services.Localization
             if (!typeof(T).IsEnum) throw new ArgumentException("T must be an enumerated type");
 
             //localized value
-            string resourceName = string.Format("Enums.{0}.{1}", 
+            var resourceName = string.Format("Enums.{0}.{1}", 
                 typeof(T).ToString(), 
                 //Convert.ToInt32(enumValue)
                 enumValue.ToString());
-            string result = localizationService.GetResource(resourceName, languageId, false, "", true);
+            var result = localizationService.GetResource(resourceName, languageId, false, "", true);
 
             //set default value if required
             if (String.IsNullOrEmpty(result))
@@ -254,8 +254,8 @@ namespace Nop.Services.Localization
                 throw new ArgumentNullException("localizationService");
 
             //localized value
-            string resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
-            string result = localizationService.GetResource(resourceName, languageId, false, "", true);
+            var resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
+            var result = localizationService.GetResource(resourceName, languageId, false, "", true);
 
             //set default value if required
             if (String.IsNullOrEmpty(result))
@@ -279,8 +279,8 @@ namespace Nop.Services.Localization
             if (languageService == null)
                 throw new ArgumentNullException("languageService");
 
-            string resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
-            string resourceValue = permissionRecord.Name;
+            var resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
+            var resourceValue = permissionRecord.Name;
 
             foreach (var lang in languageService.GetAllLanguages(true))
             {
@@ -318,7 +318,7 @@ namespace Nop.Services.Localization
             if (languageService == null)
                 throw new ArgumentNullException("languageService");
 
-            string resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
+            var resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
             foreach (var lang in languageService.GetAllLanguages(true))
             {
                 var lsr = localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
@@ -452,11 +452,11 @@ namespace Nop.Services.Localization
             if (plugin.PluginDescriptor == null)
                 throw new ArgumentException("Plugin descriptor cannot be loaded");
 
-            string systemName = plugin.PluginDescriptor.SystemName;
+            var systemName = plugin.PluginDescriptor.SystemName;
             //localized value
-            string resourceName = string.Format("Plugins.FriendlyName.{0}",
+            var resourceName = string.Format("Plugins.FriendlyName.{0}",
                 systemName);
-            string result = localizationService.GetResource(resourceName, languageId, false, "", true);
+            var result = localizationService.GetResource(resourceName, languageId, false, "", true);
 
             //set default value if required
             if (String.IsNullOrEmpty(result) && returnDefaultValue)
@@ -489,9 +489,9 @@ namespace Nop.Services.Localization
             if (plugin.PluginDescriptor == null)
                 throw new ArgumentException("Plugin descriptor cannot be loaded");
 
-            string systemName = plugin.PluginDescriptor.SystemName;
+            var systemName = plugin.PluginDescriptor.SystemName;
             //localized value
-            string resourceName = string.Format("Plugins.FriendlyName.{0}", systemName);
+            var resourceName = string.Format("Plugins.FriendlyName.{0}", systemName);
             var resource = localizationService.GetLocaleStringResourceByName(resourceName, languageId, false);
 
             if (resource != null)

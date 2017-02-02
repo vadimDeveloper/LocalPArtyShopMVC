@@ -54,15 +54,15 @@ namespace Nop.Services.Catalog
         protected virtual List<int> GetComparedProductIds()
         {
             var productIds = new List<int>();
-            HttpCookie compareCookie = _httpContext.Request.Cookies.Get(COMPARE_PRODUCTS_COOKIE_NAME);
+            var compareCookie = _httpContext.Request.Cookies.Get(COMPARE_PRODUCTS_COOKIE_NAME);
             if (compareCookie == null)
                 return productIds;
-            string[] values = compareCookie.Values.GetValues("CompareProductIds");
+            var values = compareCookie.Values.GetValues("CompareProductIds");
             if (values == null)
                 return productIds;
-            foreach (string productId in values)
+            foreach (var productId in values)
             {
-                int prodId = int.Parse(productId);
+                var prodId = int.Parse(productId);
                 if (!productIds.Contains(prodId))
                     productIds.Add(prodId);
             }
@@ -96,7 +96,7 @@ namespace Nop.Services.Catalog
         {
             var products = new List<Product>();
             var productIds = GetComparedProductIds();
-            foreach (int productId in productIds)
+            foreach (var productId in productIds)
             {
                 var product = _productService.GetProductById(productId);
                 if (product != null && product.Published && !product.Deleted)
@@ -120,7 +120,7 @@ namespace Nop.Services.Catalog
             if (compareCookie == null)
                 return;
             compareCookie.Values.Clear();
-            foreach (int newProductId in newProductIds)
+            foreach (var newProductId in newProductIds)
                 compareCookie.Values.Add("CompareProductIds", newProductId.ToString());
             compareCookie.Expires = DateTime.Now.AddDays(10.0);
             _httpContext.Response.Cookies.Set(compareCookie);
@@ -135,7 +135,7 @@ namespace Nop.Services.Catalog
             var oldProductIds = GetComparedProductIds();
             var newProductIds = new List<int>();
             newProductIds.Add(productId);
-            foreach (int oldProductId in oldProductIds)
+            foreach (var oldProductId in oldProductIds)
                 if (oldProductId != productId)
                     newProductIds.Add(oldProductId);
 
@@ -146,8 +146,8 @@ namespace Nop.Services.Catalog
                 compareCookie.HttpOnly = true;
             }
             compareCookie.Values.Clear();
-            int i = 1;
-            foreach (int newProductId in newProductIds)
+            var i = 1;
+            foreach (var newProductId in newProductIds)
             {
                 compareCookie.Values.Add("CompareProductIds", newProductId.ToString());
                 if (i == _catalogSettings.CompareProductsNumber)

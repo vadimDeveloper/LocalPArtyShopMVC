@@ -28,7 +28,7 @@ namespace Nop.Plugin.Feed.Froogle.Services
 
         private string GetEmbeddedFileContent(string resourceName)
         {
-            string fullResourceName = string.Format("Nop.Plugin.Feed.Froogle.Files.{0}", resourceName);
+            var fullResourceName = string.Format("Nop.Plugin.Feed.Froogle.Files.{0}", resourceName);
             var assem = this.GetType().Assembly;
             using (var stream = assem.GetManifestResourceStream(fullResourceName))
             using (var reader = new StreamReader(stream))

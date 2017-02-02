@@ -170,7 +170,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
 
             if (!String.IsNullOrEmpty(reply))
             {
-                string[] responseFields = reply.Split('|');
+                var responseFields = reply.Split('|');
                 switch (responseFields[0])
                 {
                     case "1":
@@ -269,7 +269,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
 
             var orderTotal = Math.Round(capturePaymentRequest.Order.OrderTotal, 2);
             form.Add("x_amount", orderTotal.ToString("0.00", CultureInfo.InvariantCulture));
-            string[] codes = capturePaymentRequest.Order.AuthorizationTransactionCode.Split(',');
+            var codes = capturePaymentRequest.Order.AuthorizationTransactionCode.Split(',');
             //x_trans_id. When x_test_request (sandbox) is set to a positive response, 
             //or when Test mode is enabled on the payment gateway, this value will be "0".
             form.Add("x_trans_id", codes[0]);
@@ -279,7 +279,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
 
             if (!String.IsNullOrEmpty(reply))
             {
-                string[] responseFields = reply.Split('|');
+                var responseFields = reply.Split('|');
                 switch (responseFields[0])
                 {
                     case "1":
@@ -328,13 +328,13 @@ namespace Nop.Plugin.Payments.AuthorizeNet
             form.Add("x_method", "CC");
             form.Add("x_currency_code", _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
 
-            string[] codes = refundPaymentRequest.Order.CaptureTransactionId == null ?
+            var codes = refundPaymentRequest.Order.CaptureTransactionId == null ?
                 refundPaymentRequest.Order.AuthorizationTransactionCode.Split(',') : refundPaymentRequest.Order.CaptureTransactionId.Split(',');
             //x_trans_id. When x_test_request (sandbox) is set to a positive response, 
             //or when Test mode is enabled on the payment gateway, this value will be "0".
             form.Add("x_trans_id", codes[0]);
 
-            string maskedCreditCardNumberDecrypted = _encryptionService.DecryptText(refundPaymentRequest.Order.MaskedCreditCardNumber);
+            var maskedCreditCardNumberDecrypted = _encryptionService.DecryptText(refundPaymentRequest.Order.MaskedCreditCardNumber);
             if (String.IsNullOrEmpty(maskedCreditCardNumberDecrypted) || maskedCreditCardNumberDecrypted.Length < 4)
             {
                 result.AddError("Last four digits of Credit Card Not Available");
@@ -354,7 +354,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
 
             if (!String.IsNullOrEmpty(reply))
             {
-                string[] responseFields = reply.Split('|');
+                var responseFields = reply.Split('|');
                 switch (responseFields[0])
                 {
                     case "1":                         
@@ -399,13 +399,13 @@ namespace Nop.Plugin.Payments.AuthorizeNet
             form.Add("x_method", "CC");
             form.Add("x_currency_code", _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
 
-            string[] codes = voidPaymentRequest.Order.CaptureTransactionId == null ?
+            var codes = voidPaymentRequest.Order.CaptureTransactionId == null ?
                 voidPaymentRequest.Order.AuthorizationTransactionCode.Split(',') : voidPaymentRequest.Order.CaptureTransactionId.Split(',');
             //x_trans_id. When x_test_request (sandbox) is set to a positive response, 
             //or when Test mode is enabled on the payment gateway, this value will be "0".
             form.Add("x_trans_id", codes[0]);
 
-            string maskedCreditCardNumberDecrypted = _encryptionService.DecryptText(voidPaymentRequest.Order.MaskedCreditCardNumber);
+            var maskedCreditCardNumberDecrypted = _encryptionService.DecryptText(voidPaymentRequest.Order.MaskedCreditCardNumber);
             if (String.IsNullOrEmpty(maskedCreditCardNumberDecrypted) || maskedCreditCardNumberDecrypted.Length < 4)
             {
                 result.AddError("Last four digits of Credit Card Not Available");
@@ -421,7 +421,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
 
             if (!String.IsNullOrEmpty(reply))
             {
-                string[] responseFields = reply.Split('|');
+                var responseFields = reply.Split('|');
                 switch (responseFields[0])
                 {
                     case "1":                        
@@ -505,7 +505,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
                 // Create a subscription that is leng of specified occurrences and interval is amount of days ad runs
 
                 subscription.paymentSchedule = new PaymentScheduleType();
-                DateTime dtNow = DateTime.UtcNow;
+                var dtNow = DateTime.UtcNow;
                 subscription.paymentSchedule.startDate = new DateTime(dtNow.Year, dtNow.Month, dtNow.Day);
                 subscription.paymentSchedule.startDateSpecified = true;
 

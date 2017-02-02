@@ -31,9 +31,6 @@ namespace Nop.Admin.Infrastructure
         /// <summary>
         /// Order of this dependency registrar implementation
         /// </summary>
-        public int Order
-        {
-            get { return 2; }
-        }
+        public int Order => 2;
     }
 }

@@ -222,7 +222,7 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts.Controllers
                 //      {Product ID}:{Quantity}. For example, 77:1, 123:2, 156:3
                 //3. The comma-separated list of product identifiers with quantity range.
                 //      {Product ID}:{Min quantity}-{Max quantity}. For example, 77:1-3, 123:2-5, 156:3-8
-                foreach (string str1 in rangeArray)
+                foreach (var str1 in rangeArray)
                 {
                     var str2 = str1;
                     //we do not display specified quantities and ranges
@@ -236,7 +236,7 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts.Controllers
                 }
 
                 var products = _productService.GetProductsByIds(ids.ToArray());
-                for (int i = 0; i <= products.Count - 1; i++)
+                for (var i = 0; i <= products.Count - 1; i++)
                 {
                     result += products[i].Name;
                     if (i != products.Count - 1)

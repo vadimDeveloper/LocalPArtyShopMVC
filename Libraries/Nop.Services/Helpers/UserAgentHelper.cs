@@ -58,7 +58,7 @@ namespace Nop.Services.Helpers
 
             //we put required logic in try-catch block
             //more info: http://www.nopcommerce.com/boards/t/17711/unhandled-exception-request-is-not-available-in-this-context.aspx
-            bool result = false;
+            var result = false;
             try
             {
                 var uasParser = GetUasParser();

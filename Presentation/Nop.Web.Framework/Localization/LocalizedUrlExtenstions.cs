@@ -85,7 +85,7 @@ namespace Nop.Web.Framework.Localization
                     url = url.RemoveApplicationPathFromRawUrl(applicationPath);
                 }
 
-                int length = url.Length;
+                var length = url.Length;
                 //too short url
                 if (length < 1 + _seoCodeLength)
                     return false;
@@ -99,7 +99,7 @@ namespace Nop.Web.Framework.Localization
             }
             else
             {
-                int length = url.Length;
+                var length = url.Length;
                 //too short url
                 if (length < 2 + _seoCodeLength)
                     return false;
@@ -131,7 +131,7 @@ namespace Nop.Web.Framework.Localization
                 url = url.RemoveApplicationPathFromRawUrl(applicationPath);
             }
 
-            int length = url.Length;
+            var length = url.Length;
             if (length < _seoCodeLength + 1)    //too short url
                 result = url;
             else if (length == 1 + _seoCodeLength)  //url like "/en"
@@ -162,7 +162,7 @@ namespace Nop.Web.Framework.Localization
             //    return url;
 
 
-            int startIndex = 0;
+            var startIndex = 0;
             if (applicationPath.IsVirtualDirectory())
             {
                 //we're in virtual directory.

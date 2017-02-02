@@ -216,11 +216,11 @@ namespace Nop.Web.Controllers
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
                 return RedirectToRoute("HomePage");
 
-            int count = 0;
+            var count = 0;
             foreach (var orderItem in order.OrderItems)
             {
-                int quantity = 0; //parse quantity
-                foreach (string formKey in form.AllKeys)
+                var quantity = 0; //parse quantity
+                foreach (var formKey in form.AllKeys)
                     if (formKey.Equals(string.Format("quantity{0}", orderItem.Id), StringComparison.InvariantCultureIgnoreCase))
                     {
                         int.TryParse(form[formKey], out quantity);

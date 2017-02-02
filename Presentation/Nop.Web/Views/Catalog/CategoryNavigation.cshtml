@@ -23,9 +23,9 @@
 }
 @helper RenderCategoryLine(CategorySimpleModel category)
 {
-    bool active = category.Id == Model.CurrentCategoryId || category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0;
-    bool last = category.Id == Model.CurrentCategoryId;
-    string liClass = active ? "active" : "inactive";
+    var active = category.Id == Model.CurrentCategoryId || category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0;
+    var last = category.Id == Model.CurrentCategoryId;
+    var liClass = active ? "active" : "inactive";
     if (last)
     {
         liClass += " last";
