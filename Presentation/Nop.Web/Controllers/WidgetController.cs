@@ -28,10 +28,10 @@ namespace Nop.Web.Controllers
             IThemeContext themeContext,
             ICacheManager cacheManager)
         {
-            this._widgetService = widgetService;
-            this._storeContext = storeContext;
-            this._themeContext = themeContext;
-            this._cacheManager = cacheManager;
+            _widgetService = widgetService;
+            _storeContext = storeContext;
+            _themeContext = themeContext;
+            _cacheManager = cacheManager;
         }
 
         #endregion
@@ -74,9 +74,11 @@ namespace Nop.Web.Controllers
             var clonedModel = new List<RenderWidgetModel>();
             foreach (var widgetModel in cacheModel)
             {
-                var clonedWidgetModel = new RenderWidgetModel();
-                clonedWidgetModel.ActionName = widgetModel.ActionName;
-                clonedWidgetModel.ControllerName = widgetModel.ControllerName;
+                var clonedWidgetModel = new RenderWidgetModel
+                {
+                    ActionName = widgetModel.ActionName,
+                    ControllerName = widgetModel.ControllerName
+                };
                 if (widgetModel.RouteValues != null)
                     clonedWidgetModel.RouteValues = new RouteValueDictionary(widgetModel.RouteValues);
 
